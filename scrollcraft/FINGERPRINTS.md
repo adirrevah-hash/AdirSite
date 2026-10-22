@@ -28,7 +28,7 @@ changes only grammar and world will fail it.
 
 | Build | Grammar | Nav treatment | Hero device | Act-sequence shape | Close pattern | Signature move | World | Port |
 |---|---|---|---|---|---|---|---|---|
-| adir (Adir Revah personal) | Typographic poster | None; a small fixed "Kept" chip, lower lead, appears after the first keep | Pinned scale-through: name, ghost outline and cobalt iris scale at different rates around the bowl of the d | pin(scale) > flow(in) > pin(kinetic, peak 5.2vh) > flow(reveal) > flow(in); 5 acts, ~10vh | Hard cut back to paper; smallest type on the site; one sentence built from kept words; CTA as underlined text link | Dwell-to-keep: hold still on a word (or click) to keep it; the ledger and the closing sentence are written from the kept words | Type only, bone paper and a deepening cobalt | :4500 |
+| adir (Adir Revah personal) | Typographic poster | None; a small fixed "Kept" chip, lower lead, appears after the first keep | Pinned scale-through: name, ghost outline and cobalt iris scale at different rates around the bowl of the d | pin(scale) > flow(in) > pin(kinetic, peak 5.2vh) > flow(reveal) > flow(scale-to-dot); 5 acts, ~9.6vh | Hard cut back to paper; the hero iris returns as a disc that shrinks into the full stop of a sentence built from kept words; CTA as underlined text link | Dwell-to-keep: hold still on a word (or click) to keep it; the ledger and the closing sentence are written from the kept words | Type only, bone paper and a deepening cobalt | :4500 |
 
 
 ---

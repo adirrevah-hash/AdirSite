@@ -6,6 +6,9 @@
 <title>Adir Revah</title>
 <meta name="description" content="Adir Revah. A short page, set mostly in type. Stop on a word and it is yours to keep.">
 <meta name="theme-color" content="#ECE9E2">
+<meta property="og:title" content="Adir Revah">
+<meta property="og:description" content="A short page, set mostly in type. Stop on a word and it is yours to keep.">
+<meta property="og:type" content="website">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%232230D6'/><circle cx='14' cy='18' r='6' fill='none' stroke='%23ECE9E2' stroke-width='3.5'/><rect x='18' y='6' width='3.5' height='18' fill='%23ECE9E2'/></svg>">
 <link rel="preload" href="fonts/archivo.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="fonts/geist.woff2" as="font" type="font/woff2" crossorigin>
@@ -88,18 +91,30 @@
     clip-path: circle(0px at 50% 50%);
     will-change: clip-path;
   }
-  .hero__meta {
+  .hero__head {
     position: absolute; z-index: 4;
-    top: clamp(1.25rem, 5svh, 3rem); left: var(--sc-gutter);
-    max-width: 30ch; margin: 0;
-    font-size: var(--sc-t-sm); line-height: 1.5; color: var(--sc-ink-soft);
+    top: clamp(1.25rem, 5svh, 3rem); left: var(--sc-gutter); right: var(--sc-gutter);
+    display: flex; justify-content: space-between; align-items: baseline; gap: var(--sc-5);
+  }
+  .hero__meta {
+    max-width: 32ch; margin: 0;
+    font-size: var(--sc-t-base); line-height: 1.45; color: var(--sc-ink-soft);
   }
   .hero__meta b { color: var(--sc-ink); font-weight: 600; }
+  .hero__cta, .close__cta {
+    font-size: var(--sc-t-base); font-weight: 500; color: var(--sc-accent); white-space: nowrap;
+    text-decoration: underline; text-decoration-thickness: 1.5px; text-underline-offset: 0.28em;
+    transition: text-underline-offset 160ms var(--sc-ease-out);
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .hero__cta:hover, .close__cta:hover { text-underline-offset: 0.42em; }
+  }
+  .hero__cta:active, .close__cta:active { transform: translateY(1px); }
 
   /* ---------- 2. hello ---------- */
   .hello {
     background: var(--blue-1);
-    padding-block: var(--sc-6) calc(var(--sc-section) * 0.55);
+    padding-block: var(--sc-4) calc(var(--sc-section) * 0.5);
   }
   .hello__inner {
     margin-left: calc(var(--sc-gutter) + 14vw);
@@ -118,7 +133,7 @@
   .words__ground { position: absolute; inset: 0; z-index: 0; }
   .words__hint {
     position: absolute; z-index: 3; top: clamp(1.25rem, 5svh, 3rem); left: var(--sc-gutter);
-    margin: 0; font-size: var(--sc-t-sm); color: var(--sc-ink-soft); max-width: 30ch; line-height: 1.5;
+    margin: 0; font-size: var(--sc-t-base); color: var(--sc-ink-soft); max-width: 34ch; line-height: 1.45;
   }
   .word {
     position: absolute; inset: 0; z-index: 2;
@@ -142,6 +157,7 @@
   }
   .word--trail .word__bar { transform-origin: right center; }
   .word.is-kept .word__bar { transform: scaleX(1); }
+  .word.is-charging .word__bar { transition: none; }
   .word__gloss {
     margin: var(--sc-5) 0 0; max-width: 34ch;
     font-size: var(--sc-t-sm); line-height: 1.55; color: var(--sc-ink-soft);
@@ -176,7 +192,13 @@
     line-height: 1; padding-block: 0.04em 0.1em;
   }
   .ledger li:nth-child(even) { padding-left: 18vw; }
-  .ledger li[hidden] { display: none; }
+  /* Passed words stay in the list as outlines, the same hand as the ghost
+     plane in the hero. The list never changes height, so nothing below it
+     has to re-measure when the reader changes their mind. */
+  .ledger li.is-out .poster {
+    color: transparent;
+    -webkit-text-stroke: 1.5px color-mix(in oklab, var(--sc-ink) 55%, transparent);
+  }
 
   /* ---------- 5. close: the quietest screen ---------- */
   .close {
@@ -184,23 +206,23 @@
     background: var(--sc-canvas);
     padding: var(--sc-section) var(--sc-gutter) var(--sc-7);
   }
-  .close__inner { max-width: 40ch; }
+  .close { overflow: hidden; }
+  .close__inner { width: 100%; position: relative; z-index: 0; }
+  .close__line { max-width: 15ch; }
+  .close__tail { white-space: nowrap; }
+  .close__dot {
+    display: inline-block; width: 0.24em; height: 0.24em; margin-left: 0.06em;
+    border-radius: 50%; background: var(--blue-1);
+    transform-origin: 50% 50%; will-change: transform;
+    position: relative; z-index: -1;
+  }
   .close__line {
-    margin: 0; font-family: var(--sc-font-display); font-weight: 600; font-stretch: 100%;
-    font-size: var(--sc-t-lg); line-height: 1.3; letter-spacing: var(--sc-track-snug); color: var(--sc-ink);
+    margin: 0; font-family: var(--sc-font-display); font-weight: 700; font-stretch: 104%;
+    font-size: clamp(2.1rem, 1.2rem + 3.6vw, 4.6rem); line-height: 1.02; letter-spacing: -0.03em; color: var(--sc-ink);
     text-wrap: balance;
   }
-  .close__sign { margin: var(--sc-3) 0 0; font-size: var(--sc-t-sm); color: var(--sc-ink-soft); }
-  .close__cta {
-    display: inline-block; margin-top: var(--sc-6);
-    font-size: var(--sc-t-base); font-weight: 500; color: var(--sc-accent);
-    text-decoration: underline; text-decoration-thickness: 1.5px; text-underline-offset: 0.28em;
-    transition: text-underline-offset 160ms var(--sc-ease-out), color 160ms var(--sc-ease-out);
-  }
-  @media (hover: hover) and (pointer: fine) {
-    .close__cta:hover { text-underline-offset: 0.42em; }
-  }
-  .close__cta:active { transform: translateY(1px); }
+  .close__sign { margin: var(--sc-6) 0 0; font-size: var(--sc-t-sm); color: var(--sc-ink-soft); }
+  .close__cta { display: inline-block; margin-top: var(--sc-6); }
   .close__colophon { margin: var(--sc-8) 0 0; font-size: var(--sc-t-xs); color: var(--sc-ink-soft); }
 
   /* ---------- the kept ledger chip: the only persistent chrome ---------- */
@@ -240,9 +262,12 @@
 
   <!-- 1 · CURIOSITY: pinned scale-through. Three planes scale around the bowl
        of the d at different rates; the blue plane opens out of the bowl. -->
-  <section id="hero" class="hero" data-sc-act="pin" data-sc-span="2.2">
+  <section id="hero" class="hero" data-sc-act="pin" data-sc-span="1.9">
     <div data-sc-stage data-sc-verify-state="">
-      <p class="hero__meta" data-sc-cue="0 0.34 0"><b>Adir Revah.</b> A short page, set mostly in type.</p>
+      <div class="hero__head" data-sc-cue="0 0.3 0">
+        <p class="hero__meta"><b>Adir Revah.</b> A short page about how I work, set mostly in type.</p>
+        <a class="hero__cta" href="#write">Write to me</a>
+      </div>
       <span class="hero__ghost poster" aria-hidden="true">adir</span>
       <h1 class="hero__title">
         <span class="sr-only">Adir Revah</span>
@@ -272,7 +297,7 @@
       <div class="words__ground" style="background:var(--blue-4)" data-sc-cue="0.63 1 0.1" data-sc-rise="0" aria-hidden="true"></div>
       <div class="words__ground" style="background:var(--blue-5)" data-sc-cue="0.82 1 0.1" data-sc-rise="0" aria-hidden="true"></div>
 
-      <p class="words__hint" data-sc-cue="0 1 0 0.03">Hold still on a word to keep it. Or click it.</p>
+      <p class="words__hint" data-sc-cue="0 1 0 0.03">Hold still on a word until the line under it fills. Then it's yours. Clicking works too.</p>
 
       <div class="word" data-i="0" data-win="0 0.26">
         <button class="word__btn" type="button" aria-pressed="false" aria-describedby="g0">
@@ -322,11 +347,11 @@
     <div class="ledger__inner">
       <h2 id="ledger-title" data-sc-in>You stopped on</h2>
       <ol aria-labelledby="ledger-title">
-        <li data-sc-reveal="left" data-sc-reveal-at="0.16 0.34"><span class="poster"></span></li>
-        <li data-sc-reveal="left" data-sc-reveal-at="0.22 0.40"><span class="poster"></span></li>
-        <li data-sc-reveal="left" data-sc-reveal-at="0.28 0.46"><span class="poster"></span></li>
-        <li data-sc-reveal="left" data-sc-reveal-at="0.34 0.52"><span class="poster"></span></li>
-        <li data-sc-reveal="left" data-sc-reveal-at="0.40 0.58"><span class="poster"></span></li>
+        <li data-sc-reveal="left" data-sc-reveal-at="0.16 0.34"><span class="poster"></span><span class="sr-only"></span></li>
+        <li data-sc-reveal="left" data-sc-reveal-at="0.22 0.40"><span class="poster"></span><span class="sr-only"></span></li>
+        <li data-sc-reveal="left" data-sc-reveal-at="0.28 0.46"><span class="poster"></span><span class="sr-only"></span></li>
+        <li data-sc-reveal="left" data-sc-reveal-at="0.34 0.52"><span class="poster"></span><span class="sr-only"></span></li>
+        <li data-sc-reveal="left" data-sc-reveal-at="0.40 0.58"><span class="poster"></span><span class="sr-only"></span></li>
       </ol>
     </div>
   </section>
@@ -334,12 +359,12 @@
   <!-- 5 · WARMTH: the quietest screen. Back on paper, the smallest type on
        the site, the CTA as a plain underlined link. Last element on the page. -->
   <section id="write" class="close" data-sc-act="flow">
-    <div class="close__inner sc-stack" data-sc-in data-sc-stagger="80">
-      <p class="close__line" aria-live="polite">I notice, question, sketch, make, and finish things.</p>
-      <p class="close__sign">Adir Revah</p>
+    <div class="close__inner sc-stack">
+      <p class="close__line"><span class="close__words" data-sc-cue="0.40 1 0.05 0" data-sc-rise="0">I notice, question, sketch, make, and finish</span> <span class="close__tail"><span class="close__last" data-sc-cue="0.40 1 0.05 0" data-sc-rise="0">things</span><span class="close__dot" aria-hidden="true"></span></span></p>
+      <p class="close__sign" data-sc-cue="0.42 1 0.05 0">Adir Revah</p>
       <!-- TODO: replace with Adir's real address before publishing. -->
-      <a class="close__cta" href="mailto:hello@example.com">Write to me</a>
-      <p class="close__colophon">Set in Archivo and Geist.</p>
+      <a class="close__cta" href="mailto:hello@example.com" data-sc-cue="0.43 1 0.05 0">Write to me</a>
+      <p class="close__colophon" data-sc-cue="0.44 1 0.05 0">Set in Archivo and Geist.</p>
     </div>
   </section>
 
@@ -397,8 +422,8 @@
     var p = progress(hero);
     if (p === heroLast) return;
     heroLast = p;
-    var t = clamp01((p - 0.04) / 0.86);
-    var o = clamp01((p - 0.30) / 0.56);
+    var t = clamp01((p - 0.03) / 0.77);
+    var o = clamp01((p - 0.24) / 0.52);
     var ns = 1, gs = 1, r = 0;
     if (reduce) {
       iris.style.clipPath = 'none';
@@ -460,17 +485,20 @@
     var all = units.map(function (u) { return u.word; });
     var shown = chosen.length ? chosen : all;
     $('#ledger-title').textContent =
-      chosen.length === 0 ? "You didn't stop once. Fair enough. Here are all five." :
-      chosen.length === all.length ? 'You stopped on every one.' : 'You stopped on';
+      chosen.length === 0 ? "You didn't stop once. Fair enough, all five then." :
+      chosen.length === all.length ? 'You stopped on every one.' : 'You stopped on the solid ones.';
     $$('.ledger li').forEach(function (li, i) {
-      li.hidden = i >= shown.length;
-      li.firstElementChild.textContent = shown[i] || '';
+      var out = chosen.length > 0 && idx.indexOf(i) === -1;
+      li.classList.toggle('is-out', out);
+      li.firstElementChild.textContent = all[i];
+      li.lastElementChild.textContent = out ? ' (passed)' : '';
     });
 
-    $('.close__line').textContent = 'I ' + list(shown) + ' things.';
+    $('.close__words').textContent = 'I ' + list(shown);
   }
 
   function keep(i, on) {
+    if (charging === i) { units[i].el.classList.remove('is-charging'); units[i].bar.style.transform = ''; charging = -1; }
     var at = kept.indexOf(i);
     if (on && at === -1) kept.push(i);
     if (!on && at !== -1) kept.splice(at, 1);
@@ -490,7 +518,7 @@
     });
   });
 
-  var lastP = -1, still = 0, lastT = 0, live = -1;
+  var lastP = -1, still = 0, lastT = 0, live = -1, charging = -1;
   function drawWords(t) {
     var p = progress(words);
     var cur = -1;
@@ -513,6 +541,20 @@
       still = 0;
     }
     lastP = p;
+    // The bar under the word charges while the reader holds still, so the
+    // mechanic explains itself. A short grace period keeps it from flickering
+    // on every pause between wheel notches.
+    var charge = (cur !== -1 && kept.indexOf(cur) === -1) ? clamp01((still - 160) / (DWELL_MS - 160)) : 0;
+    if (charging !== -1 && (charging !== cur || charge === 0)) {
+      units[charging].el.classList.remove('is-charging');
+      units[charging].bar.style.transform = '';
+      charging = -1;
+    }
+    if (charge > 0) {
+      charging = cur;
+      units[cur].el.classList.add('is-charging');
+      units[cur].bar.style.transform = 'scaleX(' + charge.toFixed(3) + ')';
+    }
   }
 
   // ------------------------------------------------------- close in view
@@ -523,13 +565,34 @@
   }, { threshold: 0.35 }).observe($('#write'));
 
   // ------------------------------------------------------------------- loop
+  // The blue that opened out of the d at the top comes back at the end and
+  // shrinks onto the sentence as its full stop. A flow act tops out at p = 0.5
+  // when it is the last thing on the page, so the whole move fits under that.
+  var close = $('#write'), dot = $('.close__dot'), dotMax = 1, dotLast = -1;
+  function layoutDot() {
+    dot.style.transform = 'none';
+    var d = dot.getBoundingClientRect().width || 1;
+    dotMax = Math.hypot(innerWidth, innerHeight) * 2.1 / d;
+    dotLast = -1;
+  }
+  function drawDot() {
+    var p = progress(close);
+    if (p === dotLast) return;
+    dotLast = p;
+    if (reduce) { dot.style.transform = 'none'; return; }
+    var q = clamp01((p - 0.2) / 0.22);
+    var e = 1 - Math.pow(1 - q, 3);
+    dot.style.transform = 'scale(' + (1 + (dotMax - 1) * (1 - e)).toFixed(3) + ')';
+  }
+
   function frame(t) {
     drawHero();
     drawWords(t);
+    drawDot();
     requestAnimationFrame(frame);
   }
 
-  function layout() { layoutHero(); layoutWords(); drawHero(); }
+  function layout() { layoutHero(); layoutWords(); layoutDot(); drawHero(); drawDot(); }
   layout();
   render();
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(layout);

@@ -73,3 +73,28 @@ the empty blue is never longer than the hello itself.
 - **Signature move:** dwell-to-keep. Holding still on a word for ~0.7s (or
   clicking it) keeps it. The ledger, act 4 and the closing sentence all read
   from the kept set.
+
+## Art-direction review (round 2, against the studio brief)
+
+Audited the build as the existing site: static HTML on the scrollcraft engine,
+no framework, forms or integrations to preserve. Three weakest areas, and what
+changed:
+
+1. **First viewport had no context and no next step.** The meta line was
+   caption-sized and there was no CTA above the fold. Now: a legible line of
+   context and "Write to me" in the first screen, the same label as the close.
+2. **The signature move was invisible until it fired.** Holding still did
+   nothing visible for 0.7s, then a word was suddenly kept. Now the line under
+   the word charges while the reader holds still, so the mechanic teaches
+   itself; the hint says so in one sentence.
+3. **Pacing gaps and a close with no relation to the open.** About 1.5 screens
+   of bare blue followed the hero, and the close was a near-empty paper screen.
+   The hero is shorter and the iris completes earlier. The close now answers
+   the hero: the blue that opened out of the bowl of the d returns as a disc
+   and shrinks onto the closing sentence as its full stop. The sentence is set
+   at display size so that full stop reads.
+
+Also fixed on the way: the ledger used to change height with the kept set,
+which left the engine's cached act geometry stale (the close then never
+finished its reveal). Passed words now stay in the list as outlines, the same
+hand as the hero's ghost plane, so the height never changes.
