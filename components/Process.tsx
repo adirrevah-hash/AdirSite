@@ -1,97 +1,93 @@
 import { processSteps as steps, services } from '@/lib/site'
 import ProcessMotion from './ProcessMotion'
 
-// The signature moment. While the section is pinned, scrolling builds a
-// website on a laptop in front of the visitor, in the same four steps the
-// studio works in: a frame, a wireframe, colour and type, then a live address.
-// It is a drawing, labelled as one, not a screenshot of a real project.
-export default function Process() {
-  const cols = services.slice(0, 3).map(s => s.title)
+// The signature moment. A laptop arrives closed and opens as the section
+// pins; on its screen a website is built in the studio's four steps: the lid
+// opens (the conversation), a wireframe draws (the sketch), colour spreads out
+// of a circle and the page scrolls (design and build), then the address types
+// itself and a cursor presses the button (launch). It is an illustration made
+// of real markup, labelled as one, not a screenshot of a project.
+
+const cards = services.slice(0, 3).map(s => s.title)
+
+function Screen() {
   return (
-    <section id="process" className="process" data-tone="paper" data-sc-act="pin" data-sc-span="3.6" style={{ height: '360vh' }} aria-labelledby="process-title">
+    <div className="scr">
+      <div className="scr__on">
+        <div className="scr__bar">
+          <span className="scr__dots" aria-hidden="true"><i /><i /><i /></span>
+          <span className="scr__url" dir="ltr"><span className="scr__typed">your-business.co.il</span><span className="scr__caret" /></span>
+          <span className="scr__live"><b />באוויר</span>
+        </div>
+        <div className="scr__page">
+          <svg className="scr__wire" viewBox="0 0 1000 605" aria-hidden="true">
+            <rect x="850" y="22" width="110" height="24" rx="4" pathLength={1} />
+            <path d="M770 34h-60M680 34h-60M590 34h-60" pathLength={1} />
+            <rect x="40" y="70" width="920" height="270" rx="10" pathLength={1} />
+            <path d="M920 140H560M920 186H620" pathLength={1} />
+            <rect x="760" y="234" width="160" height="40" rx="20" pathLength={1} />
+            <circle cx="230" cy="205" r="95" pathLength={1} />
+            <rect x="670" y="372" width="290" height="200" rx="8" pathLength={1} />
+            <rect x="355" y="372" width="290" height="200" rx="8" pathLength={1} />
+            <rect x="40" y="372" width="290" height="200" rx="8" pathLength={1} />
+            <path d="M930 410H760M615 410H445M300 410H130" pathLength={1} />
+          </svg>
+          <div className="scr__site">
+            <div className="ms">
+              <div className="ms__nav"><b>העסק שלכם</b><span>שירותים</span><span>עבודות</span><span>צור קשר</span></div>
+              <div className="ms__hero">
+                <p className="ms__h">העסק שלכם,<br />במקום הראשון.</p>
+                <p className="ms__p">אתר שמסביר מי אתם ומביא פניות.</p>
+                <span className="ms__cta">בואו נדבר</span>
+                <span className="ms__orb" />
+              </div>
+              {cards.map((c, i) => (
+                <div key={c} className={`ms__card ms__card--${i}`}><b>{c}</b><i /><i /></div>
+              ))}
+              <div className="ms__band"><b>ARStudio</b><span>אתרים שנבנים בכוונה</span></div>
+            </div>
+          </div>
+          <span className="scr__ripple" />
+          <svg className="scr__cursor" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3l13 7.5-6 1.6-3 5.9z" /></svg>
+        </div>
+      </div>
+      <span className="scr__glare" />
+    </div>
+  )
+}
+
+export default function Process() {
+  return (
+    <section id="process" className="process" data-tone="paper" data-sc-act="pin" data-sc-span="4" style={{ height: '400vh' }} aria-labelledby="process-title">
       <div data-sc-stage data-sc-verify-state="">
         <div className="wrap process__grid">
-          <div>
-            <h2 id="process-title" className="display display-lg m-0">ככה נבנה אתר.</h2>
-            <ol className="steps">
+          <div className="pcopy">
+            <h2 id="process-title" className="display pcopy__title m-0">ככה נבנה אתר<span className="gold">.</span></h2>
+            <ol className="psteps">
               {steps.map((s, i) => (
-                <li key={s.id} className={`step${i === 0 ? ' is-active' : ''}`} data-step={i}>
-                  <span className="step__dot" aria-hidden="true" />
-                  <span className="step__title">{s.title}</span>
-                  <p className="step__line">{s.line}</p>
+                <li key={s.id} className={`pstep${i === 0 ? ' is-active' : ''}`} data-step={i}>
+                  <span className="pstep__num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+                  <h3 className="pstep__title display m-0">{s.title}</h3>
+                  <p className="pstep__line">{s.line}</p>
                 </li>
               ))}
             </ol>
+            <div className="prail" aria-hidden="true">
+              <div className="prail__track"><span className="prail__fill" /></div>
+              <ul className="prail__labels">
+                {steps.map((s, i) => <li key={s.id} className={i === 0 ? 'is-active' : ''}>{s.title}</li>)}
+              </ul>
+            </div>
           </div>
 
-          <figure className="m-0">
-            <svg className="build" viewBox="0 0 1200 830" role="img" aria-label="איור: אתר נבנה על מסך של לפטופ, מקו מתאר ועד אתר באוויר" style={{ direction: 'ltr' }}>
-              <g className="build__frame">
-                {/* step 3: surfaces, faded in by data-at: the screen lights, then the
-                    laptop body, then the site takes its colour. */}
-                <rect className="fill" data-at="1" x="44" y="12" width="1112" height="730" rx="30" fill="#1B1D22" />
-                <path className="fill" data-at="2" d="M0 742H1200L1168 790Q1160 802 1144 802H56Q40 802 32 790Z" fill="#D9D4C9" />
-                <g transform="translate(84 52) scale(0.86)">
-                  <rect className="fill" data-at="0" x="10" y="10" width="1180" height="740" rx="18" fill="#F6F4EF" />
-                  <rect className="fill" data-at="3" x="40" y="140" width="1120" height="330" rx="6" fill="#143D30" />
-                  <circle className="fill" data-at="4" cx="280" cy="305" r="112" fill="#C7A766" />
-                  <rect className="fill" data-at="5" x="880" y="352" width="230" height="58" rx="29" fill="#F1EEE6" />
-                  <rect className="fill" data-at="6" x="40" y="510" width="353" height="210" rx="6" fill="#E2DED5" />
-                  <rect className="fill" data-at="7" x="423" y="510" width="354" height="210" rx="6" fill="#E2DED5" />
-                  <rect className="fill" data-at="8" x="807" y="510" width="353" height="210" rx="6" fill="#E2DED5" />
-                </g>
-
-                {/* step 1: the laptop */}
-                <rect className="ln" data-d="0" x="44" y="12" width="1112" height="730" rx="30" pathLength={1} />
-                <rect className="ln" data-d="0" x="72" y="40" width="1056" height="680" rx="8" pathLength={1} />
-                <circle className="ln" data-d="0" cx="600" cy="26" r="4" pathLength={1} />
-                <path className="ln" data-d="0" d="M0 742H1200L1168 790Q1160 802 1144 802H56Q40 802 32 790Z" pathLength={1} />
-                <path className="ln" data-d="0" d="M520 742V748Q520 756 528 756H672Q680 756 680 748V742" pathLength={1} />
-
-                <g transform="translate(84 52) scale(0.86)">
-                  {/* step 1: the browser on its screen */}
-                  <path className="ln" data-d="0" d="M10 64h1180" pathLength={1} />
-                  <circle className="ln" data-d="0" cx="44" cy="37" r="7" pathLength={1} />
-                  <circle className="ln" data-d="0" cx="70" cy="37" r="7" pathLength={1} />
-                  <circle className="ln" data-d="0" cx="96" cy="37" r="7" pathLength={1} />
-                  <rect className="ln" data-d="0" x="420" y="23" width="360" height="28" rx="14" pathLength={1} />
-
-                  {/* step 2: the wireframe */}
-                  <rect className="ln bar" data-d="1" x="1040" y="88" width="120" height="24" rx="4" pathLength={1} />
-                  <path className="ln bar" data-d="1" d="M700 100h70M800 100h70M900 100h70" pathLength={1} />
-                  <rect className="ln" data-d="1" x="40" y="140" width="1120" height="330" rx="6" pathLength={1} />
-                  <path className="ln bar" data-d="1" d="M1110 220H620M1110 285H700" pathLength={1} />
-                  <rect className="ln" data-d="1" x="880" y="352" width="230" height="58" rx="29" pathLength={1} />
-                  <circle className="ln" data-d="1" cx="280" cy="305" r="112" pathLength={1} />
-                  <rect className="ln" data-d="1" x="40" y="510" width="353" height="210" rx="6" pathLength={1} />
-                  <rect className="ln" data-d="1" x="423" y="510" width="354" height="210" rx="6" pathLength={1} />
-                  <rect className="ln" data-d="1" x="807" y="510" width="353" height="210" rx="6" pathLength={1} />
-                  <path className="ln bar" data-d="1" d="M360 560H80M743 560H463M1126 560H847" pathLength={1} />
-
-                  {/* step 3: real type replaces the bars */}
-                  <g className="txt" fill="#13151C" textAnchor="end">
-                    <text x="1158" y="108" fontSize="26" fontWeight="900" style={{ fontStretch: '75%' }}>העסק שלכם</text>
-                    <text x="970" y="108" fontSize="20" fontFamily="var(--font-text)">שירותים</text>
-                    <text x="870" y="108" fontSize="20" fontFamily="var(--font-text)">עבודות</text>
-                    <text x="770" y="108" fontSize="20" fontFamily="var(--font-text)">צור קשר</text>
-                    <text x="1110" y="238" fontSize="66" fontWeight="900" fill="#F1EEE6" style={{ fontStretch: '75%' }}>העסק שלכם,</text>
-                    <text x="1110" y="310" fontSize="66" fontWeight="900" fill="#F1EEE6" style={{ fontStretch: '75%' }}>במקום הראשון.</text>
-                    <text x="1062" y="389" fontSize="22" fontWeight="600" fill="#0C2620" fontFamily="var(--font-text)">בואו נדבר</text>
-                    {cols.map((c, i) => (
-                      <text key={c} x={[360, 743, 1126][i]} y="572" fontSize="30" fontWeight="900" style={{ fontStretch: '80%' }}>{c}</text>
-                    ))}
-                  </g>
-
-                  {/* step 4: an address, and it is live */}
-                  <g className="live">
-                    <text x="600" y="43" fontSize="16" textAnchor="middle" fill="#4A4D5C" fontFamily="var(--font-text)">your-business.co.il</text>
-                    <circle cx="1112" cy="37" r="6" fill="#C7A766" />
-                    <text x="1100" y="43" fontSize="16" textAnchor="end" fill="#13151C" fontFamily="var(--font-text)">באוויר</text>
-                  </g>
-                </g>
-              </g>
-            </svg>
-            <figcaption className="sr-only">איור של תהליך העבודה</figcaption>
+          <figure className="mac-wrap m-0" role="img" aria-label="איור: לפטופ נפתח ועל המסך שלו נבנה אתר, משרטוט ועד אתר באוויר">
+            <div className="mac">
+              <div className="mac__lid">
+                <div className="mac__back"><span /></div>
+                <div className="mac__front"><Screen /></div>
+              </div>
+              <div className="mac__body"><div className="mac__deck"><span className="mac__keys" /><span className="mac__pad" /></div></div>
+            </div>
           </figure>
         </div>
       </div>

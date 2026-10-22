@@ -85,15 +85,22 @@ const visibleIn = (p, sel) => p.evaluate(s => { const r = document.querySelector
   const hero = await page.evaluate(() => ({ y: scrollY, t: document.querySelector('.hero__mark').style.transform, copy: getComputedStyle(document.querySelector('.hero__copy')).opacity }))
   check('reverse scroll restores the hero', hero.y === 0 && /scale\(1(\.0+)?\)/.test(hero.t) && parseFloat(hero.copy) > 0.95, JSON.stringify(hero))
 
-  // Process: the drawing finishes and the last step is active at the end of the pin
+  // Process: closed laptop on arrival, finished live site at the end of the pin
+  await page.evaluate(() => { const s = document.getElementById('process'); scrollTo({ top: s.offsetTop - innerHeight * 0.65, behavior: 'instant' }) })
+  await wait(500)
+  const closed = await page.evaluate(() => document.querySelector('.mac__lid').style.transform)
   await page.evaluate(() => { const s = document.getElementById('process'); scrollTo({ top: s.offsetTop + s.offsetHeight - innerHeight - 10, behavior: 'instant' }) })
   await wait(600)
   const proc = await page.evaluate(() => ({
-    active: [...document.querySelectorAll('.step')].findIndex(s => s.classList.contains('is-active')),
-    live: parseFloat(document.querySelector('.build .live').style.opacity),
-    undrawn: [...document.querySelectorAll('.build .ln')].filter(l => parseFloat(l.style.strokeDashoffset) > 0.01).length,
+    active: [...document.querySelectorAll('.pstep')].findIndex(s => s.classList.contains('is-active')),
+    lid: document.querySelector('.mac__lid').style.transform,
+    url: document.querySelector('.scr__typed').textContent,
+    live: parseFloat(document.querySelector('.scr__live').style.opacity),
+    site: document.querySelector('.scr__site').style.clipPath,
+    rail: document.querySelector('.prail__fill').style.transform,
   }))
-  check('process: drawing complete and last step active at the end', proc.active === 3 && proc.live > 0.95 && proc.undrawn === 0, JSON.stringify(proc))
+  check('process: laptop arrives closed', /rotateX\(-90/.test(closed), closed)
+  check('process: ends open, live, typed, last step active, rail full', proc.active === 3 && /rotateX\(12/.test(proc.lid) && proc.url === 'your-business.co.il' && proc.live > 0.95 && proc.site === 'none' && /scaleX\(1(\.0+)?\)/.test(proc.rail), JSON.stringify(proc))
   await page.screenshot({ path: `${OUT}/desktop-process-end.png` })
 
   // Reload mid-page keeps a coherent state
@@ -101,7 +108,7 @@ const visibleIn = (p, sel) => p.evaluate(s => { const r = document.querySelector
   await wait(300)
   await page.reload({ waitUntil: 'networkidle' })
   await wait(900)
-  const mid = await page.evaluate(() => ({ y: scrollY, steps: document.querySelectorAll('.step.is-active').length }))
+  const mid = await page.evaluate(() => ({ y: scrollY, steps: document.querySelectorAll('.pstep.is-active').length }))
   check('reload mid-process: one active step', mid.steps === 1, JSON.stringify(mid))
 
   // Resize keeps the layout inside the viewport
@@ -243,10 +250,11 @@ const visibleIn = (p, sel) => p.evaluate(s => { const r = document.querySelector
   await wait(600)
   const r = await page.evaluate(() => ({
     mark: document.querySelector('.hero__mark').style.transform,
-    undrawn: [...document.querySelectorAll('.build .ln')].filter(l => parseFloat(l.style.strokeDashoffset || '0') > 0.01).length,
-    frame: document.querySelector('.build__frame').style.transform,
+    lid: document.querySelector('.mac__lid').style.transform,
+    site: document.querySelector('.scr__site').style.clipPath,
+    page: document.querySelector('.ms').style.transform,
   }))
-  check('reduced motion: no scaling, drawing shown complete', (r.mark === '' || r.mark === 'none') && r.undrawn === 0 && (r.frame === 'none' || r.frame === ''), JSON.stringify(r))
+  check('reduced motion: no hero scaling, laptop shown open with the finished site', (r.mark === '' || r.mark === 'none') && /rotateX\(12/.test(r.lid) && r.site === 'none' && /translate3d\(0px, 0(\.00)?%/.test(r.page.replace('0, 0', '0px, 0')), JSON.stringify(r))
   await page.screenshot({ path: `${OUT}/reduced-process.png` })
   check('reduced: no console errors', errors.length === 0, errors.join(' | '))
   await ctx.close()

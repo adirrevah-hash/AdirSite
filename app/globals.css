@@ -310,32 +310,125 @@ body {
 
 /* ----------------------------------------------------------------- process */
 .process [data-sc-stage] { display: grid; align-content: center; background: var(--color-paper); }
-.process__grid { display: grid; gap: 2rem 4rem; align-items: center; }
-@media (min-width: 900px) { .process__grid { grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.25fr); } }
-.steps { list-style: none; margin: 2rem 0 0; padding: 0; display: grid; gap: 0.25rem; }
-.step { display: grid; grid-template-columns: 2.4rem 1fr; gap: 0 0.75rem; padding: 0.85rem 0; border-top: 1px solid var(--tone-line); }
-.step__dot { width: 0.7rem; height: 0.7rem; border-radius: 50%; border: 1.5px solid var(--tone-soft); margin-top: 0.62rem; transition: background-color 220ms var(--ease), border-color 220ms var(--ease), transform 220ms var(--ease); }
-.step__title { font-family: var(--font-display); font-weight: 800; font-stretch: 80%; font-size: clamp(1.5rem, 1.1rem + 1.2vw, 2.1rem); line-height: 1.2; color: var(--tone-soft); transition: color 220ms var(--ease); }
-.step__line { grid-column: 2; margin: 0.2rem 0 0; color: var(--tone-soft); font-size: 1rem; max-width: 36ch; }
-.step.is-active .step__title { color: var(--tone-ink); }
-.step.is-active .step__line { color: var(--tone-ink); }
-.step.is-active .step__dot, .step.is-done .step__dot { background: var(--color-forest); border-color: var(--color-forest); }
-.step.is-active .step__dot { transform: scale(1.35); }
-.build { width: 100%; height: auto; max-height: 62svh; overflow: visible; }
-.build__frame { filter: drop-shadow(0 30px 40px rgb(19 21 28 / var(--lift, 0))); transform-box: fill-box; transform-origin: 50% 50%; }
-.build .ln { fill: none; stroke: var(--color-ink); stroke-width: 1.5; vector-effect: non-scaling-stroke; }
-.build text { font-family: var(--font-display); }
+.process__grid { display: grid; gap: 2rem 5vw; align-items: center; }
+@media (min-width: 900px) { .process__grid { grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.4fr); } }
+
+/* The copy: one step at a time, large, with a gold outline numeral. */
+.pcopy { min-width: 0; }
+.pcopy__title { font-size: clamp(1.9rem, 1.2rem + 2.2vw, 3.2rem); }
+.psteps { list-style: none; margin: clamp(1.5rem, 4vh, 3rem) 0 0; padding: 0; display: grid; }
+.pstep {
+  grid-area: 1 / 1; opacity: 0; transform: translateY(16px); pointer-events: none;
+  transition: opacity 420ms var(--ease), transform 640ms var(--ease);
+}
+.pstep.is-past { transform: translateY(-16px); }
+.pstep.is-active { opacity: 1; transform: none; pointer-events: auto; }
+.pstep__num {
+  display: block; direction: ltr; text-align: right;
+  font-family: var(--font-mark); font-weight: 800; font-stretch: 110%; letter-spacing: -0.05em; line-height: 0.8;
+  font-size: clamp(3.4rem, 1.6rem + 6.5vw, 8.5rem); color: transparent; -webkit-text-stroke: 1.5px var(--color-gold);
+}
+.pstep__title { font-size: clamp(2.3rem, 1.3rem + 3.6vw, 5rem); margin-top: 0.8rem !important; }
+.pstep__line { margin: 0.8rem 0 0; color: var(--tone-soft); font-size: 1.125rem; max-width: 34ch; }
+.prail { margin-top: clamp(1.75rem, 5vh, 3.5rem); }
+.prail__track { position: relative; height: 2px; background: var(--tone-line); overflow: hidden; border-radius: 2px; }
+.prail__fill { position: absolute; inset: 0; background: var(--color-gold); transform: scaleX(0); transform-origin: right; }
+.prail__labels { list-style: none; margin: 0.8rem 0 0; padding: 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.5rem; font-size: 0.85rem; color: var(--tone-soft); }
+.prail__labels li { transition: color 300ms var(--ease); }
+.prail__labels li.is-done { color: var(--tone-ink); }
+.prail__labels li.is-active { color: var(--tone-ink); font-weight: 600; }
+
+/* The laptop. Real 3D: the lid turns on its hinge over a keyboard deck that
+   lies flat toward the viewer. Resting values below are the finished, open
+   state, so the page still shows a working laptop if scripts never run. */
+.mac-wrap { perspective: 2400px; perspective-origin: 50% -18%; padding: 2% 4% 0; }
+/* The deck is drawn in 3D below the lid, so layout does not see it; the
+   bottom margin reserves the space it occupies on screen. */
+.mac { --lift: 1; position: relative; width: min(100%, 84svh); margin: 0 auto 9%; transform-style: preserve-3d; direction: ltr; }
+.mac__lid {
+  position: relative; z-index: 2; width: 86%; margin-inline: auto; aspect-ratio: 16 / 10.4;
+  transform-origin: 50% 100%; transform: rotateX(12deg); transform-style: preserve-3d; will-change: transform;
+}
+.mac__front, .mac__back {
+  position: absolute; inset: 0; border-radius: 3.4% 3.4% 0.8% 0.8% / 5.2% 5.2% 1.2% 1.2%;
+  backface-visibility: hidden; -webkit-backface-visibility: hidden;
+}
+.mac__front { background: #141619; padding: 2.3% 2.3% 3%; box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.09), inset 0 0 0 3px #1E2025; }
+.mac__back { transform: rotateX(180deg); background: linear-gradient(180deg, #DADDE1, #B9BEC5); box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.55); }
+.mac__back span { position: absolute; left: 50%; top: 50%; width: 6%; aspect-ratio: 1; border-radius: 50%; transform: translate(-50%, -50%); background: var(--color-gold); }
+.mac__body { position: relative; width: 100%; height: 0; transform-style: preserve-3d; }
+.mac__deck {
+  position: absolute; left: 0; right: 0; top: 0; aspect-ratio: 100 / 62;
+  transform-origin: 50% 0; transform: rotateX(90deg);
+  background: linear-gradient(#CBCFD4, #E1E4E8 30%, #D2D6DB); border-radius: 0 0 2.4% 2.4% / 0 0 4% 4%;
+  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.5), 0 calc(40px * var(--lift)) calc(70px * var(--lift)) rgb(19 21 28 / calc(0.3 * var(--lift)));
+}
+.mac__keys {
+  position: absolute; left: 11%; right: 11%; top: 7%; height: 47%; border-radius: 1.2% / 2%;
+  background:
+    repeating-linear-gradient(0deg, transparent 0 15.5%, #1F2125 15.5% 16.8%),
+    repeating-linear-gradient(90deg, #3A3D43 0 6.1%, #1F2125 6.1% 7%);
+}
+.mac__pad { position: absolute; left: 33%; right: 33%; top: 59%; height: 33%; border-radius: 2% / 3%; background: #C6CACF; box-shadow: inset 0 0 0 1px rgb(0 0 0 / 0.08); }
+
+/* The screen and the site on it. Sized in container units so the mini-site
+   scales with the laptop at every width. */
+.scr { position: relative; width: 100%; height: 100%; overflow: hidden; border-radius: 0.6% / 1%; background: #0D0F12; container-type: inline-size; }
+.scr__on { position: absolute; inset: 0; display: flex; flex-direction: column; background: #F6F4EF; }
+.scr__bar { flex: none; height: 7%; display: flex; align-items: center; gap: 1.6cqw; padding: 0 1.8cqw; background: #ECE8DF; border-bottom: 1px solid rgb(19 21 28 / 0.08); direction: ltr; font-family: var(--font-text); }
+.scr__dots { display: flex; gap: 0.7cqw; }
+.scr__dots i { width: 1.1cqw; aspect-ratio: 1; border-radius: 50%; background: rgb(19 21 28 / 0.18); }
+.scr__url {
+  flex: 1; margin-inline: 12cqw 4cqw; height: 62%; border-radius: 99px; background: #F8F6F1; box-shadow: inset 0 0 0 1px rgb(19 21 28 / 0.08);
+  display: flex; align-items: center; justify-content: center; font-size: 1.45cqw; color: #4A4D5C; letter-spacing: 0.02em; white-space: nowrap;
+}
+.scr__caret { width: 1px; height: 52%; margin-inline-start: 1px; background: #13151C; opacity: 0; animation: caret 1s steps(1) infinite; }
+@keyframes caret { 50% { visibility: hidden; } }
+.scr__live { display: flex; align-items: center; gap: 0.6cqw; font-size: 1.35cqw; font-weight: 600; color: #13151C; }
+.scr__live b { width: 1cqw; aspect-ratio: 1; border-radius: 50%; background: var(--color-gold); box-shadow: 0 0 0 0.45cqw rgb(199 167 102 / 0.28); }
+.scr__page { position: relative; flex: 1; overflow: hidden; }
+.scr__wire { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; }
+.scr__wire * { fill: none; stroke: #13151C; stroke-width: 1.2; vector-effect: non-scaling-stroke; }
+.scr__site { position: absolute; inset: 0; }
+.ms { position: absolute; inset: 0; direction: rtl; font-family: var(--font-text); color: #13151C; will-change: transform; }
+.ms__nav { position: absolute; top: 3.2%; left: 4%; right: 4%; display: flex; align-items: center; gap: 3cqw; font-size: 1.45cqw; }
+.ms__nav b { margin-inline-end: auto; font-family: var(--font-display); font-weight: 900; font-stretch: 75%; font-size: 2.2cqw; }
+.ms__hero { position: absolute; left: 4%; right: 4%; top: 11.6%; height: 44.6%; border-radius: 1cqw; background: radial-gradient(120% 140% at 85% 0%, #1D4A3B, #143D30 55%, #0F3226); overflow: hidden; }
+.ms__h { position: absolute; right: 4.4%; top: 17%; margin: 0; font-family: var(--font-display); font-weight: 900; font-stretch: 75%; font-size: 4.6cqw; line-height: 1; color: #F1EEE6; }
+.ms__p { position: absolute; right: 4.4%; top: 46%; margin: 0; font-size: 1.45cqw; color: #C8D2C9; }
+.ms__cta {
+  position: absolute; left: 78.3%; width: 17.4%; top: 60.7%; height: 14.8%; border-radius: 99px;
+  display: grid; place-items: center; font-size: 1.5cqw; font-weight: 600; background: var(--color-gold); color: #0C2620;
+  transition: transform 120ms var(--ease), background-color 120ms var(--ease);
+}
+.ms__cta.is-pressed { transform: scale(0.93); background: #F1EEE6; }
+.ms__orb { position: absolute; left: 10.3%; top: 50%; width: 20.6%; aspect-ratio: 1; border-radius: 50%; transform: translateY(-50%); background: radial-gradient(circle at 35% 30%, #EAD3A0, #C7A766 55%, #9F8247); }
+.ms__card { position: absolute; top: 61.5%; height: 33%; width: 29%; border-radius: 0.8cqw; background: #E7E3DA; padding: 1.8cqw; display: grid; align-content: start; gap: 1cqw; }
+.ms__card b { font-family: var(--font-display); font-weight: 900; font-stretch: 80%; font-size: 2cqw; }
+.ms__card i { display: block; height: 0.5cqw; border-radius: 1cqw; background: rgb(19 21 28 / 0.12); }
+.ms__card i:last-child { width: 62%; }
+.ms__card--0 { left: 67%; }
+.ms__card--1 { left: 35.5%; }
+.ms__card--2 { left: 4%; }
+.ms__band { position: absolute; top: 100%; left: 4%; right: 4%; height: 22%; border-radius: 1cqw; background: #0C2620; display: flex; align-items: center; justify-content: center; gap: 2cqw; color: #F1EEE6; font-size: 1.5cqw; }
+.ms__band b { font-family: var(--font-mark); font-weight: 800; font-size: 3cqw; letter-spacing: -0.04em; direction: ltr; }
+.ms__band span { color: var(--color-gold); }
+.scr__ripple { position: absolute; left: 84%; top: 42%; width: 8cqw; aspect-ratio: 1; border-radius: 50%; border: 0.3cqw solid var(--color-gold); opacity: 0; pointer-events: none; }
+.scr__cursor { position: absolute; left: 82%; top: 42%; width: 2.6cqw; opacity: 0; fill: #13151C; stroke: #fff; stroke-width: 1.4; stroke-linejoin: round; filter: drop-shadow(0 0.3cqw 0.4cqw rgb(0 0 0 / 0.25)); }
+.scr__glare { position: absolute; inset: 0; pointer-events: none; background: linear-gradient(115deg, rgb(255 255 255 / 0.1) 0%, transparent 38%); }
+
 @media (max-width: 899px) {
-  .process [data-sc-stage] { align-content: start; padding-top: calc(var(--header-h) + 1rem); }
-  .process__grid { gap: 1.25rem; }
-  .process__grid > figure { order: -1; }
-  .process .build { max-height: 32svh; }
-  .process h2 { font-size: clamp(2.1rem, 9vw, 3rem); }
-  .steps { margin-top: 1rem; }
-  .step { padding: 0.55rem 0; }
-  .steps { position: relative; padding-bottom: 3.4rem; }
-  .step__line { position: absolute; left: 0; right: 0; bottom: 0; grid-column: auto; grid-row: auto; max-width: none; opacity: 0; transition: opacity 200ms var(--ease); }
-  .step.is-active .step__line { opacity: 1; }
+  .process [data-sc-stage] { align-content: center; padding-top: var(--header-h); }
+  .process__grid { gap: 1.1rem; }
+  .mac-wrap { order: -1; padding-inline: 0; }
+  .mac { width: min(100%, 66svh); margin-bottom: 11%; }
+  .pcopy__title { font-size: 1.6rem; }
+  .psteps { margin-top: 0.6rem; }
+  .pstep__num { font-size: 3rem; }
+  .pstep__title { font-size: 2.2rem; margin-top: 0.4rem !important; }
+  .pstep__line { font-size: 1rem; }
+  .prail { margin-top: 1rem; }
+  .prail__labels { font-size: 0.75rem; }
 }
 
 /* ----------------------------------------------------------------- contact */
