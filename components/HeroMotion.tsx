@@ -66,8 +66,8 @@ export default function HeroMotion() {
         ghost.style.transform = `scale(${gs.toFixed(4)})`
         iris.style.clipPath = `circle(${r.toFixed(1)}px at ${ox.toFixed(1)}px ${oy.toFixed(1)}px)`
       }
-      // Once the blue owns the top of the frame, the header should read as on blue.
-      const tone = o > 0.62 ? 'blue' : 'paper'
+      // Once the green owns the top of the frame, the header should read as on green.
+      const tone = o > 0.62 ? 'forest' : 'paper'
       if (hero.dataset.tone !== tone) { hero.dataset.tone = tone; dispatchEvent(new Event('tonechange')) }
       stage.setAttribute('data-sc-verify-state', `${ms.toFixed(2)}/${gs.toFixed(2)}/${reduce ? o.toFixed(2) : Math.round(r)}`)
     }

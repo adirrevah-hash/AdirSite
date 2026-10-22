@@ -50,7 +50,7 @@ function Art({ id }: { id: ServiceId }) {
 
 export default function Services() {
   return (
-    <section id="services" className="services" data-tone="blue" aria-labelledby="services-title">
+    <section id="services" className="services" data-tone="forest" aria-labelledby="services-title">
       <div className="wrap">
         <ul className="list-none p-0 m-0">
           {services.map(s => (

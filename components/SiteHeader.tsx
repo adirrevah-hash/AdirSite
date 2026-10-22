@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { nav, site, whatsappUrl, CTA_LABEL } from '@/lib/site'
 
-type Tone = 'paper' | 'blue' | 'navy'
+type Tone = 'paper' | 'forest' | 'deep'
 
 export default function SiteHeader() {
   const [tone, setTone] = useState<Tone>('paper')
@@ -13,7 +13,7 @@ export default function SiteHeader() {
   const sheet = useRef<HTMLDivElement>(null)
 
   // The header takes the tone of whatever section is currently under it, so it
-  // never sits as a paper bar on a blue chapter or the other way round.
+  // never sits as a paper bar on a green chapter or the other way round.
   useEffect(() => {
     let raf = 0
     const read = () => {
@@ -29,7 +29,7 @@ export default function SiteHeader() {
     read()
     addEventListener('scroll', onScroll, { passive: true })
     addEventListener('resize', onScroll)
-    // Sections can change tone without a scroll event (the hero turns blue
+    // Sections can change tone without a scroll event (the hero turns green
     // inside its own animation frame), so they announce it.
     addEventListener('tonechange', onScroll)
     addEventListener('scrollcraft:ready', onScroll)
@@ -58,7 +58,7 @@ export default function SiteHeader() {
     return () => { document.body.style.overflow = prev; removeEventListener('keydown', onKey) }
   }, [open])
 
-  const shownTone: Tone = open ? 'navy' : tone
+  const shownTone: Tone = open ? 'deep' : tone
 
   return (
     <>

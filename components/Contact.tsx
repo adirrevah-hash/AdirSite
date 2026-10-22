@@ -4,7 +4,7 @@ import { IconWhatsApp, IconPhone, IconInstagram } from './icons'
 
 export default function Contact() {
   return (
-    <section id="contact" className="contact" data-tone="navy" aria-labelledby="contact-title">
+    <section id="contact" className="contact" data-tone="deep" aria-labelledby="contact-title">
       <div className="wrap contact__grid">
         <div data-sc-in data-sc-stagger="70">
           <h2 id="contact-title" className="display display-lg m-0">בואו נדבר על העסק שלכם.</h2>

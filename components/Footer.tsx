@@ -1,8 +1,8 @@
 import { nav, site, whatsappUrl } from '@/lib/site'
 import { services } from '@/lib/site'
 
-// The page ends where it started: the wordmark, closed with the same blue
-// circle that opened out of its "d" in the hero.
+// The page ends where it started: the wordmark, closed with a gold full stop, the same
+// round mark that opened out of its "d" in the hero.
 export default function Footer() {
   const year = new Date().getFullYear()
   return (

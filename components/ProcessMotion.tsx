@@ -44,7 +44,7 @@ export default function ProcessMotion() {
           l.style.strokeDashoffset = (1 - t).toFixed(4)
         })
       })
-      fills.forEach((f, i) => { f.style.opacity = easeOut(span(p, 0.44 + i * 0.016, 0.52 + i * 0.016)).toFixed(3) })
+      fills.forEach(f => { const i = Number(f.dataset.at); f.style.opacity = easeOut(span(p, 0.44 + i * 0.016, 0.52 + i * 0.016)).toFixed(3) })
       const ty = easeOut(span(p, 0.58, 0.7))
       txt.style.opacity = ty.toFixed(3)
       bars.forEach(b => { b.style.opacity = (1 - ty).toFixed(3) })

@@ -2,7 +2,7 @@ import { CTA_LABEL, whatsappUrl } from '@/lib/site'
 import HeroMotion from './HeroMotion'
 
 // The first screen: the claim and the next step are readable immediately.
-// Scrolling then pushes into the bowl of the "d" in the wordmark and blue
+// Scrolling then pushes into the bowl of the "d" in the wordmark and green
 // floods out of it into the services chapter.
 export default function Hero() {
   return (
@@ -14,7 +14,7 @@ export default function Hero() {
           <h1 className="hero__title display display-xl">
             אתרים שנבנים
             <br />
-            בכוונה.
+            בכוונה<span className="gold">.</span>
           </h1>
           <p className="hero__lede lede">
             ARStudio הוא סטודיו לבניית אתרים, דפי נחיתה, עיצוב לוגו וכרטיסי ביקור. לעסקים, בעלי מקצוע ויזמים.
@@ -32,9 +32,9 @@ export default function Hero() {
         </span>
         <div className="hero__iris" aria-hidden="true" />
 
-        {/* The services chapter opens inside the blue, so the colour arrives with
+        {/* The services chapter opens inside the green, so the colour arrives with
             something to say instead of as an empty screen. */}
-        <div className="hero__next" data-tone="blue" data-sc-cue="0.5 1 0.18 0" data-sc-rise="0">
+        <div className="hero__next" data-tone="forest" data-sc-cue="0.5 1 0.18 0" data-sc-rise="0">
           <div className="services__head">
             <h2 id="services-title" className="display display-lg m-0">מה בונים בסטודיו.</h2>
             <p className="lede m-0">ארבעה שירותים, שפה אחת. מהלוגו ועד האתר, כל חלק נבנה כדי לעבוד יחד עם השאר.</p>
