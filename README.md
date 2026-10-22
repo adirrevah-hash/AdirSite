@@ -41,15 +41,15 @@ npm run qa           # end-to-end checks against a running server (BASE_URL, def
    the sitemap use the real domain.
 3. **Business email.** Add it to `site.email` in `lib/site.ts`; it then appears in the footer.
 
-## Adding portfolio projects
+## Portfolio
 
-Projects are listed in `lib/site.ts` and stay hidden until confirmed. For each one:
+Projects are listed in `lib/site.ts`. Each one shows on a laptop and a phone.
 
-1. Capture screenshots: `npm run capture:work <id>` (saves to `public/work/`).
-2. Fill in `scope` (exactly what the studio did, e.g. "עיצוב ובניית אתר"),
-   `field` (what the client does) and `image`, then set `verified: true`.
-
-The "עבודות" section and its menu link appear automatically once at least one project is confirmed.
+1. Capture screenshots: `npm run capture:work` (or `npm run capture:work <id>`).
+   Desktop is captured full-page and scrolls inside the laptop; mobile is one screen.
+2. Rebuild. The page finds `public/work/<id>-desktop.jpg` and `<id>-mobile.jpg` by name.
+   Until they exist, each screen shows the project's name.
+3. Optional: fill in `field` (what the client does) and `scope` (what the studio did).
 
 ## Deploying
 

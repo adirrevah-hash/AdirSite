@@ -62,26 +62,23 @@ export const services: Service[] = [
   },
 ]
 
-// Portfolio. A project is shown ONLY when `verified` is true, meaning the
-// studio has confirmed its part in the work and `scope` says exactly what that
-// part was. Screenshots go in /public/work (see scripts/capture-work.mjs).
+// Portfolio: projects the studio built. `scope` and `field` are optional and
+// only shown when filled in. Screenshots are picked up automatically from
+// /public/work/<id>-desktop.jpg and <id>-mobile.jpg (npm run capture:work);
+// until they exist, the device screens show the project name instead.
 export type Project = {
   id: string
   name: string
   url: string
-  verified: boolean
-  scope: string // e.g. 'עיצוב ובניית אתר', 'עיצוב בלבד', 'פיתוח בלבד'
-  field: string // what the client does, in a few words
-  image?: { desktop: string; mobile?: string; alt: string }
+  scope?: string // e.g. 'עיצוב ובניית אתר'
+  field?: string // what the client does, in a few words
 }
 
 export const projects: Project[] = [
-  { id: 'wiserise', name: 'WiseRise', url: 'https://www.wiserise.co.il/', verified: false, scope: '', field: '' },
-  { id: 'alumina', name: 'Alumina Group', url: 'https://www.alumina-group.co.il/', verified: false, scope: '', field: '' },
-  { id: 'readytogoo', name: 'Ready to Goo', url: 'https://readytogoo.com/', verified: false, scope: '', field: '' },
+  { id: 'wiserise', name: 'WiseRise', url: 'https://www.wiserise.co.il/' },
+  { id: 'alumina', name: 'Alumina Group', url: 'https://www.alumina-group.co.il/' },
+  { id: 'readytogoo', name: 'Ready to Goo', url: 'https://readytogoo.com/' },
 ]
-
-export const shownProjects = projects.filter(p => p.verified && p.scope && p.image)
 
 export const processSteps = [
   { id: 'talk', title: 'שיחה', line: 'מבינים את העסק, את הקהל ואת המטרה של האתר.' },
@@ -92,7 +89,7 @@ export const processSteps = [
 
 export const nav = [
   { href: '#services', label: 'שירותים' },
-  ...(shownProjects.length ? [{ href: '#work', label: 'עבודות' }] : []),
+  ...(projects.length ? [{ href: '#work', label: 'עבודות' }] : []),
   { href: '#process', label: 'תהליך' },
   { href: '#contact', label: 'צור קשר' },
 ]

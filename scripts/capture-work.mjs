@@ -4,8 +4,9 @@
 //   npm run capture:work            # all projects
 //   npm run capture:work wiserise   # one project
 //
-// Capturing a site does not publish it: a project only appears on the page
-// once `verified: true`, `scope` and `image` are filled in lib/site.ts.
+// Desktop is captured full-page (it scrolls inside the laptop on the site),
+// mobile as one phone screen. Rebuild after capturing; the page picks the
+// files up by name.
 import { chromium } from 'playwright-core'
 import { readFileSync, mkdirSync } from 'node:fs'
 
@@ -27,7 +28,18 @@ for (const p of projects) {
       await page.evaluate(() => document.fonts.ready)
       await page.waitForTimeout(1500) // let entrance animations settle
       const out = `public/work/${p.id}-${kind}.jpg`
-      await page.screenshot({ path: out, type: 'jpeg', quality: 86 })
+      if (mobile) {
+        await page.screenshot({ path: out, type: 'jpeg', quality: 84 })
+      } else {
+        // Scroll through once so lazy images and reveal animations load, then
+        // capture up to five screens of the page.
+        const h = await page.evaluate(async () => {
+          for (let y = 0; y < document.body.scrollHeight; y += innerHeight / 2) { scrollTo(0, y); await new Promise(r => setTimeout(r, 120)) }
+          scrollTo(0, 0); await new Promise(r => setTimeout(r, 400))
+          return document.documentElement.scrollHeight
+        })
+        await page.screenshot({ path: out, type: 'jpeg', quality: 80, fullPage: true, clip: { x: 0, y: 0, width: viewport.width, height: Math.min(h, viewport.height * 5) } })
+      }
       console.log('saved', out)
     } catch (e) {
       console.error(`failed ${p.id} (${kind}): ${e.message.split('\n')[0]}`)

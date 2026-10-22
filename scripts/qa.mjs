@@ -50,8 +50,15 @@ const visibleIn = (p, sel) => p.evaluate(s => { const r = document.querySelector
   check('hero CTA visible in first viewport', await page.evaluate(() => { const r = document.querySelector('.hero__actions .btn').getBoundingClientRect(); return r.bottom < innerHeight }))
   await page.screenshot({ path: `${OUT}/desktop-hero.png` })
 
+  const work = await page.evaluate(() => ({
+    n: document.querySelectorAll('#work [data-project]').length,
+    names: [...document.querySelectorAll('#work .project__caption h3')].map(h => h.textContent),
+    newTab: [...document.querySelectorAll('#work a[href^="https"]')].every(a => a.target === '_blank' && a.rel.includes('noopener')),
+  }))
+  check('portfolio shows the three projects, opening in a new tab', work.n === 3 && work.newTab, work.names.join(', '))
+
   // Every heading/section reachable from the nav
-  for (const [href, target] of [['#services', '.svc'], ['#process', '#process-title'], ['#contact', '#contact-title']]) {
+  for (const [href, target] of [['#services', '.svc'], ['#work', '#work-title'], ['#process', '#process-title'], ['#contact', '#contact-title']]) {
     await page.click(`.site-header .nav a[href="${href}"]`)
     await wait(1400)
     check(`nav ${href} lands on its content`, await visibleIn(page, target))
@@ -59,7 +66,7 @@ const visibleIn = (p, sel) => p.evaluate(s => { const r = document.querySelector
 
   // Header tone follows the section under it (text must not vanish)
   const tones = []
-  for (const sel of ['#top', '#services', '#process', '#contact']) {
+  for (const sel of ['#top', '#services', '#work', '#process', '#contact']) {
     await page.evaluate(s => { const el = document.querySelector(s); scrollTo({ top: el.offsetTop + 40, behavior: 'instant' }) }, sel)
     await wait(350)
     tones.push(await page.evaluate(() => {
@@ -254,6 +261,7 @@ const visibleIn = (p, sel) => p.evaluate(s => { const r = document.querySelector
     if (l.href.startsWith('tel:')) return l.href !== 'tel:+972538007008'
     if (l.href.startsWith('https://wa.me/')) return !l.href.startsWith('https://wa.me/972538007008')
     if (l.href.startsWith('https://www.instagram.com/')) return l.href !== 'https://www.instagram.com/ar_studio1/'
+    if (['https://www.wiserise.co.il/', 'https://www.alumina-group.co.il/', 'https://readytogoo.com/'].includes(l.href)) return false
     return true
   })
   const unsafeBlank = links.filter(l => l.blank && !/noopener/.test(l.rel))

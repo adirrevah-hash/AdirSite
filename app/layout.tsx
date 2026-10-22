@@ -53,6 +53,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body>
         <a className="skip-link" href="#main">דילוג לתוכן</a>
+        <div className="sc-grain" aria-hidden="true" />
         {children}
         <ScrollCraftMount />
       </body>
