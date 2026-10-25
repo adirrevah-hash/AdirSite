@@ -10,11 +10,12 @@ export function initStory(reduced: boolean) {
   const stops: Array<() => void> = []
 
   const ctx = gsap.context(() => {
-    // Philosophy: the statement holds while each word comes up to full ink.
+    // Philosophy: each word comes up to full ink as the statement passes
+    // through the screen. No pin: the page keeps its normal pace.
     const pin = document.querySelector<HTMLElement>('[data-fill-pin]')
     if (pin) {
       const ink = getComputedStyle(pin.querySelector('[data-fill]')!).color
-      gsap.timeline({ scrollTrigger: { trigger: pin, start: 'center 52%', end: '+=120%', pin: true, scrub: 0.5 } })
+      gsap.timeline({ scrollTrigger: { trigger: pin, start: 'top 85%', end: 'bottom 40%', scrub: 0.5 } })
         .to(pin.querySelectorAll('[data-fill] .c'), { color: ink, ease: 'none', stagger: 0.12, duration: 0.3 })
     }
 

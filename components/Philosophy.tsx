@@ -2,9 +2,8 @@ import Blueprint from './Blueprint'
 import Split from './Split'
 
 // The pause after the hero: light ground, one statement, three principles.
-// With motion the statement holds in place and fills in word by word as the
-// reader scrolls, so it is read at the pace it was written. A selection box,
-// as in a design tool, frames it with its live measurements.
+// With motion the statement fills in word by word as it moves up the screen.
+// A selection box, as in a design tool, frames it with its live measurements.
 const principles = [
   { glyph: 'circle', title: 'ברור לפני יפה', text: 'כל עמוד מתחיל בשאלה מה הגולש צריך להבין ומה הוא צריך לעשות. העיצוב בא לשרת את התשובה.' },
   { glyph: 'square', title: 'הדיוק בפרטים', text: 'ריווח, טיפוגרפיה ותנועה הם מה שמבדיל אתר מקצועי מתבנית. כל אחד מהם נבחר במכוון.' },
