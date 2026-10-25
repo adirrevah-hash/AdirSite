@@ -26,6 +26,14 @@ export function IconInstagram(props: React.SVGProps<SVGSVGElement>) {
   )
 }
 
+export function IconFacebook(props: React.SVGProps<SVGSVGElement>) {
+  return (
+    <svg {...base} {...props} fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round">
+      <path d="M14.5 21v-7.5h2.6l.4-3h-3V8.7c0-.9.3-1.5 1.5-1.5h1.6V4.5c-.3 0-1.2-.1-2.3-.1-2.3 0-3.8 1.4-3.8 3.9v2.2H9v3h2.5V21" />
+    </svg>
+  )
+}
+
 export function IconArrow(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg {...base} {...props} fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
