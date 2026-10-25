@@ -1,4 +1,8 @@
+import Split from './Split'
+
 // The pause after the hero: light ground, one statement, three principles.
+// With motion the statement holds in place and fills in word by word as the
+// reader scrolls, so it is read at the pace it was written.
 const principles = [
   { glyph: 'circle', title: 'ברור לפני יפה', text: 'כל עמוד מתחיל בשאלה מה הגולש צריך להבין ומה הוא צריך לעשות. העיצוב בא לשרת את התשובה.' },
   { glyph: 'square', title: 'הדיוק בפרטים', text: 'ריווח, טיפוגרפיה ותנועה הם מה שמבדיל אתר מקצועי מתבנית. כל אחד מהם נבחר במכוון.' },
@@ -19,12 +23,14 @@ export default function Philosophy() {
   return (
     <section id="approach" className="philo on-light bg-off-white" aria-labelledby="approach-title" data-philo>
       <div className="wrap">
-        <p className="t-label">הגישה</p>
-        <h2 id="approach-title" className="t-statement philo__statement" data-reveal="lines">
-          <span className="line"><span>אתר טוב לא רק נראה טוב.</span></span>
-          <span className="line"><span>הוא מסביר, משכנע,</span></span>
-          <span className="line"><span>ומביא את הפנייה הבאה.</span></span>
-        </h2>
+        <div className="philo__pin" data-fill-pin>
+          <p className="t-label">הגישה</p>
+          <h2 id="approach-title" className="t-statement philo__statement" data-fill>
+            <span className="stmt-line"><Split by="words" text="אתר טוב לא רק נראה טוב." /></span>
+            <span className="stmt-line"><Split by="words" text="הוא מסביר, משכנע," /></span>
+            <span className="stmt-line"><Split by="words" text="ומביא את הפנייה הבאה." /></span>
+          </h2>
+        </div>
         <div className="philo__grid" data-reveal="fade">
           {principles.map(p => (
             <div key={p.title} className="principle">

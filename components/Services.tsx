@@ -1,3 +1,4 @@
+import Split from './Split'
 import { services } from '@/lib/site'
 import ServiceVisual from './ServiceVisual'
 
@@ -10,8 +11,8 @@ export default function Services() {
       <div className="wrap">
         <header className="services__head">
           <p className="t-label">שירותים</p>
-          <h2 id="services-title" className="t-h2" data-reveal="lines">
-            <span className="line"><span>מה בונים בסטודיו.</span></span>
+          <h2 id="services-title" className="t-h2" data-reveal="chars">
+            <span className="line"><Split text="מה בונים בסטודיו." /></span>
           </h2>
           <p className="t-lede">שישה שירותים שעובדים יחד: מהסימן הראשון של המותג ועד האתר שממשיך לעבוד אחרי ההשקה.</p>
         </header>

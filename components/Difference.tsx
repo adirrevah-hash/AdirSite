@@ -1,4 +1,4 @@
-import { CTA, whatsappUrl } from '@/lib/site'
+import Split from './Split'
 
 const items = [
   { icon: 'build', title: 'אתר שנבנה לעסק שלכם', text: 'מבנה, תוכן ועיצוב שנקבעים לפי העסק והקהל שלו, לא לפי תבנית מוכנה.' },
@@ -25,9 +25,9 @@ export default function Difference() {
         <div className="diff__layout">
           <header className="diff__head">
             <p className="t-label">ההבדל</p>
-            <h2 id="diff-title" className="t-h2" data-reveal="lines">
-              <span className="line"><span>מה מקבלים</span></span>
-              <span className="line"><span>בפועל.</span></span>
+            <h2 id="diff-title" className="t-h2" data-reveal="chars">
+              <span className="line"><Split text="מה מקבלים" /></span>
+              <span className="line"><Split text="בפועל." /></span>
             </h2>
           </header>
           <ul className="diff__list" data-reveal="fade">
@@ -39,14 +39,6 @@ export default function Difference() {
               </li>
             ))}
           </ul>
-        </div>
-
-        <div className="cta-band on-dark" data-reveal="mask">
-          <p className="t-h2 cta-band__title">יש לכם עסק שמגיע לו אתר כזה?</p>
-          <div className="cta-band__actions">
-            <a href="#contact" className="btn btn--light" data-magnetic>{CTA.primary} <span className="btn__arrow" aria-hidden="true">←</span></a>
-            <a href={whatsappUrl('היי ARStudio, אשמח לשמוע על בניית אתר')} target="_blank" rel="noopener noreferrer" className="link">או בוואטסאפ</a>
-          </div>
         </div>
       </div>
     </section>

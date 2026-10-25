@@ -1,9 +1,12 @@
+import Split from './Split'
 import Image from 'next/image'
 import { showcase, type ShowcaseProject } from '@/lib/work'
 import { IconClose, IconExternal } from './icons'
+import Marquee from './Marquee'
 
 // The gallery. Each project sits in a desktop frame with a phone leaning into
-// it, in an editorial, uneven layout. A project opens into a dialog with the
+// it. On wide screens the gallery holds in place and the projects travel
+// sideways past the reader; elsewhere they stack. A project opens into a dialog with the
 // larger views and the project notes. Until screenshots are captured, the
 // screens carry a title card that says so plainly.
 
@@ -47,36 +50,39 @@ function Devices({ p, large }: { p: ShowcaseProject; large?: boolean }) {
 export default function Work() {
   const items = showcase()
   return (
-    <section id="work" className="work on-dark bg-graphite" aria-labelledby="work-title">
-      <div className="wrap">
-        <header className="work__head">
-          <div>
-            <p className="t-label">עבודות נבחרות</p>
-            <h2 id="work-title" className="t-h2" data-reveal="lines">
-              <span className="line"><span>אתרים שבנינו</span></span>
-              <span className="line"><span>לעסקים אמיתיים.</span></span>
-            </h2>
-          </div>
-          <p className="work__count"><span className="num">{String(items.length).padStart(2, '0')}</span> פרויקטים באוויר</p>
-        </header>
+    <section id="work" className="work on-dark bg-graphite" aria-labelledby="work-title" data-work>
+      <Marquee />
+      <div className="work__room">
+        <div className="work__pin" data-work-pin>
+          <div className="work__track" data-work-track>
+            <header className="work__head">
+              <p className="t-label">עבודות נבחרות</p>
+              <h2 id="work-title" className="t-h2" data-reveal="chars">
+                <span className="line"><Split text="אתרים שבנינו" /></span>
+                <span className="line"><Split text="לעסקים אמיתיים." start={11} /></span>
+              </h2>
+              <p className="work__count"><span className="num">{String(items.length).padStart(2, '0')}</span> פרויקטים באוויר</p>
+              <p className="work__cue" aria-hidden="true"><span>גללו</span><i /></p>
+            </header>
 
-        <div className="work__grid">
-          {items.map((p, i) => (
-            <article key={p.id} className={`project project--${i}`} data-reveal="mask">
-              <button type="button" className="project__stage" data-dialog={`dlg-${p.id}`} aria-haspopup="dialog" aria-label={`פרטי הפרויקט ${p.name}`}>
-                <Devices p={p} />
-                <span className="project__hint" aria-hidden="true">פרטי הפרויקט</span>
-              </button>
-              <div className="project__caption">
-                <h3 className="t-h3">{p.name}</h3>
-                <p className="project__meta"><span className="num">{p.domain}</span><span aria-hidden="true">·</span>{p.kind}</p>
-                <div className="project__actions">
-                  <button type="button" className="link" data-dialog={`dlg-${p.id}`} aria-haspopup="dialog">פרטי הפרויקט</button>
-                  <a href={p.url} target="_blank" rel="noopener noreferrer" className="link">לאתר <IconExternal width={16} height={16} /></a>
+            {items.map((p, i) => (
+              <article key={p.id} className={`project project--${i}`} data-project>
+                <span className="project__index num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+                <button type="button" className="project__stage" data-dialog={`dlg-${p.id}`} data-cursor="פתיחה" aria-haspopup="dialog">
+                  <span className="project__media" aria-hidden="true"><Devices p={p} /></span>
+                  <span className="project__hint">פרטי הפרויקט<span className="sr-only"> {p.name}</span></span>
+                </button>
+                <div className="project__caption">
+                  <h3 className="t-h3">{p.name}</h3>
+                  <p className="project__meta"><span className="num">{p.domain}</span><span aria-hidden="true">·</span>{p.kind}</p>
+                  <div className="project__actions">
+                    <button type="button" className="link" data-dialog={`dlg-${p.id}`} aria-haspopup="dialog">פרטי הפרויקט</button>
+                    <a href={p.url} target="_blank" rel="noopener noreferrer" className="link">לאתר <IconExternal width={16} height={16} /></a>
+                  </div>
                 </div>
-              </div>
-            </article>
-          ))}
+              </article>
+            ))}
+          </div>
         </div>
       </div>
 

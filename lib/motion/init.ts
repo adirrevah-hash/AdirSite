@@ -9,6 +9,7 @@ import { initProcess } from './process'
 import { initForm } from './form'
 import { initFloat } from './float'
 import { initMagnetic } from './magnetic'
+import { initCursor, initStory } from './story'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -26,16 +27,34 @@ export function initSite(opts: SiteOptions) {
     initHeader(),
     initReveals(reduced),
     initHero(reduced),
-    initWork(reduced),
-    initServices(reduced),
-    initProcess(reduced),
     initForm(opts.endpoint),
     initFloat(),
-    initMagnetic(reduced),
   ]
+  // The chapters further down set up once the first screen is interactive,
+  // which keeps the main thread free while the page is loading.
+  let later = 0
+  const rest = () => {
+    later = 0
+    cleanups.push(
+      initWork(reduced),
+      initServices(reduced),
+      initProcess(reduced),
+      initMagnetic(reduced),
+      initStory(reduced),
+      initCursor(reduced),
+    )
+    // Pinned chapters add scroll distance, so every trigger has to be
+    // measured in page order, whichever module created it.
+    ScrollTrigger.sort()
+    ScrollTrigger.refresh()
+  }
+  const idle = window.requestIdleCallback ?? ((cb: () => void) => window.setTimeout(cb, 200))
+  const cancelIdle = window.cancelIdleCallback ?? window.clearTimeout
+  later = idle(rest, { timeout: 1500 })
   // Layout settles once the fonts are in; measure the triggers again then.
   document.fonts?.ready.then(() => ScrollTrigger.refresh())
   return () => {
+    if (later) cancelIdle(later)
     cleanups.forEach(c => c?.())
     ScrollTrigger.getAll().forEach(t => t.kill())
   }

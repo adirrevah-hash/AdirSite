@@ -6,7 +6,7 @@ export default function Footer() {
     <footer className="footer on-dark bg-graphite">
       <div className="wrap">
         <div className="footer__top">
-          <p className="footer__word" aria-hidden="true">ARStudio</p>
+          <p className="footer__word" aria-hidden="true" data-footer-word>{[...'ARStudio'].map((ch, i) => <span key={i}>{ch}</span>)}</p>
           <p className="footer__line">אתרי תדמית, דפי נחיתה וזהות חזותית לעסקים.</p>
         </div>
         <div className="footer__cols">

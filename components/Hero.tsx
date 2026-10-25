@@ -1,3 +1,4 @@
+import Split from './Split'
 import { CTA, site, whatsappUrl } from '@/lib/site'
 
 const FINS = 15
@@ -21,8 +22,8 @@ export default function Hero() {
       <div className="wrap hero__inner">
         <p className="t-label hero__kicker">סטודיו לעיצוב ובניית אתרים</p>
         <h1 className="t-hero hero__title">
-          <span className="line"><span>מותגים דיגיטליים,</span></span>
-          <span className="line"><span>בנויים בדיוק.</span></span>
+          <span className="line"><Split text="מותגים דיגיטליים," /></span>
+          <span className="line"><Split text="בנויים בדיוק." start={16} /></span>
         </h1>
         <p className="t-lede hero__sub">
           אתרי תדמית, דפי נחיתה וזהות חזותית לעסקים שרוצים להיראות ברמה של מה שהם עושים.

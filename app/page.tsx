@@ -5,6 +5,7 @@ import Work from '@/components/Work'
 import Services from '@/components/Services'
 import Process from '@/components/Process'
 import Difference from '@/components/Difference'
+import Statement from '@/components/Statement'
 import Contact from '@/components/Contact'
 import Footer from '@/components/Footer'
 import WhatsAppFloat from '@/components/WhatsAppFloat'
@@ -20,6 +21,7 @@ export default function Home() {
         <Services />
         <Process />
         <Difference />
+        <Statement />
         <Contact />
       </main>
       <Footer />

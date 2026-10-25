@@ -19,10 +19,18 @@ export function initHero(reduced: boolean) {
     onUpdate: self => { progress = self.progress; three?.setProgress(progress * 0.95) },
   })
 
-  const copyTween = reduced ? null : gsap.to('.hero__inner', {
-    yPercent: -10, opacity: 0.15, ease: 'none',
-    scrollTrigger: { trigger: hero, start: 'top top', end: 'bottom top', scrub: true },
-  })
+  // As the hero scrolls away its headline comes apart word by word and the
+  // copy under it lifts off, leaving the object to finish its turn.
+  let scatter: gsap.core.Timeline | null = null
+  if (!reduced) {
+    scatter = gsap.timeline({ scrollTrigger: { trigger: hero, start: 'top top', end: 'bottom top', scrub: 0.6 } })
+    hero.querySelectorAll<HTMLElement>('.hero__title .w').forEach((w, i) => {
+      scatter!.to(w, { yPercent: -gsap.utils.random(90, 260), xPercent: gsap.utils.random(-25, 25), rotate: gsap.utils.random(-12, 12), opacity: 0, ease: 'power1.in' }, i * 0.04)
+    })
+    // The copy fades as one block. Its parts carry the intro's CSS fade, so
+    // the scrub works on their wrapper rather than fight over the same element.
+    scatter.fromTo('.hero__inner', { y: 0, opacity: 1 }, { y: -60, opacity: 0, ease: 'power1.in', immediateRender: false }, 0.1)
+  }
 
   const idle = (cb: () => void) => ('requestIdleCallback' in window ? (window as any).requestIdleCallback(cb, { timeout: 1200 }) : setTimeout(cb, 300))
   // Phones get the WebGL object only when they have the headroom for it;
@@ -47,8 +55,8 @@ export function initHero(reduced: boolean) {
   return () => {
     disposed = true
     st.kill()
-    copyTween?.scrollTrigger?.kill()
-    copyTween?.kill()
+    scatter?.scrollTrigger?.kill()
+    scatter?.revert()
     three?.dispose()
     hero.classList.remove('is-3d')
   }

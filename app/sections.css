@@ -92,20 +92,18 @@
 .principle__glyph { width: 40px; height: 40px; fill: none; stroke: var(--color-navy-secondary); stroke-width: 1.2; }
 
 /* ================================================================== work */
-.work { padding-block: var(--section-y); }
-.work__head { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 2rem; margin-bottom: clamp(3.5rem, 7vw, 6rem); }
-.work__head h2 { margin: 1.25rem 0 0; }
+.work { padding-bottom: var(--section-y); }
+.work__pin { padding-top: clamp(3.5rem, 7vw, 6rem); }
+.work__track { display: grid; gap: clamp(5rem, 10vw, 8rem); max-width: var(--maxw); margin-inline: auto; padding-inline: var(--gutter); }
+.work__head { display: grid; justify-items: start; align-content: start; }
+.work__head h2 { margin: 1.25rem 0 1.5rem; }
 .work__count { margin: 0; color: var(--color-silver-muted); font-size: 0.95rem; }
 .work__count .num { font-size: 2.6rem; font-weight: 300; color: var(--color-off-white); margin-inline-end: 0.5rem; vertical-align: -0.2em; }
-.work__grid { display: grid; gap: clamp(4.5rem, 9vw, 8rem) 4vw; }
-@media (min-width: 1024px) {
-  .work__grid { grid-template-columns: repeat(12, minmax(0, 1fr)); }
-  .project--0 { grid-column: 1 / span 12; }
-  .project--0 .devices { width: 84%; }
-  .project--1 { grid-column: 1 / span 7; }
-  .project--2 { grid-column: 8 / span 5; margin-top: 14rem; }
-}
-.project__stage { all: unset; position: relative; display: block; width: 100%; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.project { position: relative; }
+@media (min-width: 1024px) { .project { width: 80%; } .project--1 { margin-inline-start: auto; } }
+.project__index { position: absolute; z-index: 0; top: -0.55em; inset-inline-end: 0; font-size: clamp(5rem, 12vw, 11rem); font-weight: 600; line-height: 1; letter-spacing: -0.04em; color: transparent; -webkit-text-stroke: 1px var(--color-silver-muted); opacity: 0.5; pointer-events: none; }
+.project__stage { all: unset; position: relative; z-index: 1; display: block; width: 100%; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.project__media { display: block; }
 .project__stage:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 8px; border-radius: 14px; }
 .devices { position: relative; padding-inline-end: 9%; padding-bottom: 7%; }
 .device-desk { position: relative; border-radius: 12px; overflow: hidden; background: var(--color-graphite-elevated); box-shadow: 0 0 0 1px var(--border-dark), 0 50px 90px -50px rgb(0 0 0 / 0.75); transition: transform 700ms var(--ease); }

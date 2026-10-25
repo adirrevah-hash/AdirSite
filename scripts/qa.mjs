@@ -71,7 +71,15 @@ for (const [w, h] of [[360, 780], [390, 844], [430, 932], [768, 1024], [1024, 76
   check('header turns solid once scrolled', await page.evaluate(() => document.querySelector('[data-header]').classList.contains('is-scrolled')))
 
   // project dialog: opens, takes focus, Escape closes, focus returns
-  await scrollTo(page, '#work .project', -100); await wait(900)
+  // On wide screens the gallery runs sideways: keyboard focus must bring
+  // each project into view.
+  const seen = []
+  for (const id of ['wiserise', 'alumina', 'readytogoo']) {
+    await page.focus(`#work .project__actions button[data-dialog="dlg-${id}"]`); await wait(1200)
+    seen.push(await page.evaluate(i => { const r = document.querySelector(`#work [data-dialog="dlg-${i}"].project__stage`).getBoundingClientRect(); return r.left >= -1 && r.right <= innerWidth + 1 && r.top < innerHeight && r.bottom > 0 }, id))
+  }
+  check('gallery: keyboard focus brings each project fully into view', seen.every(Boolean), seen.join(','))
+  await page.focus('#work .project__actions button'); await wait(1200)
   await page.click('#work .project__actions button')
   await wait(500)
   const dlg = await page.evaluate(() => { const d = document.querySelector('dialog[open]'); return { open: !!d, focusIn: !!d && d.contains(document.activeElement) } })
@@ -88,14 +96,16 @@ for (const [w, h] of [[360, 780], [390, 844], [430, 932], [768, 1024], [1024, 76
   check('services stage shows the hovered service', stage === 'cards', stage)
 
   // process line lights its nodes as it is read
-  await scrollTo(page, '.steps-wrap', -200); await wait(1200)
+  await scrollTo(page, '.steps-wrap', -200); await wait(600)
+  for (let i = 0; i < 4; i++) { await page.mouse.wheel(0, 400); await wait(120) }
+  await wait(1200)
   const lit = await page.evaluate(() => document.querySelectorAll('.step.is-on').length)
   check('process nodes light as the line reaches them', lit >= 2, `${lit} lit`)
 
   // reverse fast scroll returns to a clean top
   for (let i = 0; i < 25; i++) { await page.mouse.wheel(0, -900); await wait(16) }
-  await wait(1200)
-  const top = await page.evaluate(() => ({ y: scrollY, copy: getComputedStyle(document.querySelector('.hero__inner')).opacity }))
+  await wait(2000) // scrubbed tweens ease in behind the scroll
+  const top = await page.evaluate(() => ({ y: scrollY, copy: Math.min(...[...document.querySelectorAll('.hero__inner, .hero__title .w, .hero__sub, .hero__actions')].map(e => +getComputedStyle(e).opacity)) }))
   check('reverse scroll restores the hero', top.y === 0 && +top.copy > 0.95, JSON.stringify(top))
 
   for (const w of [1024, 1280, 1680]) { await page.setViewportSize({ width: w, height: 900 }); await wait(300); check(`resize to ${w}: no overflow`, (await overflowX(page)) <= 0) }

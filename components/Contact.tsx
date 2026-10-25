@@ -1,3 +1,4 @@
+import Split from './Split'
 import { site, whatsappUrl } from '@/lib/site'
 import { SERVICE_OPTIONS } from '@/lib/contact'
 import { IconWhatsApp, IconPhone, IconInstagram, IconArrow } from './icons'
@@ -13,9 +14,9 @@ export default function Contact() {
       <div className="wrap contact__grid">
         <div className="contact__intro">
           <p className="t-label">יצירת קשר</p>
-          <h2 id="contact-title" className="t-h2" data-reveal="lines">
-            <span className="line"><span>בואו נבנה את</span></span>
-            <span className="line"><span>הנוכחות הדיגיטלית שלכם.</span></span>
+          <h2 id="contact-title" className="t-h2" data-reveal="chars">
+            <span className="line"><Split text="בואו נבנה את" /></span>
+            <span className="line"><Split text="הנוכחות הדיגיטלית שלכם." /></span>
           </h2>
           <p className="t-lede">משאירים פרטים ונחזור אליכם, או כותבים ישר לוואטסאפ. השיחה הראשונה היא כדי להבין מה העסק צריך.</p>
           <ul className="channels">

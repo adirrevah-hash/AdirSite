@@ -1,0 +1,127 @@
+/* Styles that exist for the motion layer: split text, the intro, the
+   marquee, the horizontal gallery, the process chapter, the statement and
+   the cursor. Anything that hides content waits for .motion-ready, which is
+   only set when motion is allowed and the script is running. */
+
+/* ---------------------------------------------------------- split text */
+.split .w { display: inline-block; white-space: nowrap; }
+.split .c { display: inline-block; }
+
+/* ---------------------------------------------------------------- intro */
+.intro { display: none; }
+.has-intro .intro { display: block; position: fixed; inset: 0; z-index: 300; pointer-events: none; color: var(--color-off-white); animation: introGone 0s linear 2.7s forwards; }
+@keyframes introGone { to { visibility: hidden; } }
+.intro__bars { position: absolute; inset: 0; display: flex; }
+.intro__bars i { flex: 1; margin-inline-end: -1px; background: var(--color-midnight); transform-origin: top; animation: barLift 950ms var(--ease-io) both; animation-delay: calc(1.6s + var(--b) * 60ms); }
+@keyframes barLift { to { transform: scaleY(0); } }
+.intro__center { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; gap: clamp(0.8rem, 1.6vw, 1.4rem); direction: ltr; animation: introOut 500ms var(--ease) 1.35s both; }
+@keyframes introOut { to { opacity: 0; transform: translateY(-18px); } }
+.intro__mark { display: inline-flex; gap: 0.18em; height: 0.82em; font-size: clamp(2.2rem, 5.5vw, 4.2rem); }
+.intro__mark i { width: 0.1em; border-radius: 1px; background: var(--color-silver); transform-origin: bottom; animation: markGrow 700ms var(--ease) both; }
+.intro__mark i:nth-child(2) { opacity: 0.75; animation-delay: 70ms; }
+.intro__mark i:nth-child(3) { opacity: 0.5; animation-delay: 140ms; }
+.intro__mark i:nth-child(4) { opacity: 0.3; animation-delay: 210ms; }
+@keyframes markGrow { from { transform: scaleY(0); } }
+.intro__word { display: inline-flex; overflow: hidden; padding-bottom: 0.06em; font-family: var(--font-display); font-weight: 600; font-size: clamp(2.2rem, 5.5vw, 4.2rem); line-height: 1.05; letter-spacing: -0.02em; }
+.intro__word span { display: inline-block; animation: charUp 900ms var(--ease) both; animation-delay: calc(0.3s + var(--l) * 45ms); }
+@keyframes charUp { from { transform: translateY(115%); } }
+@property --n { syntax: '<integer>'; initial-value: 0; inherits: false; }
+.intro__count, .intro__tag { position: absolute; bottom: max(2rem, env(safe-area-inset-bottom, 0px)); font-size: 0.85rem; letter-spacing: 0.06em; color: var(--color-silver-muted); animation: introOut 400ms var(--ease) 1.4s both; }
+.intro__count { left: var(--gutter); counter-reset: n var(--n); animation: count 1.3s var(--ease-io) both, introOut 400ms var(--ease) 1.4s both; }
+.intro__count::after { content: counter(n, decimal-leading-zero) '%'; }
+@keyframes count { from { --n: 0; } to { --n: 100; } }
+.intro__tag { right: var(--gutter); }
+
+/* the hero arrives as the cover lifts. Fill backwards only: once done, the
+   animations let go, so the scroll scrub can take over the same elements. */
+@media (prefers-reduced-motion: no-preference) {
+  .hero .c { animation: charIn 1.1s var(--ease) backwards; animation-delay: calc(120ms + var(--ci) * 26ms); }
+  .has-intro .hero .c { animation-delay: calc(1.85s + var(--ci) * 26ms); }
+  .has-intro .hero__kicker, .has-intro .hero__sub, .has-intro .hero__actions, .has-intro .hero__meta { animation: fadeUp 1s var(--ease) backwards; }
+  .has-intro .hero__kicker { animation-delay: 1.8s; }
+  .has-intro .hero__sub { animation-delay: 2.3s; }
+  .has-intro .hero__actions { animation-delay: 2.42s; }
+  .has-intro .hero__meta { animation-delay: 2.55s; }
+  .has-intro .hero__art { animation: artIn 1.8s var(--ease) 1.7s backwards; }
+}
+@keyframes charIn { from { transform: translateY(112%) rotate(7deg); } to { transform: none; } }
+@keyframes artIn { from { opacity: 0; transform: scale(0.94); } to { opacity: 1; transform: none; } }
+
+/* --------------------------------------------------------- philosophy */
+.stmt-line { display: block; }
+/* Words waiting to be read sit in a lighter ink that still passes 3:1 for
+   large text; the scroll brings each one up to full ink. */
+.motion-ready [data-fill] .c { color: color-mix(in oklab, var(--ink) 55%, var(--color-off-white)); }
+
+/* -------------------------------------------------------------- marquee */
+.marquee { overflow: hidden; padding-top: clamp(3.5rem, 7vw, 6rem); direction: ltr; user-select: none; -webkit-user-select: none; }
+.marquee__row { display: flex; width: max-content; white-space: nowrap; font-family: var(--font-display); font-weight: 500; font-size: clamp(3rem, 1.5rem + 7vw, 8.5rem); line-height: 1.08; letter-spacing: -0.03em; color: var(--color-off-white); will-change: transform; }
+.marquee__row--outline { color: transparent; -webkit-text-stroke: 1px var(--color-silver-muted); }
+.marquee__run { display: flex; }
+.marquee__item { display: inline-flex; align-items: center; gap: 0.45em; padding-inline-end: 0.45em; direction: rtl; }
+.marquee__mark { display: inline-flex; gap: 0.07em; height: 0.5em; }
+.marquee__mark b { width: 0.06em; border-radius: 1px; background: var(--color-silver-muted); }
+.marquee__mark b:nth-child(2) { opacity: 0.75; } .marquee__mark b:nth-child(3) { opacity: 0.5; } .marquee__mark b:nth-child(4) { opacity: 0.3; }
+
+/* ------------------------------------------------- horizontal gallery */
+.work.is-h .work__room { height: calc(100svh + var(--travel, 0px)); }
+.work.is-h .work__pin { position: sticky; top: 0; height: 100svh; box-sizing: border-box; display: flex; align-items: center; padding-top: var(--header-h); overflow: clip; }
+.work.is-h .work__track { display: flex; align-items: center; gap: 7vw; width: max-content; max-width: none; margin: 0; padding-inline: var(--gutter) 12vw; will-change: transform; }
+.work.is-h .work__head { flex: none; width: min(32vw, 30rem); margin: 0; }
+.work.is-h .work__cue { display: inline-flex; }
+.work.is-h .project { flex: none; width: min(54vw, calc((100svh - var(--header-h) - 14rem) / 0.66)); margin: 0; }
+.work.is-h .project .devices { width: 100%; }
+.work.is-h .project__index { font-size: clamp(7rem, 14vw, 13rem); top: -0.62em; }
+.work__cue { display: none; align-items: center; gap: 0.9rem; margin: 1.5rem 0 0; font-size: 0.85rem; letter-spacing: 0.06em; color: var(--color-silver-muted); }
+.work__cue i { position: relative; width: 4.5rem; height: 1px; background: var(--border-dark); overflow: hidden; }
+.work__cue i::after { content: ''; position: absolute; inset: 0; background: var(--color-silver); transform: translateX(100%); animation: cue 2.2s var(--ease-io) infinite; }
+@keyframes cue { 60%, 100% { transform: translateX(-100%); } }
+
+/* ------------------------------------------------------ process chapter */
+.process__head { position: relative; }
+.process__counter { display: none; }
+@media (min-width: 900px) {
+  .process__counter {
+    position: absolute; top: 0; left: 0; display: flex; align-items: flex-start; gap: 0.08em; height: 1em; overflow: hidden;
+    font-size: clamp(6rem, 12vw, 11.5rem); font-weight: 300; line-height: 1; letter-spacing: -0.05em; color: var(--color-off-white);
+  }
+  .process__roll { display: block; will-change: transform; }
+  .process__roll span { display: block; height: 1em; }
+  .process__of { font-size: 0.14em; letter-spacing: 0.02em; margin-top: 0.9em; color: var(--color-silver-muted); }
+}
+/* Steps not yet reached sit back in the muted ink (still above 4.5:1) and
+   a little lower; reaching one brings it up to full ink. */
+.motion-ready .step { transition: transform 700ms var(--ease); }
+.motion-ready .step > * { transition: color 500ms var(--ease), border-color 500ms var(--ease); }
+.motion-ready .step:not(.is-on) { transform: translateY(14px); }
+.motion-ready .step:not(.is-on) > *, .motion-ready .step:not(.is-on) .step__out span { color: var(--color-silver-muted); border-color: var(--border-dark); }
+
+/* ------------------------------------------------------------ statement */
+.statement { position: relative; overflow: clip; }
+.shutter { display: none; }
+.motion-ready .shutter { display: flex; height: 60svh; background: var(--color-off-white); }
+.shutter i { flex: 1; margin-inline-end: -1px; background: var(--color-midnight); transform-origin: bottom; }
+.statement__stage { min-height: 100svh; display: grid; align-items: center; padding-block: var(--section-y); box-sizing: border-box; }
+.statement__inner { width: 100%; }
+.statement__title { margin: 0; font-family: var(--font-display); font-weight: 500; font-size: clamp(3rem, 0.8rem + 8.2vw, 10rem); line-height: 0.98; letter-spacing: -0.035em; transform-origin: 50% 45%; }
+.statement__line { display: block; }
+.statement__line--soft { color: var(--color-silver-muted); }
+.statement__actions { margin-top: clamp(2.5rem, 5vw, 4rem); display: flex; flex-wrap: wrap; align-items: center; gap: 1rem 1.75rem; }
+
+/* --------------------------------------------------------------- footer */
+.footer__word { overflow: hidden; padding-bottom: 0.04em; }
+.footer__word span { display: inline-block; }
+
+/* ------------------------------------------------- cursor and progress */
+.cursor {
+  position: fixed; top: 0; left: 0; z-index: 250; pointer-events: none;
+  width: 2.75rem; height: 2.75rem; margin: -1.375rem 0 0 -1.375rem; border-radius: 50%;
+  display: grid; place-items: center; border: 1px solid var(--color-silver); mix-blend-mode: difference; opacity: 0;
+  transition: width 350ms var(--ease), height 350ms var(--ease), margin 350ms var(--ease), background-color 350ms var(--ease), border-color 350ms var(--ease), opacity 300ms var(--ease);
+}
+.cursor.is-on { opacity: 1; }
+.cursor.is-link { width: 4rem; height: 4rem; margin: -2rem 0 0 -2rem; background: rgb(255 255 255 / 0.12); }
+.cursor.is-label { width: 6.5rem; height: 6.5rem; margin: -3.25rem 0 0 -3.25rem; background: var(--color-off-white); border-color: transparent; mix-blend-mode: normal; }
+.cursor__label { font-size: 0.85rem; font-weight: 600; color: var(--color-graphite); opacity: 0; transition: opacity 250ms var(--ease); }
+.cursor.is-label .cursor__label { opacity: 1; }
+.progress { position: fixed; top: env(safe-area-inset-top, 0px); inset-inline: 0; z-index: 90; height: 2px; background: var(--color-silver); transform: scaleX(0); transform-origin: right; pointer-events: none; }
