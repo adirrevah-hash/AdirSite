@@ -1,22 +1,19 @@
 import { validateContact, leadText, type ContactInput, type FieldErrors, type Lead } from '../contact'
+import { whatsappUrl } from '../site'
 
-const WA = 'https://wa.me/972538007008'
 const FIELDS: (keyof ContactInput)[] = ['name', 'phone', 'service', 'message']
 
-// The lead form. Validates in the browser with the same rules the server uses,
-// posts to the endpoint, and reports exactly what happened. When no delivery
-// is configured (or there is no server, as in the preview) it says so and
-// finishes on WhatsApp with the details already written; it never claims a
-// message was sent when it was not.
-export function initForm(endpoint: string | null) {
+// The lead form. Validates in the browser, then opens WhatsApp to the studio's
+// number with everything the visitor wrote already in the message. WhatsApp
+// still needs the visitor to press send, and the page says exactly that; it
+// never claims a message was sent.
+export function initForm() {
   const found = document.querySelector<HTMLFormElement>('[data-lead-form]')
   if (!found) return () => {}
   const form: HTMLFormElement = found
   const status = form.querySelector<HTMLElement>('[data-status]')!
   const submit = form.querySelector<HTMLButtonElement>('[data-submit]')!
-  const startedAt = Date.now()
   const touched: Partial<Record<keyof ContactInput, boolean>> = {}
-  let sending = false
 
   const el = (k: keyof ContactInput) => form.elements.namedItem(k) as HTMLInputElement
   const values = (): ContactInput => ({ name: el('name').value, phone: el('phone').value, service: el('service').value, message: el('message').value })
@@ -41,20 +38,18 @@ export function initForm(endpoint: string | null) {
     }
   }
 
-  function show(kind: 'success' | 'error' | 'handoff', title: string, text: string, lead?: Lead) {
+  function show(title: string, text: string, lead: Lead) {
     status.hidden = false
-    status.className = `form-status${kind === 'success' ? ' is-success' : kind === 'error' ? ' is-error' : ''}`
+    status.className = 'form-status is-success'
     status.innerHTML = ''
     const h = document.createElement('h3'); h.textContent = title
     const p = document.createElement('p'); p.textContent = text
     status.append(h, p)
-    if (lead) {
-      const a = document.createElement('a')
-      a.className = 'btn btn--light'; a.target = '_blank'; a.rel = 'noopener noreferrer'
-      a.href = `${WA}?text=${encodeURIComponent(leadText(lead))}`
-      a.textContent = 'שליחה בוואטסאפ'
-      status.append(a)
-    }
+    const a = document.createElement('a')
+    a.className = 'btn btn--light'; a.target = '_blank'; a.rel = 'noopener noreferrer'
+    a.href = whatsappUrl(leadText(lead))
+    a.textContent = 'לא נפתח? לפתיחת וואטסאפ'
+    status.append(a)
     status.focus()
   }
 
@@ -73,9 +68,10 @@ export function initForm(endpoint: string | null) {
     const r = validateContact(values()); paint(r.ok ? {} : r.errors)
   }
 
-  async function onSubmit(e: SubmitEvent) {
+  function onSubmit(e: SubmitEvent) {
     e.preventDefault()
-    if (sending) return
+    // The hidden field only a bot fills: do nothing.
+    if ((form.elements.namedItem('company') as HTMLInputElement).value) return
     FIELDS.forEach(k => { touched[k] = true })
     const r = validateContact(values())
     if (!r.ok) {
@@ -84,35 +80,17 @@ export function initForm(endpoint: string | null) {
       return
     }
     paint({})
-    const handoff = () => show('handoff', 'עוד צעד אחד: שליחה בוואטסאפ', 'הטופס עדיין לא מחובר לתיבת דואר, אז הפרטים לא נשלחו מכאן. הם כבר כתובים בהודעה: לוחצים ושולחים.', r.lead)
-    if (!endpoint) { handoff(); return }
-
-    sending = true
-    submit.disabled = true
-    submit.setAttribute('aria-busy', 'true')
-    submit.firstChild!.textContent = 'שולח… '
-    try {
-      const company = (form.elements.namedItem('company') as HTMLInputElement).value
-      const res = await fetch(endpoint, {
-        method: 'POST', headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ ...values(), company, elapsed: Date.now() - startedAt }),
-      })
-      const data = await res.json().catch(() => ({}))
-      if (res.ok && data.ok) {
-        show('success', 'הפנייה התקבלה. תודה!', 'נחזור אליכם למספר שהשארתם. אם זה דחוף, אפשר גם לכתוב לנו בוואטסאפ.')
-        form.reset()
-      } else if (data.reason === 'not_configured' || res.status === 404) handoff()
-      else if (res.status === 422 && data.errors) { paint(data.errors); status.hidden = true }
-      else if (res.status === 429) show('error', 'נשלחו יותר מדי פניות', 'אפשר לנסות שוב בעוד כמה דקות, או לשלוח את הפרטים בוואטסאפ.', r.lead)
-      else show('error', 'השליחה לא הצליחה', 'הפרטים שמורים. אפשר לשלוח אותם בוואטסאפ בלחיצה אחת.', r.lead)
-    } catch {
-      show('error', 'אין חיבור כרגע', 'הפרטים שמורים. אפשר לשלוח אותם בוואטסאפ בלחיצה אחת.', r.lead)
-    } finally {
-      sending = false
-      submit.disabled = false
-      submit.removeAttribute('aria-busy')
-      submit.firstChild!.textContent = 'שליחת פרטים '
+    // Open WhatsApp inside the click, so no popup blocker stops it. Phones
+    // hand the link to the app; desktops get a new tab for WhatsApp Web or
+    // the desktop app, falling back to this tab if a new one is refused.
+    const url = whatsappUrl(leadText(r.lead))
+    if (matchMedia('(pointer: coarse)').matches) window.location.href = url
+    else {
+      const win = window.open(url, '_blank')
+      if (win) win.opener = null
+      else window.location.href = url
     }
+    show('הפרטים מוכנים בוואטסאפ', 'פתחנו שיחה עם הסטודיו וכל מה שמילאתם כבר כתוב בהודעה. נשאר רק ללחוץ שליחה בוואטסאפ כדי שהיא תגיע אלינו.', r.lead)
   }
 
   // "לבקש הצעה" on a service card preselects that service.

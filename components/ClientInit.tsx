@@ -9,7 +9,7 @@ export default function ClientInit() {
     let cleanup: (() => void) | undefined
     let cancelled = false
     import('@/lib/motion/init').then(m => {
-      if (!cancelled) cleanup = m.initSite({ endpoint: '/api/contact' })
+      if (!cancelled) cleanup = m.initSite()
     })
     return () => { cancelled = true; cleanup?.() }
   }, [])

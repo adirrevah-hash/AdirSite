@@ -19,21 +19,15 @@ gsap.registerPlugin(ScrollTrigger)
 // must not re-measure every trigger mid-scroll, which makes pinned rows jump.
 ScrollTrigger.config({ ignoreMobileResize: true })
 
-export type SiteOptions = {
-  // Where the lead form posts. null in the static preview, where there is no
-  // server: the form then completes on WhatsApp and says so.
-  endpoint: string | null
-}
-
 // One entry point for every interaction on the page. Each module returns its
 // own cleanup; this returns one that runs them all.
-export function initSite(opts: SiteOptions) {
+export function initSite() {
   const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches
   const cleanups = [
     initHeader(),
     initReveals(reduced),
     initHero(reduced),
-    initForm(opts.endpoint),
+    initForm(),
     initFloat(),
   ]
   // The chapters further down set up once the first screen is interactive,

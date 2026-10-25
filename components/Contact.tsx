@@ -3,10 +3,8 @@ import { site, whatsappUrl } from '@/lib/site'
 import { SERVICE_OPTIONS } from '@/lib/contact'
 import { IconWhatsApp, IconPhone, IconInstagram, IconArrow } from './icons'
 
-// Conversion. The form is plain markup; lib/motion/form.ts validates it,
-// sends it to /api/contact and reports the outcome honestly: delivered, or
-// (with no delivery configured) handed over to WhatsApp with the details
-// already written.
+// Conversion. The form is plain markup; lib/motion/form.ts validates it and
+// opens WhatsApp to the studio with everything filled in already written.
 export default function Contact() {
   return (
     <section id="contact" className="contact on-dark bg-midnight" aria-labelledby="contact-title">

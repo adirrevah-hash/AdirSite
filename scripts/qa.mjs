@@ -162,36 +162,19 @@ for (const [w, h] of [[1440, 900], [390, 844]]) {
   check('invalid phone is caught before sending', (await page.evaluate(() => document.activeElement?.id)) === 'f-phone')
   await page.screenshot({ path: `${OUT}/form-errors.png` })
   await page.fill('#f-phone', '050-123-4567'); await page.fill('#f-message', 'צריך דף נחיתה לקמפיין')
-  await wait(2600)
-  await page.click('[data-submit]')
-  await page.waitForSelector('[data-status]:not([hidden])', { timeout: 8000 })
-  const st = await page.evaluate(() => { const s = document.querySelector('[data-status]'); return { text: s.textContent, wa: s.querySelector('a')?.getAttribute('href') || '', focused: document.activeElement === s, cls: s.className } })
-  const sent = /התקבלה/.test(st.text)
-  const handoff = /לא נשלחו/.test(st.text) && st.wa.startsWith('https://wa.me/972538007008?text=') && decodeURIComponent(st.wa).includes('050-1234567') && decodeURIComponent(st.wa).includes('דף נחיתה')
-  check('valid lead: delivered, or an honest WhatsApp handoff with the details', sent || handoff, sent ? 'delivered' : 'handoff')
+  // A valid lead opens WhatsApp to the studio with everything filled in.
+  await ctx.route('https://wa.me/**', r => r.fulfill({ status: 200, contentType: 'text/html', body: 'whatsapp' }))
+  const [tab] = await Promise.all([ctx.waitForEvent('page', { timeout: 8000 }), page.click('[data-submit]')])
+  const waUrl = decodeURIComponent(tab.url())
+  await tab.close()
+  const st = await page.evaluate(() => { const s = document.querySelector('[data-status]'); return { text: s.textContent, focused: document.activeElement === s } })
+  const carries = ['בדיקה אוטומטית', '050-1234567', 'דף נחיתה', 'צריך דף נחיתה לקמפיין'].every(t => waUrl.includes(t))
+  check('valid lead opens WhatsApp to 053-800-7008 with every field filled in', waUrl.startsWith('https://wa.me/972538007008?text=') && carries, waUrl.slice(0, 90))
+  check('the page says the message still needs sending in WhatsApp', /ללחוץ שליחה בוואטסאפ/.test(st.text))
   check('outcome is announced (focus moves to the status)', st.focused)
   await page.screenshot({ path: `${OUT}/form-result.png` })
   check('form: no console errors', errors.length === 0, errors.join(' | '))
   await ctx.close()
-}
-
-// ------------------------------------------------------------- API guards
-{
-  const post = (body, headers = {}) => fetch(`${BASE}/api/contact`, { method: 'POST', headers: { 'content-type': 'application/json', 'x-real-ip': headers.ip || `10.0.0.${Math.floor(Math.random() * 250)}`, ...headers }, body: typeof body === 'string' ? body : JSON.stringify(body) })
-  const good = { name: 'בדיקה', phone: '0501234567', service: 'logo', message: '', elapsed: 9000 }
-  check('API: cross-origin refused', (await post(good, { origin: 'https://evil.example' })).status === 403)
-  check('API: non-JSON refused', (await fetch(`${BASE}/api/contact`, { method: 'POST', headers: { 'content-type': 'text/plain' }, body: 'x' })).status === 415)
-  check('API: oversized body refused', (await post({ ...good, message: 'x'.repeat(9000) })).status === 413)
-  check('API: malformed JSON refused', (await post('{nope')).status === 400)
-  const inv = await post({ ...good, phone: '123' })
-  check('API: invalid fields -> 422 with field errors', inv.status === 422 && !!(await inv.json()).errors?.phone)
-  check('API: honeypot gets a silent ok', (await post({ ...good, company: 'bot' })).status === 200)
-  check('API: instant submit gets a silent ok', (await post({ ...good, elapsed: 300 })).status === 200)
-  const real = await post(good); const rb = await real.json()
-  check('API: valid lead delivered or reports not_configured', (real.ok && rb.ok) || (real.status === 503 && rb.reason === 'not_configured'), `${real.status} ${JSON.stringify(rb)}`)
-  const codes = []; for (let i = 0; i < 8; i++) codes.push((await post(good, { ip: '10.9.9.9' })).status)
-  const first = codes.indexOf(429)
-  check('API: rate limit engages and holds', first > -1 && first <= 5 && codes.slice(first).every(c => c === 429), codes.join(','))
 }
 
 // ---------------------------------------------------------------- mobile

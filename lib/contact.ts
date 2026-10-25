@@ -88,7 +88,3 @@ export function leadText(lead: Lead) {
   if (lead.message) lines.push(`פרטים: ${lead.message}`)
   return lines.join('\n')
 }
-
-export function escapeHtml(s: string) {
-  return s.replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]!)
-}

@@ -1,6 +1,6 @@
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
-import { normalisePhone, validateContact, leadText, escapeHtml } from '../lib/contact.ts'
+import { normalisePhone, validateContact, leadText } from '../lib/contact.ts'
 
 test('normalisePhone accepts Israeli mobile, landline and international forms', () => {
   assert.equal(normalisePhone('053-800-7008'), '0538007008')
@@ -45,11 +45,14 @@ test('message is optional', () => {
   assert.equal(validateContact({ name: 'רון', phone: '0501234567', service: 'card' }).ok, true)
 })
 
-test('leadText and escapeHtml', () => {
-  const r = validateContact({ name: 'רון', phone: '0501234567', service: 'card', message: '<b>hi</b>' })
+test('leadText carries everything the visitor filled in', () => {
+  const r = validateContact({ name: 'רון', phone: '0501234567', service: 'card', message: 'צריך כרטיס ביקור' })
   assert.ok(r.ok)
   if (r.ok) {
-    assert.match(leadText(r.lead), /טלפון: 050-1234567/)
-    assert.equal(escapeHtml(r.lead.message), '&lt;b&gt;hi&lt;/b&gt;')
+    const t = leadText(r.lead)
+    assert.match(t, /שם: רון/)
+    assert.match(t, /טלפון: 050-1234567/)
+    assert.match(t, /שירות: כרטיס ביקור/)
+    assert.match(t, /פרטים: צריך כרטיס ביקור/)
   }
 })
