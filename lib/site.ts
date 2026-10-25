@@ -22,6 +22,7 @@ export const CTA = { primary: 'בואו נדבר', work: 'לעבודות' }
 
 export const nav = [
   { href: '#work', label: 'עבודות' },
+  { href: '#about', label: 'אודות' },
   { href: '#services', label: 'שירותים' },
   { href: '#process', label: 'תהליך' },
   { href: '#contact', label: 'צור קשר' },

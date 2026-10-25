@@ -48,14 +48,6 @@ export function initReveals(reduced: boolean) {
       })
     })
 
-    // The founder's portrait rises into place and its photo settles from a
-    // touch closer. Opacity and transform only.
-    gsap.utils.toArray<HTMLElement>('[data-about-portrait]').forEach(el => {
-      const st = { trigger: el, start: 'top 85%', once: true }
-      gsap.fromTo(el, { opacity: 0, y: 48 }, { opacity: 1, y: 0, duration: 1.3, ease: EASE, scrollTrigger: st })
-      gsap.fromTo(el.querySelector('.about__img'), { scale: 1.08 }, { scale: 1, duration: 1.8, ease: EASE, scrollTrigger: st })
-    })
-
     // Labels outside the hero decode once, left to right in reading order.
     gsap.utils.toArray<HTMLElement>('main .t-label').forEach(el => {
       if (el.closest('.hero')) return

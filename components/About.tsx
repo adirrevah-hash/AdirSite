@@ -1,9 +1,8 @@
-import Image from 'next/image'
 import Split from './Split'
 
-// Behind the studio: the founder's portrait in a fine champagne frame beside a
-// short introduction, a hand-drawn signature and one call to action. Gold is
-// kept to accents: the frame, the label, the signature and the button rim.
+// Behind the studio: a short introduction from the founder, a hand-drawn
+// signature and one call to action. Gold is kept to accents: the label, the
+// signature and the button rim.
 
 // "ADIR", hand-lettered as single strokes, so it stays sharp at any size.
 function Signature() {
@@ -29,14 +28,6 @@ export default function About() {
     <section id="about" className="about on-dark" aria-labelledby="about-title">
       <div className="about__deco" aria-hidden="true"><i className="about__arc" /><i className="about__rule" /></div>
       <div className="wrap about__grid">
-        <figure className="about__portrait" data-about-portrait>
-          <div className="about__frame">
-            <Image src="/about/adir.jpg" alt="אדיר, המייסד של ARStudio" width={610} height={726} sizes="(min-width: 1024px) 40vw, 92vw" quality={90} className="about__img" />
-          </div>
-          <span className="about__tick about__tick--a" aria-hidden="true" />
-          <span className="about__tick about__tick--b" aria-hidden="true" />
-        </figure>
-
         <div className="about__copy" data-reveal="fade">
           <p className="t-label about__label">מאחורי ARStudio</p>
           <h2 id="about-title" className="t-h2 about__title">
