@@ -373,13 +373,13 @@ button.link { background: none; border-inline: 0; border-top: 0; font: inherit; 
 .footer__top { display: grid; gap: 1rem; padding-bottom: 3rem; border-bottom: 1px solid var(--border-dark); }
 .footer__word { margin: 0; direction: ltr; text-align: right; font-family: var(--font-display); font-weight: 600; letter-spacing: -0.045em; line-height: 0.85; font-size: min(16.5vw, 13.5rem); color: var(--color-off-white); }
 .footer__line { margin: 0; color: var(--color-silver-muted); }
-.footer__row { display: grid; gap: 2.5rem; align-items: start; padding-block: 3rem; }
-@media (min-width: 760px) { .footer__row { grid-template-columns: 1fr auto; } }
+.footer__brandrow { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1.25rem 2rem; }
+.footer__row { padding-block: 3rem; }
 .footer__social { display: flex; gap: 0.85rem; }
 .social-btn { display: grid; place-items: center; width: 3.5rem; height: 3.5rem; border-radius: 50%; color: var(--color-off-white); transition: transform 300ms var(--ease), color 200ms var(--ease); }
 @media (hover: hover) and (pointer: fine) { a.social-btn:hover { transform: translateY(-3px); } }
 .social-btn.is-pending { color: var(--color-silver-muted); cursor: default; }
-.footer__legal-links { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.6rem; justify-items: stretch; min-width: min(100%, 19rem); }
+.footer__legal-links { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.6rem; width: min(100%, 22rem); }
 .legal-btn {
   width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 1rem;
   min-height: 3.25rem; padding: 0 1.25rem; border-radius: 14px; border: 1px solid var(--border-dark); background: transparent;

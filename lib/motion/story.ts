@@ -68,7 +68,7 @@ export function initStory(reduced: boolean) {
     const title = stage?.querySelector<HTMLElement>('[data-zoom]')
     if (stage && title) {
       const cta = stage.querySelector('[data-statement-cta]')
-      gsap.timeline({ scrollTrigger: { trigger: stage, start: 'top top', end: '+=110%', pin: true, scrub: 0.6 } })
+      gsap.timeline({ scrollTrigger: { trigger: stage, start: 'center center', end: '+=90%', pin: true, scrub: 0.6 } })
         .fromTo(title, { scale: 3.2, opacity: 0, filter: 'blur(14px)' }, { scale: 1, opacity: 1, filter: 'blur(0px)', ease: 'power2.out', duration: 1 })
         .fromTo(title.querySelectorAll('.statement__line'), { yPercent: 55 }, { yPercent: 0, ease: 'power2.out', stagger: 0.12, duration: 0.8 }, 0)
         .fromTo(cta, { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.35 }, 0.85)

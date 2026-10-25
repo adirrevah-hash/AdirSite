@@ -102,7 +102,9 @@
 .shutter { display: none; }
 .motion-ready .shutter { display: flex; height: 60svh; background: var(--color-off-white); }
 .shutter i { flex: 1; margin-inline-end: -1px; background: var(--color-midnight); transform-origin: bottom; }
-.statement__stage { min-height: 100svh; display: grid; align-items: center; padding-block: var(--section-y); box-sizing: border-box; }
+.statement__stage { display: grid; align-items: center; padding-block: clamp(3rem, 6vw, 5rem); box-sizing: border-box; }
+/* the closing line hands straight over to the form */
+.statement + .contact { padding-top: clamp(2.5rem, 5vw, 4rem); }
 .statement__inner { width: 100%; }
 .statement__title { margin: 0; font-family: var(--font-display); font-weight: 500; font-size: clamp(3rem, 0.8rem + 8.2vw, 10rem); line-height: 0.98; letter-spacing: -0.035em; transform-origin: 50% 45%; }
 .statement__line { display: block; }

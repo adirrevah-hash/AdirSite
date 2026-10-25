@@ -2,8 +2,8 @@ import { legal } from '@/lib/legal'
 import { site } from '@/lib/site'
 import { IconClose, IconFacebook, IconInstagram } from './icons'
 
-// The close of the page: the wordmark, the social channels as icon buttons,
-// and the three legal documents, each opening in a side panel.
+// The close of the page: the wordmark with the line and the social channels
+// beside it, then the three legal documents, each opening in a side panel.
 export default function Footer() {
   const year = new Date().getFullYear()
   return (
@@ -11,27 +11,28 @@ export default function Footer() {
       <div className="wrap">
         <div className="footer__top">
           <p className="footer__word" aria-hidden="true" data-footer-word>{[...'ARStudio'].map((ch, i) => <span key={i}>{ch}</span>)}</p>
-          <p className="footer__line">אתרי תדמית, דפי נחיתה וזהות חזותית לעסקים.</p>
+          <div className="footer__brandrow">
+            <p className="footer__line">אתרי תדמית, דפי נחיתה וזהות חזותית לעסקים.</p>
+            <div className="footer__social">
+              <a href={site.instagram.url} target="_blank" rel="noopener noreferrer" className="social-btn glass" aria-label="אינסטגרם">
+                <IconInstagram width={22} height={22} />
+              </a>
+              {site.facebook ? (
+                <a href={site.facebook} target="_blank" rel="noopener noreferrer" className="social-btn glass" aria-label="פייסבוק">
+                  <IconFacebook width={22} height={22} />
+                </a>
+              ) : (
+                // No Facebook address yet: shown, but not a link that goes nowhere.
+                <span className="social-btn glass is-pending" title="הקישור לפייסבוק יתווסף בקרוב">
+                  <IconFacebook width={22} height={22} aria-hidden="true" />
+                  <span className="sr-only">פייסבוק, הקישור יתווסף בקרוב</span>
+                </span>
+              )}
+            </div>
+          </div>
         </div>
 
         <div className="footer__row">
-          <div className="footer__social">
-            <a href={site.instagram.url} target="_blank" rel="noopener noreferrer" className="social-btn glass" aria-label="אינסטגרם">
-              <IconInstagram width={22} height={22} />
-            </a>
-            {site.facebook ? (
-              <a href={site.facebook} target="_blank" rel="noopener noreferrer" className="social-btn glass" aria-label="פייסבוק">
-                <IconFacebook width={22} height={22} />
-              </a>
-            ) : (
-              // No Facebook address yet: shown, but not a link that goes nowhere.
-              <span className="social-btn glass is-pending" title="הקישור לפייסבוק יתווסף בקרוב">
-                <IconFacebook width={22} height={22} aria-hidden="true" />
-                <span className="sr-only">פייסבוק, הקישור יתווסף בקרוב</span>
-              </span>
-            )}
-          </div>
-
           <ul className="footer__legal-links">
             {legal.map(d => (
               <li key={d.id}>

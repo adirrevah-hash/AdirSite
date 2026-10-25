@@ -20,8 +20,8 @@ export function IconInstagram(props: React.SVGProps<SVGSVGElement>) {
 
 export function IconFacebook(props: React.SVGProps<SVGSVGElement>) {
   return (
-    <svg {...base} {...props} fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round">
-      <path d="M14.5 21v-7.5h2.6l.4-3h-3V8.7c0-.9.3-1.5 1.5-1.5h1.6V4.5c-.3 0-1.2-.1-2.3-.1-2.3 0-3.8 1.4-3.8 3.9v2.2H9v3h2.5V21" />
+    <svg {...base} {...props} fill="currentColor">
+      <path d="M13.6 21.5v-8.1h2.7l.4-3.2h-3.1V8.2c0-.9.3-1.6 1.6-1.6h1.7V3.8c-.3 0-1.3-.1-2.5-.1-2.4 0-4.1 1.5-4.1 4.2v2.3H7.6v3.2h2.7v8.1h3.3z" />
     </svg>
   )
 }
