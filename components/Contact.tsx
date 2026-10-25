@@ -26,7 +26,7 @@ export default function Contact() {
           </ul>
         </div>
 
-        <form className="lead-form" noValidate data-lead-form aria-labelledby="contact-title">
+        <form className="lead-form glass" noValidate data-lead-form aria-labelledby="contact-title">
           <div className="field">
             <label htmlFor="f-name">שם</label>
             <input id="f-name" name="name" type="text" autoComplete="name" required maxLength={80} />

@@ -71,7 +71,7 @@ export default function Work() {
                 <span className="project__index num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
                 <button type="button" className="project__stage" data-dialog={`dlg-${p.id}`} data-cursor="פתיחה" aria-haspopup="dialog">
                   <span className="project__media" aria-hidden="true"><Devices p={p} /></span>
-                  <span className="project__hint">פרטי הפרויקט<span className="sr-only"> {p.name}</span></span>
+                  <span className="project__hint glass">פרטי הפרויקט<span className="sr-only"> {p.name}</span></span>
                 </button>
                 <div className="project__caption">
                   <h3 className="t-h3">{p.name}</h3>
@@ -89,7 +89,7 @@ export default function Work() {
 
       {items.map(p => (
         <dialog key={p.id} id={`dlg-${p.id}`} className="pdialog on-dark" aria-labelledby={`dlg-${p.id}-title`}>
-          <div className="pdialog__panel">
+          <div className="pdialog__panel glass">
             <header className="pdialog__head">
               <div>
                 <p className="t-label">פרויקט</p>

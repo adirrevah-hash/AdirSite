@@ -5,7 +5,7 @@ import { IconWhatsApp } from './icons'
 // switches it on in between.
 export default function WhatsAppFloat() {
   return (
-    <a href={whatsappUrl()} target="_blank" rel="noopener noreferrer" className="wa-float" aria-label="שיחה בוואטסאפ" data-wa-float>
+    <a href={whatsappUrl()} target="_blank" rel="noopener noreferrer" className="wa-float glass" aria-label="שיחה בוואטסאפ" data-wa-float>
       <IconWhatsApp />
     </a>
   )

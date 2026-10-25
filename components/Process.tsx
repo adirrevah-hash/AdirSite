@@ -30,7 +30,7 @@ export default function Process() {
                 <span className="step__num num">{String(i + 1).padStart(2, '0')}</span>
                 <h3 className="t-h3">{s.title}</h3>
                 <p className="t-body">{s.text}</p>
-                <p className="step__out"><span>תוצר</span>{s.out}</p>
+                <p className="step__out glass"><span>תוצר</span>{s.out}</p>
               </li>
             ))}
           </ol>

@@ -14,12 +14,13 @@ export default function Services() {
       <div className="services__room x-room">
         <div className="services__pin x-pin">
           <p className="ghost-word services__ghost" aria-hidden="true" data-ghost>שירותים</p>
+          <div className="glass-orbs" aria-hidden="true"><i /><i /><i /></div>
           <div className="services__track x-track">
             <header className="services__head">
               <p className="t-label">שירותים</p>
               <h2 id="services-title" className="t-h2" data-reveal="chars">
                 <span className="line"><Split text="מה בונים" /></span>
-                <span className="line"><Split text="בסטודיו." /></span>
+                <span className="line"><Split text="בסטודיו?" /></span>
               </h2>
               <p className="t-lede">שישה שירותים שעובדים יחד: מהסימן הראשון של המותג ועד האתר שממשיך לעבוד אחרי ההשקה.</p>
               <p className="x-cue" aria-hidden="true"><span>גללו</span><i /></p>
@@ -27,7 +28,7 @@ export default function Services() {
 
             <ol className="services__list">
               {services.map((s, i) => (
-                <li key={s.id} className="svc-item" data-svc={s.id}>
+                <li key={s.id} className="svc-item glass" data-svc={s.id}>
                   <div className="svc-item__visual" aria-hidden="true">
                     <span className="svc-item__num num">{String(i + 1).padStart(2, '0')}</span>
                     <ServiceVisual id={s.id} />

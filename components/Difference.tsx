@@ -29,18 +29,19 @@ export default function Difference() {
       <div className="diff__room x-room">
         <div className="diff__pin x-pin">
           <p className="ghost-word diff__ghost" aria-hidden="true" data-ghost>בנויים בדיוק</p>
+          <div className="glass-orbs" aria-hidden="true"><i /><i /><i /></div>
           <div className="diff__track x-track">
             <header className="diff__head">
               <p className="t-label">ההבדל</p>
               <h2 id="diff-title" className="t-h2" data-reveal="chars">
                 <span className="line"><Split text="מה מקבלים" /></span>
-                <span className="line"><Split text="בפועל." /></span>
+                <span className="line"><Split text="בפועל?" /></span>
               </h2>
               <p className="x-cue" aria-hidden="true"><span>גללו</span><i /></p>
             </header>
             <ul className="diff__list">
               {items.map((it, i) => (
-                <li key={it.title} className="diff__item" data-spot>
+                <li key={it.title} className="diff__item glass" data-spot>
                   <span className="diff__num num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
                   <Icon kind={it.icon} />
                   <h3 className="t-h3">{it.title}</h3>
