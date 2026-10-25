@@ -61,3 +61,45 @@ export function initHero(reduced: boolean) {
     hero.classList.remove('is-3d')
   }
 }
+
+// The hero's second line turns through its words, letter by letter, while the
+// hero is on screen. Reduced motion keeps the first word and its rule.
+export function initRotator(reduced: boolean) {
+  const rot = document.querySelector<HTMLElement>('[data-rotator]')
+  if (!rot) return () => {}
+  const words = [...rot.querySelectorAll<HTMLElement>('.hero__word')]
+  const rule = rot.querySelector<HTMLElement>('[data-underline]')
+  const measure = (w: HTMLElement) => rule?.style.setProperty('--uw', `${w.querySelector('.split')!.getBoundingClientRect().width}px`)
+  let i = 0
+  measure(words[0])
+  const onResize = () => measure(words[i])
+  addEventListener('resize', onResize)
+  if (reduced || words.length < 2) return () => removeEventListener('resize', onResize)
+
+  let timer = 0
+  let visible = true
+  const next = () => {
+    if (!visible || document.hidden) return
+    const cur = words[i]
+    i = (i + 1) % words.length
+    const nxt = words[i]
+    cur.classList.replace('is-on', 'is-out')
+    nxt.classList.add('is-on')
+    measure(nxt)
+    gsap.to(cur.querySelectorAll('.c'), {
+      yPercent: -115, duration: 0.45, ease: 'power3.in', stagger: 0.018, overwrite: true,
+      onComplete: () => { cur.classList.remove('is-out'); gsap.set(cur.querySelectorAll('.c'), { clearProps: 'transform' }) },
+    })
+    gsap.fromTo(nxt.querySelectorAll('.c'), { yPercent: 115 }, { yPercent: 0, duration: 0.75, ease: 'expo.out', stagger: 0.022, delay: 0.22, overwrite: true })
+    if (rule) gsap.fromTo(rule, { scaleX: 0 }, { scaleX: 1, duration: 0.9, ease: 'expo.out', delay: 0.3, overwrite: true })
+  }
+  const io = new IntersectionObserver(([e]) => { visible = e.isIntersecting })
+  io.observe(rot)
+  // Start once the opening has played, then turn every few seconds.
+  const start = window.setTimeout(() => { timer = window.setInterval(next, 2800) }, document.documentElement.classList.contains('has-intro') ? 4200 : 2600)
+  return () => {
+    clearTimeout(start); clearInterval(timer); io.disconnect()
+    removeEventListener('resize', onResize)
+    gsap.killTweensOf([rule, ...words.flatMap(w => [...w.querySelectorAll('.c')])])
+  }
+}

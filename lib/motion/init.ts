@@ -2,7 +2,7 @@ import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { initHeader } from './header'
 import { initReveals } from './reveals'
-import { initHero } from './hero'
+import { initHero, initRotator } from './hero'
 import { initWork } from './work'
 import { initServices } from './services'
 import { initDifference } from './difference'
@@ -34,6 +34,7 @@ export function initSite() {
     initHeader(),
     initReveals(reduced),
     initHero(reduced),
+    initRotator(reduced),
     initForm(),
     initFloat(),
   ]

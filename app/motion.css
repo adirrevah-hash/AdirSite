@@ -275,3 +275,45 @@ main .pin-spacer { max-width: 100%; overflow-x: clip !important; } /* its inline
    the content; they keep the glass fill and take a plain edge instead. */
 .pdialog__panel.glass::after { content: none; }
 .pdialog__panel.glass { border-inline-start-color: var(--border-dark) !important; }
+
+/* ------------------------------------------------------- hero, living line
+   The second line turns through what the sites do. One word is in the flow;
+   the others wait out of sight in the same place, and the script turns them
+   letter by letter. A silver rule draws itself under each new word. */
+.hero__rotator { position: relative; font-size: 0.8em; padding-bottom: 0.18em; margin-bottom: -0.1em; }
+.hero__word:not(.is-on) { position: absolute; top: 0; inset-inline-start: 0; visibility: hidden; }
+.hero__word.is-out { visibility: visible; }
+.hero__underline { position: absolute; bottom: 0.05em; inset-inline-start: 0; height: 0.055em; width: var(--uw, 3.2em); border-radius: 999px; background: linear-gradient(to left, var(--color-off-white), var(--color-silver-muted)); transform-origin: right; }
+@media (prefers-reduced-motion: no-preference) { .hero__underline { animation: underlineIn 1s var(--ease) 0.6s backwards; } .has-intro .hero__underline { animation-delay: 2.35s; } }
+@keyframes underlineIn { from { transform: scaleX(0); } }
+
+/* what every site includes, as quiet glass pills */
+.hero__chips { list-style: none; margin: 1.5rem 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 0.55rem; }
+.hero__chips li { display: inline-flex; align-items: center; gap: 0.45rem; padding: 0.45rem 0.85rem; border-radius: 999px; font-size: 0.85rem; color: var(--color-silver); }
+.hero__chips svg { width: 0.95rem; height: 0.95rem; fill: none; stroke: var(--color-off-white); stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+@media (prefers-reduced-motion: no-preference) { .has-intro .hero__chips { animation: fadeUp 1s var(--ease) 2.36s backwards; } }
+
+/* a lead arriving beside the object, now and then */
+.hero__toast { position: absolute; z-index: 2; left: 9%; bottom: 20%; display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 1.1rem 0.75rem 1.25rem; border-radius: 16px; color: var(--color-off-white); font-size: 0.9rem; font-weight: 500; }
+.hero__toast small { display: block; font-size: 0.75rem; font-weight: 400; color: var(--color-silver-muted); }
+.hero__toast-dot { flex: none; width: 0.6rem; height: 0.6rem; border-radius: 50%; background: var(--success); box-shadow: 0 0 0 4px color-mix(in oklab, var(--success) 25%, transparent); }
+@media (prefers-reduced-motion: no-preference) { .hero__toast { animation: toastLoop 9s var(--ease) 3.5s infinite backwards; } }
+@media (prefers-reduced-motion: reduce) { .hero__toast { display: none; } }
+@keyframes toastLoop {
+  0% { opacity: 0; transform: translateY(14px) scale(0.96); }
+  6%, 62% { opacity: 1; transform: none; }
+  70%, 100% { opacity: 0; transform: translateY(-8px); }
+}
+@media (max-width: 959px) { .hero__toast { left: 6%; bottom: 6%; font-size: 0.82rem; padding: 0.6rem 0.9rem; } }
+
+/* phones: the object a little shorter and the copy a little tighter, so the
+   two buttons stay on the first screen with the chips added */
+@media (max-width: 959px) {
+  .hero__art { height: 38svh; }
+  .hero__inner { padding-top: calc(var(--header-h) + 38svh); }
+  .hero__title { margin-top: 1rem; }
+  .hero__sub { margin-top: 1.1rem; }
+  .hero__chips { margin-top: 1rem; gap: 0.45rem; }
+  .hero__chips li { padding: 0.35rem 0.7rem; font-size: 0.8rem; }
+  .hero__actions { margin-top: 1.4rem; }
+}
