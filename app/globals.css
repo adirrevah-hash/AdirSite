@@ -1,0 +1,137 @@
+@import 'tailwindcss';
+
+/* =========================================================================
+   ARStudio design system
+   Colour: the brief's palette, as tokens. Nothing below uses a raw colour
+   that is not defined here. Type: Noto Sans Hebrew (variable) for display,
+   IBM Plex Sans Hebrew for text. Self-hosted, split by script.
+   ========================================================================= */
+
+@font-face {
+  font-family: 'Display'; src: url(/fonts/noto-hebrew-he.woff2) format('woff2');
+  font-weight: 100 900; font-stretch: 62.5% 100%; font-display: block;
+  unicode-range: U+0307-0308, U+0590-05FF, U+200C-2010, U+20AA, U+25CC, U+FB1D-FB4F;
+}
+@font-face {
+  font-family: 'Display'; src: url(/fonts/noto-hebrew-latin.woff2) format('woff2');
+  font-weight: 100 900; font-stretch: 62.5% 100%; font-display: block;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face { font-family: 'Text'; src: url(/fonts/plex-hebrew-400-he.woff2) format('woff2'); font-weight: 400; font-display: block; unicode-range: U+0307-0308, U+0590-05FF, U+200C-2010, U+20AA, U+25CC, U+FB1D-FB4F; }
+@font-face { font-family: 'Text'; src: url(/fonts/plex-hebrew-400-latin.woff2) format('woff2'); font-weight: 400; font-display: block; unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC, U+2122, U+2212, U+FEFF, U+FFFD; }
+@font-face { font-family: 'Text'; src: url(/fonts/plex-hebrew-500-he.woff2) format('woff2'); font-weight: 500; font-display: swap; unicode-range: U+0307-0308, U+0590-05FF, U+200C-2010, U+20AA, U+25CC, U+FB1D-FB4F; }
+@font-face { font-family: 'Text'; src: url(/fonts/plex-hebrew-500-latin.woff2) format('woff2'); font-weight: 500; font-display: swap; unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC, U+2122, U+2212, U+FEFF, U+FFFD; }
+@font-face { font-family: 'Text'; src: url(/fonts/plex-hebrew-600-he.woff2) format('woff2'); font-weight: 600; font-display: block; unicode-range: U+0307-0308, U+0590-05FF, U+200C-2010, U+20AA, U+25CC, U+FB1D-FB4F; }
+@font-face { font-family: 'Text'; src: url(/fonts/plex-hebrew-600-latin.woff2) format('woff2'); font-weight: 600; font-display: block; unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC, U+2122, U+2212, U+FEFF, U+FFFD; }
+
+:root {
+  --color-midnight: #091321;
+  --color-navy-deep: #101D30;
+  --color-navy-secondary: #172B43;
+  --color-graphite: #171A20;
+  --color-graphite-elevated: #222833;
+  --color-off-white: #F5F6F8;
+  --color-white: #FFFFFF;
+  --color-silver: #C5CDD8;
+  --color-silver-muted: #8E9AAA;
+  --color-ink-soft: #4B5563;          /* secondary text on light grounds (7.1:1 on off-white) */
+  --border-dark: rgba(197, 205, 216, 0.16);
+  --border-light: rgba(23, 26, 32, 0.12);
+  --hover-on-dark: #172B43;
+  --hover-on-light: #E5E9EF;
+  --focus-ring: #8EABC9;
+  --success: #247A55;
+  --error: #B42332;
+  --header-scrolled: rgba(9, 19, 33, 0.88);
+
+  --font-display: 'Display', system-ui, sans-serif;
+  --font-text: 'Text', system-ui, sans-serif;
+
+  --gutter: clamp(1.25rem, 4.5vw, 5rem);
+  --maxw: 90rem;
+  --header-h: 4.5rem;
+  --section-y: clamp(5.5rem, 11vw, 10rem);
+  --radius: 14px;
+  --radius-lg: 22px;
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-io: cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+/* Grounds. Each re-inks its subtree, so text never inherits the wrong ink. */
+.on-dark { --ink: var(--color-off-white); --ink-2: var(--color-silver); --ink-3: var(--color-silver-muted); --line: var(--border-dark); --hover: var(--hover-on-dark); color: var(--ink); }
+.on-light { --ink: var(--color-graphite); --ink-2: var(--color-ink-soft); --ink-3: var(--color-ink-soft); --line: var(--border-light); --hover: var(--hover-on-light); color: var(--ink); }
+.bg-midnight { background: var(--color-midnight); }
+.bg-navy { background: var(--color-navy-deep); }
+.bg-graphite { background: var(--color-graphite); }
+.bg-off-white { background: var(--color-off-white); }
+
+html { scroll-padding-top: calc(var(--header-h) + 1rem); -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0; background: var(--color-midnight); color: var(--color-off-white);
+  font-family: var(--font-text); font-size: 1.0625rem; line-height: 1.7;
+  -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; overflow-x: clip;
+}
+::selection { background: var(--color-silver); color: var(--color-midnight); }
+:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 3px; border-radius: 4px; }
+a { color: inherit; text-decoration: none; }
+img { max-width: 100%; height: auto; }
+
+.wrap { width: 100%; max-width: var(--maxw); margin-inline: auto; padding-inline: var(--gutter); }
+.sr-only { position: absolute; width: 1px; height: 1px; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.skip-link { position: absolute; inset-inline-start: 1rem; top: -4rem; z-index: 200; padding: 0.6rem 1rem; border-radius: 8px; background: var(--color-white); color: var(--color-graphite); }
+.skip-link:focus { top: 1rem; }
+
+/* ---------------------------------------------------------------- type */
+.t-hero { font-family: var(--font-display); font-weight: 500; font-size: clamp(2.6rem, 1.1rem + 5.4vw, 6.6rem); line-height: 0.98; letter-spacing: -0.025em; text-wrap: balance; }
+.t-statement { font-family: var(--font-display); font-weight: 300; font-size: clamp(2.1rem, 1.1rem + 3.9vw, 5rem); line-height: 1.08; letter-spacing: -0.02em; text-wrap: balance; }
+.t-h2 { font-family: var(--font-display); font-weight: 500; font-size: clamp(2.2rem, 1.3rem + 3.2vw, 4.4rem); line-height: 1.02; letter-spacing: -0.02em; text-wrap: balance; }
+.t-h3 { font-family: var(--font-display); font-weight: 500; font-size: clamp(1.45rem, 1.15rem + 1vw, 2rem); line-height: 1.15; letter-spacing: -0.01em; }
+.t-lede { font-size: clamp(1.08rem, 1rem + 0.35vw, 1.28rem); line-height: 1.65; color: var(--ink-2); max-width: 44ch; text-wrap: pretty; }
+.t-body { color: var(--ink-2); max-width: 60ch; text-wrap: pretty; }
+.t-label { font-size: 0.8125rem; font-weight: 500; letter-spacing: 0.06em; color: var(--ink-3); display: inline-flex; align-items: center; gap: 0.75rem; }
+.t-label::before { content: ''; width: 1.75rem; height: 1px; background: currentColor; opacity: 0.6; }
+.num { font-family: var(--font-display); font-variant-numeric: tabular-nums; direction: ltr; unicode-bidi: isolate; }
+
+/* Lines that rise out of a mask. Markup: .lines > .line > span */
+.line { display: block; overflow: hidden; padding-bottom: 0.08em; margin-bottom: -0.08em; }
+.line > span { display: block; }
+
+/* ------------------------------------------------------------- buttons */
+.btn {
+  position: relative; display: inline-flex; align-items: center; justify-content: center; gap: 0.7rem;
+  min-height: 3.25rem; padding: 0 1.6rem; border-radius: 999px; border: 1px solid transparent;
+  font: 600 1rem/1 var(--font-text); white-space: nowrap; cursor: pointer;
+  transition: background-color 180ms var(--ease), color 180ms var(--ease), border-color 180ms var(--ease), transform 160ms var(--ease);
+  -webkit-tap-highlight-color: transparent;
+}
+.btn:active { transform: scale(0.98); }
+.btn--light { background: var(--color-white); color: var(--color-graphite); }
+.btn--dark { background: var(--color-midnight); color: var(--color-off-white); }
+.btn--ghost { border-color: var(--line); color: var(--ink); background: transparent; }
+@media (hover: hover) and (pointer: fine) {
+  .btn--light:hover { background: var(--hover-on-light); }
+  .btn--dark:hover { background: var(--hover-on-dark); }
+  .btn--ghost:hover { background: var(--hover); border-color: transparent; }
+}
+.btn[disabled] { opacity: 0.6; cursor: progress; }
+.btn__arrow { display: inline-block; transition: transform 220ms var(--ease); }
+@media (hover: hover) and (pointer: fine) { .btn:hover .btn__arrow, .link:hover .btn__arrow { transform: translateX(-4px); } }
+.link { display: inline-flex; align-items: center; gap: 0.5rem; font-weight: 500; color: var(--ink); border-bottom: 1px solid var(--line); padding-bottom: 0.2rem; transition: border-color 180ms var(--ease); }
+@media (hover: hover) and (pointer: fine) { .link:hover { border-color: currentColor; } }
+
+/* ------------------------------------------------------------- motion
+   Reveals are hidden only once the motion script has claimed them, so the
+   page is complete without JavaScript and for reduced motion. */
+.motion-ready [data-reveal='fade'] > *, .motion-ready [data-reveal='fade-self'] { will-change: transform, opacity; }
+
+@keyframes rise { from { transform: translateY(105%); } to { transform: none; } }
+@keyframes fadeUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: no-preference) {
+  /* Only the headline lines rise; the copy under them paints at once, so the
+     first screen is readable (and measured) immediately. */
+  .hero .line > span { animation: rise 1s var(--ease) both; }
+  .hero .line:nth-child(2) > span { animation-delay: 80ms; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 1ms !important; animation-iteration-count: 1 !important; transition-duration: 1ms !important; scroll-behavior: auto !important; }
+}
