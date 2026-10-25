@@ -3,8 +3,8 @@ import { CTA, site, whatsappUrl } from '@/lib/site'
 
 // The opening. Type on the right, its second line turning through what the
 // sites do; on the left a website in exploded view, its layers floating apart
-// as in a design tool, with a lead arriving beside it. Before WebGL is ready
-// (or if it never is) a CSS rendition of the same layers holds the frame.
+// as in a design tool. Before WebGL is ready (or if it never is) a CSS
+// rendition of the same layers holds the frame.
 const WORDS = ['שמוכרים.', 'שבולטים.', 'שמביאים פניות.', 'שעובדים בשבילכם.']
 const CHIPS = ['עיצוב מותאם אישית', 'מותאם לכל מסך', 'חיבור לוואטסאפ ולטפסים']
 
@@ -23,11 +23,6 @@ export default function Hero() {
           </div>
         </div>
         <canvas className="hero__canvas" data-hero-canvas />
-        {/* An illustration of what the site is for: a lead arriving. */}
-        <div className="hero__toast glass">
-          <i className="hero__toast-dot" />
-          <span>פנייה חדשה מהאתר<small>דרך הטופס · עכשיו</small></span>
-        </div>
       </div>
 
       <div className="wrap hero__inner">

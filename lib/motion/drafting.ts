@@ -1,8 +1,6 @@
-import { gsap } from 'gsap'
-
 // The light sections read as a drafting table: a grid lit around the pointer
-// with guides and live coordinates, icons that draw their own lines, and cells
-// lit from the pointer. All decorative.
+// with guides and live coordinates, and cells lit from the pointer, their
+// scenes leaning toward it. All decorative.
 export function initDrafting(reduced: boolean) {
   const stops: Array<() => void> = []
   const fine = matchMedia('(hover: hover) and (pointer: fine)').matches
@@ -30,28 +28,25 @@ export function initDrafting(reduced: boolean) {
       stops.push(() => { host.removeEventListener('pointermove', onMove); host.removeEventListener('pointerleave', onLeave); cancelAnimationFrame(frame) })
     })
 
-    // Each difference cell is lit from where the pointer is.
+    // Each difference cell is lit from where the pointer is, and its scene
+    // leans a little toward it.
     document.querySelectorAll<HTMLElement>('[data-spot]').forEach(cell => {
+      const scene = cell.querySelector<HTMLElement>('[data-dv]')
       const onMove = (e: PointerEvent) => {
         const r = cell.getBoundingClientRect()
         cell.style.setProperty('--sx', `${e.clientX - r.left}px`)
         cell.style.setProperty('--sy', `${e.clientY - r.top}px`)
+        if (scene) {
+          scene.style.setProperty('--tx', `${(((e.clientX - r.left) / r.width) - 0.5) * 14}deg`)
+          scene.style.setProperty('--ty', `${(0.5 - (e.clientY - r.top) / r.height) * 10}deg`)
+        }
       }
+      const onLeave = () => { scene?.style.removeProperty('--tx'); scene?.style.removeProperty('--ty') }
       cell.addEventListener('pointermove', onMove, { passive: true })
-      stops.push(() => cell.removeEventListener('pointermove', onMove))
+      cell.addEventListener('pointerleave', onLeave)
+      stops.push(() => { cell.removeEventListener('pointermove', onMove); cell.removeEventListener('pointerleave', onLeave) })
     })
   }
 
-  if (reduced) return () => stops.forEach(f => f())
-
-  const ctx = gsap.context(() => {
-    // Glyphs and icons draw their strokes the first time they are seen.
-    document.querySelectorAll<SVGSVGElement>('.diff__icon').forEach(svg => {
-      const shapes = [...svg.querySelectorAll<SVGGeometryElement>('path, rect, circle')]
-      shapes.forEach(s => { const len = s.getTotalLength(); gsap.set(s, { strokeDasharray: len, strokeDashoffset: len }) })
-      gsap.to(shapes, { strokeDashoffset: 0, duration: 1.6, ease: 'expo.inOut', stagger: 0.12, scrollTrigger: { trigger: svg, start: 'top 88%', once: true } })
-    })
-
-  })
-  return () => { stops.forEach(f => f()); ctx.revert() }
+  return () => stops.forEach(f => f())
 }

@@ -192,7 +192,6 @@
 .diff__room.is-h .diff__head { flex: none; width: min(30vw, 26rem); }
 .diff__room.is-h .diff__list { display: flex; gap: clamp(1rem, 1.8vw, 1.75rem); }
 .diff__room.is-h .diff__item { flex: none; width: clamp(17rem, 28vw, 26rem); min-height: min(26rem, 52svh); display: flex; flex-direction: column; justify-content: flex-end; }
-.diff__room.is-h .diff__icon { width: 72px; height: 72px; margin-bottom: auto; }
 @media (max-width: 699px) {
   .diff__room.is-h .diff__head { width: 78vw; }
   .diff__room.is-h .diff__item { width: 80vw; min-height: min(22rem, 50svh); }
@@ -293,18 +292,6 @@ main .pin-spacer { max-width: 100%; overflow-x: clip !important; } /* its inline
 .hero__chips svg { width: 0.95rem; height: 0.95rem; fill: none; stroke: var(--color-off-white); stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
 @media (prefers-reduced-motion: no-preference) { .has-intro .hero__chips { animation: fadeUp 1s var(--ease) 2.36s backwards; } }
 
-/* a lead arriving beside the object, now and then */
-.hero__toast { position: absolute; z-index: 2; left: 9%; bottom: 20%; display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 1.1rem 0.75rem 1.25rem; border-radius: 16px; color: var(--color-off-white); font-size: 0.9rem; font-weight: 500; }
-.hero__toast small { display: block; font-size: 0.75rem; font-weight: 400; color: var(--color-silver-muted); }
-.hero__toast-dot { flex: none; width: 0.6rem; height: 0.6rem; border-radius: 50%; background: var(--success); box-shadow: 0 0 0 4px color-mix(in oklab, var(--success) 25%, transparent); }
-@media (prefers-reduced-motion: no-preference) { .hero__toast { animation: toastLoop 9s var(--ease) 3.5s infinite backwards; } }
-@media (prefers-reduced-motion: reduce) { .hero__toast { display: none; } }
-@keyframes toastLoop {
-  0% { opacity: 0; transform: translateY(14px) scale(0.96); }
-  6%, 62% { opacity: 1; transform: none; }
-  70%, 100% { opacity: 0; transform: translateY(-8px); }
-}
-@media (max-width: 959px) { .hero__toast { left: 6%; bottom: 6%; font-size: 0.82rem; padding: 0.6rem 0.9rem; } }
 
 /* phones: the object a little shorter and the copy a little tighter, so the
    two buttons stay on the first screen with the chips added */
@@ -317,3 +304,80 @@ main .pin-spacer { max-width: 100%; overflow-x: clip !important; } /* its inline
   .hero__chips li { padding: 0.35rem 0.7rem; font-size: 0.8rem; }
   .hero__actions { margin-top: 1.4rem; }
 }
+
+/* ------------------------------------------- difference: living scenes
+   Each card opens on a small scene that acts out its promise. The resting
+   style is the finished scene; the animations exist only once the motion
+   layer runs (.motion-ready), and play only while the card is on screen
+   (.is-live). Without either, every scene simply shows complete. */
+.dv {
+  position: relative; display: grid; place-items: center; width: 100%; height: 9.5rem; margin-bottom: auto; overflow: hidden;
+  border-radius: 14px; border: 1px solid var(--border-light);
+  background: radial-gradient(120% 100% at 30% 0%, var(--color-white), var(--hover-on-light));
+  transform: perspective(700px) rotateX(var(--ty, 0deg)) rotateY(var(--tx, 0deg)); transition: transform 500ms var(--ease);
+}
+.diff__room.is-h .diff__item .dv { margin-bottom: auto; }
+.dv b, .dv i, .dv em { display: block; }
+
+/* build: a page assembling from its parts */
+.dv-win { width: 78%; aspect-ratio: 16 / 10; display: flex; flex-direction: column; overflow: hidden; border-radius: 8px; background: var(--color-white); border: 1px solid var(--border-light); box-shadow: 0 16px 30px -20px rgb(9 19 33 / 0.45); }
+.dv-bar { display: flex !important; gap: 3px; padding: 5px 7px; background: var(--hover-on-light); direction: ltr; }
+.dv-bar b { width: 5px; height: 5px; border-radius: 50%; background: var(--color-silver-muted); }
+.dv-build { flex: 1; display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: 1.3fr 1fr; gap: 7%; padding: 8%; }
+.dv-build b { border-radius: 4px; background: var(--color-silver); }
+.dv-build .p1 { grid-column: 1 / -1; background: linear-gradient(135deg, var(--color-navy-secondary), var(--color-midnight)); }
+.dv-build .p1 { --from: translateY(-150%); } .dv-build .p2 { --from: translateX(-170%) rotate(-14deg); }
+.dv-build .p3 { --from: translateY(170%); } .dv-build .p4 { --from: translateX(170%) rotate(12deg); }
+.motion-ready .dv-build b { animation: dvAssemble 6s var(--ease) infinite; animation-play-state: paused; }
+.dv-build .p2 { animation-delay: 0.18s !important; } .dv-build .p3 { animation-delay: 0.36s !important; } .dv-build .p4 { animation-delay: 0.54s !important; }
+@keyframes dvAssemble { 0%, 6% { opacity: 0; transform: var(--from); } 22%, 84% { opacity: 1; transform: none; } 96%, 100% { opacity: 0; transform: scale(0.9); } }
+
+/* phone: one page narrowing from desktop to phone, its blocks reflowing */
+.dv-resize { width: 82%; height: 76%; display: flex; justify-content: center; }
+.dv-frame { width: 100%; height: 100%; display: flex; flex-direction: column; overflow: hidden; border-radius: 8px; background: var(--color-white); border: 1px solid var(--border-light); box-shadow: 0 16px 30px -20px rgb(9 19 33 / 0.45); contain: layout paint; }
+.dv-flow { flex: 1; display: flex; flex-wrap: wrap; align-content: flex-start; gap: 5px; padding: 7px; }
+.dv-flow b { flex: 1 1 42px; min-width: 42px; height: 15px; border-radius: 3px; background: var(--color-silver); }
+.dv-flow b.wide { flex-basis: 100%; height: 26px; background: linear-gradient(135deg, var(--color-navy-secondary), var(--color-midnight)); }
+.motion-ready .dv-frame { animation: dvNarrow 7s var(--ease-io) infinite; animation-play-state: paused; }
+@keyframes dvNarrow { 0%, 14% { width: 100%; border-radius: 8px; } 44%, 70% { width: 32%; border-radius: 14px; } 92%, 100% { width: 100%; border-radius: 8px; } }
+
+/* lead: a filled form sends a dot along the line; it lands as a chat bubble */
+.dv-lead { width: 86%; display: flex; align-items: center; direction: ltr; }
+.dv-form { width: 34%; display: grid; gap: 5px; padding: 8px; border-radius: 8px; background: var(--color-white); border: 1px solid var(--border-light); box-shadow: 0 16px 30px -20px rgb(9 19 33 / 0.45); }
+.dv-form i { height: 8px; border-radius: 3px; border: 1px solid var(--border-light); background: var(--color-off-white); }
+.dv-form em { height: 10px; border-radius: 999px; background: var(--color-midnight); }
+.dv-path { position: relative; flex: 1; height: 2px; margin: 0 8px; background: repeating-linear-gradient(90deg, var(--color-silver-muted) 0 4px, transparent 4px 8px); }
+.dv-dot { position: absolute; top: 50%; left: calc(100% - 9px); width: 9px; height: 9px; margin-top: -4.5px; border-radius: 50%; background: var(--color-navy-secondary); opacity: 0; }
+.dv-phone { position: relative; width: 22%; aspect-ratio: 9 / 17; display: grid; align-content: end; padding: 5px; border-radius: 10px; border: 3px solid var(--color-graphite); background: var(--color-white); }
+.dv-bubble { display: grid; gap: 3px; padding: 5px; border-radius: 7px 7px 7px 2px; background: color-mix(in oklab, var(--success) 20%, var(--color-white)); transform-origin: bottom left; }
+.dv-bubble i { height: 3px; border-radius: 2px; background: color-mix(in oklab, var(--color-graphite) 35%, transparent); }
+.dv-bubble i + i { width: 60%; }
+.dv-badge { position: absolute; top: -6px; right: -6px; width: 11px; height: 11px; border-radius: 50%; background: var(--success); border: 2px solid var(--color-white); }
+.motion-ready .dv-dot { animation: dvTravel 4.2s var(--ease-io) infinite; animation-play-state: paused; }
+.motion-ready .dv-bubble, .motion-ready .dv-badge { animation: dvLand 4.2s var(--ease) infinite; animation-play-state: paused; }
+@keyframes dvTravel { 0%, 12% { left: 0; opacity: 0; } 18% { left: 0; opacity: 1; } 52% { left: calc(100% - 9px); opacity: 1; } 58%, 100% { left: calc(100% - 9px); opacity: 0; } }
+@keyframes dvLand { 0%, 54% { opacity: 0; transform: scale(0.3); } 64%, 90% { opacity: 1; transform: none; } 100% { opacity: 0; transform: none; } }
+
+/* brand: one mark, carried to a card, a site and a phone */
+.dv-brand { width: 86%; display: grid; justify-items: center; gap: 6px; }
+.dv-mark { display: inline-flex !important; gap: 2px; height: 12px; }
+.dv-mark i { width: 2.5px; border-radius: 1px; background: var(--color-navy-secondary); }
+.dv-mark i:nth-child(2) { opacity: 0.75; } .dv-mark i:nth-child(3) { opacity: 0.5; } .dv-mark i:nth-child(4) { opacity: 0.3; }
+.dv-mark--lg { gap: 3px; height: 26px; } .dv-mark--lg i { width: 4.5px; }
+.dv-lines { display: flex !important; justify-content: space-between; width: 66%; height: 12px; border-top: 1px dashed var(--color-silver-muted); }
+.dv-lines i { width: 1px; background: var(--color-silver-muted); }
+.dv-items { display: flex; justify-content: space-between; align-items: end; width: 100%; }
+.dv-item { display: grid !important; place-items: center; border-radius: 5px; background: var(--color-white); border: 1px solid var(--border-light); box-shadow: 0 12px 22px -16px rgb(9 19 33 / 0.5); }
+.dv-item--card { width: 32%; aspect-ratio: 85 / 55; background: linear-gradient(135deg, var(--color-navy-secondary), var(--color-midnight)); border: 0; }
+.dv-item--card .dv-mark i { background: var(--color-silver); }
+.dv-item--site { width: 36%; aspect-ratio: 16 / 10; }
+.dv-item--phone { width: 15%; aspect-ratio: 9 / 17; border: 2px solid var(--color-graphite); border-radius: 7px; }
+.dv-item--phone .dv-mark { height: 9px; } .dv-item--phone .dv-mark i { width: 2px; }
+.motion-ready .dv-mark--lg { animation: dvPulse 5s var(--ease) infinite; animation-play-state: paused; }
+.motion-ready .dv-item .dv-mark { animation: dvStamp 5s var(--ease) infinite; animation-play-state: paused; }
+.dv-item--site .dv-mark { animation-delay: 0.35s !important; } .dv-item--phone .dv-mark { animation-delay: 0.7s !important; }
+@keyframes dvPulse { 0%, 100% { transform: none; } 10% { transform: scale(1.15); } 20% { transform: none; } }
+@keyframes dvStamp { 0%, 14% { opacity: 0; transform: scale(0.2) translateY(-10px); } 26%, 86% { opacity: 1; transform: none; } 100% { opacity: 0; transform: none; } }
+
+/* scenes play only while their card is on screen */
+.motion-ready .diff__item.is-live .dv * { animation-play-state: running !important; }

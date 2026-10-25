@@ -1,26 +1,17 @@
 import Blueprint from './Blueprint'
+import DiffVisual from './DiffVisual'
 import Split from './Split'
 
 const items = [
-  { icon: 'build', title: 'אתר שנבנה לעסק שלכם', text: 'מבנה, תוכן ועיצוב שנקבעים לפי העסק והקהל שלו, לא לפי תבנית מוכנה.' },
-  { icon: 'phone', title: 'מותאם לטלפון מהיום הראשון', text: 'כל מסך מתוכנן גם לנייד, וכל כפתור נוח ללחיצה באגודל.' },
-  { icon: 'lead', title: 'פניות שמגיעות אליכם', text: 'טופס ווואטסאפ מחוברים ונבדקים לפני ההשקה, כדי שאף פנייה לא תלך לאיבוד.' },
-  { icon: 'brand', title: 'שפה חזותית אחת', text: 'אותו מותג מהלוגו, דרך כרטיס הביקור ועד האתר.' },
+  { kind: 'build', title: 'אתר שנבנה לעסק שלכם', text: 'מבנה, תוכן ועיצוב שנקבעים לפי העסק והקהל שלו, לא לפי תבנית מוכנה.' },
+  { kind: 'phone', title: 'מותאם לטלפון מהיום הראשון', text: 'כל מסך מתוכנן גם לנייד, וכל כפתור נוח ללחיצה באגודל.' },
+  { kind: 'lead', title: 'פניות שמגיעות אליכם', text: 'טופס ווואטסאפ מחוברים ונבדקים לפני ההשקה, כדי שאף פנייה לא תלך לאיבוד.' },
+  { kind: 'brand', title: 'שפה חזותית אחת', text: 'אותו מותג מהלוגו, דרך כרטיס הביקור ועד האתר.' },
 ] as const
 
-function Icon({ kind }: { kind: (typeof items)[number]['icon'] }) {
-  return (
-    <svg className="diff__icon" viewBox="0 0 48 48" aria-hidden="true">
-      {kind === 'build' && <><rect x="8" y="10" width="32" height="24" rx="2" /><path d="M8 16h32M14 40h20M24 34v6" /></>}
-      {kind === 'phone' && <><rect x="15" y="6" width="18" height="36" rx="4" /><path d="M21 36h6" /></>}
-      {kind === 'lead' && <><path d="M8 12h32v20H20l-8 6v-6H8z" /><path d="M16 20h16M16 26h10" /></>}
-      {kind === 'brand' && <><circle cx="18" cy="24" r="10" /><rect x="24" y="14" width="18" height="20" rx="2" /></>}
-    </svg>
-  )
-}
-
 // Four commitments as a row of cards that travels sideways while the section
-// holds, like the services; without motion they sit in a plain grid.
+// holds, like the services; without motion they sit in a plain grid. Each card
+// opens on a small scene that acts out its promise.
 export default function Difference() {
   const total = String(items.length).padStart(2, '0')
   return (
@@ -43,7 +34,7 @@ export default function Difference() {
               {items.map((it, i) => (
                 <li key={it.title} className="diff__item glass" data-spot>
                   <span className="diff__num num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
-                  <Icon kind={it.icon} />
+                  <DiffVisual kind={it.kind} />
                   <h3 className="t-h3">{it.title}</h3>
                   <p className="t-body">{it.text}</p>
                 </li>
