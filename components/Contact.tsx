@@ -1,11 +1,8 @@
 import Split from './Split'
-import { site, whatsappUrl } from '@/lib/site'
 import { SERVICE_OPTIONS } from '@/lib/contact'
-import { IconWhatsApp, IconPhone, IconInstagram, IconArrow } from './icons'
 
 // Conversion. The form is plain markup; lib/motion/form.ts validates it and
 // opens WhatsApp to the studio with everything filled in already written.
-// The direct channels (WhatsApp, phone, Instagram) sit under its button.
 export default function Contact() {
   return (
     <section id="contact" className="contact on-dark bg-midnight" aria-labelledby="contact-title">
@@ -58,11 +55,6 @@ export default function Contact() {
             <button type="submit" className="btn btn--light" data-submit>שליחת פרטים <span className="btn__arrow" aria-hidden="true">←</span></button>
             <p className="lead-form__note">הפרטים משמשים רק כדי לחזור אליכם בנוגע לפנייה.</p>
           </div>
-          <ul className="channels channels--form" aria-label="דרכים נוספות ליצור קשר">
-            <li><a href={whatsappUrl('היי ARStudio, אשמח לשמוע פרטים')} target="_blank" rel="noopener noreferrer"><IconWhatsApp /><span>וואטסאפ<small className="num">{site.phone.display}</small></span><IconArrow className="channels__arrow" /></a></li>
-            <li><a href={`tel:${site.phone.tel}`}><IconPhone /><span>טלפון<small className="num">{site.phone.display}</small></span><IconArrow className="channels__arrow" /></a></li>
-            <li><a href={site.instagram.url} target="_blank" rel="noopener noreferrer"><IconInstagram /><span>אינסטגרם<small className="num">@{site.instagram.handle}</small></span><IconArrow className="channels__arrow" /></a></li>
-          </ul>
           <p className="sr-only" role="status" aria-live="polite" data-status />
         </form>
       </div>

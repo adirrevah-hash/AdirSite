@@ -8,14 +8,6 @@ export function IconWhatsApp(props: React.SVGProps<SVGSVGElement>) {
   )
 }
 
-export function IconPhone(props: React.SVGProps<SVGSVGElement>) {
-  return (
-    <svg {...base} {...props} fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M21 16.9v3a2 2 0 01-2.2 2 19.8 19.8 0 01-8.6-3.1 19.5 19.5 0 01-6-6A19.8 19.8 0 011.1 4.2 2 2 0 013.1 2h3a2 2 0 012 1.7c.1 1 .4 1.9.7 2.8a2 2 0 01-.5 2.1L7.1 9.9a16 16 0 006 6l1.3-1.3a2 2 0 012.1-.4c.9.3 1.8.6 2.8.7a2 2 0 011.7 2z" />
-    </svg>
-  )
-}
-
 export function IconInstagram(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg {...base} {...props} fill="none" stroke="currentColor" strokeWidth="1.5">
@@ -30,14 +22,6 @@ export function IconFacebook(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg {...base} {...props} fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round">
       <path d="M14.5 21v-7.5h2.6l.4-3h-3V8.7c0-.9.3-1.5 1.5-1.5h1.6V4.5c-.3 0-1.2-.1-2.3-.1-2.3 0-3.8 1.4-3.8 3.9v2.2H9v3h2.5V21" />
-    </svg>
-  )
-}
-
-export function IconArrow(props: React.SVGProps<SVGSVGElement>) {
-  return (
-    <svg {...base} {...props} fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M19 12H5M11 6l-6 6 6 6" />
     </svg>
   )
 }
