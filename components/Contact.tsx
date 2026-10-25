@@ -5,6 +5,7 @@ import { IconWhatsApp, IconPhone, IconInstagram, IconArrow } from './icons'
 
 // Conversion. The form is plain markup; lib/motion/form.ts validates it and
 // opens WhatsApp to the studio with everything filled in already written.
+// The direct channels (WhatsApp, phone, Instagram) sit under its button.
 export default function Contact() {
   return (
     <section id="contact" className="contact on-dark bg-midnight" aria-labelledby="contact-title">
@@ -17,11 +18,6 @@ export default function Contact() {
             <span className="line"><Split text="הנוכחות הדיגיטלית שלכם." /></span>
           </h2>
           <p className="t-lede">משאירים פרטים ונחזור אליכם, או כותבים ישר לוואטסאפ. השיחה הראשונה היא כדי להבין מה העסק צריך.</p>
-          <ul className="channels">
-            <li><a href={whatsappUrl('היי ARStudio, אשמח לשמוע פרטים')} target="_blank" rel="noopener noreferrer"><IconWhatsApp /><span>וואטסאפ<small className="num">{site.phone.display}</small></span><IconArrow className="channels__arrow" /></a></li>
-            <li><a href={`tel:${site.phone.tel}`}><IconPhone /><span>טלפון<small className="num">{site.phone.display}</small></span><IconArrow className="channels__arrow" /></a></li>
-            <li><a href={site.instagram.url} target="_blank" rel="noopener noreferrer"><IconInstagram /><span>אינסטגרם<small className="num">@{site.instagram.handle}</small></span><IconArrow className="channels__arrow" /></a></li>
-          </ul>
         </div>
 
         <form className="lead-form glass" noValidate data-lead-form aria-labelledby="contact-title">
@@ -49,10 +45,24 @@ export default function Contact() {
             <label htmlFor="f-company">חברה</label>
             <input id="f-company" name="company" type="text" tabIndex={-1} autoComplete="off" />
           </div>
+          <div className="field field--check">
+            <input id="f-consent" name="consent" type="checkbox" required />
+            <label htmlFor="f-consent">
+              אני מאשר/ת את{' '}
+              <button type="button" className="inline-link" data-dialog="dlg-privacy" aria-haspopup="dialog">מדיניות הפרטיות</button>
+              {' '}ואת{' '}
+              <button type="button" className="inline-link" data-dialog="dlg-terms" aria-haspopup="dialog">תנאי השימוש באתר</button>
+            </label>
+          </div>
           <div className="lead-form__submit">
             <button type="submit" className="btn btn--light" data-submit>שליחת פרטים <span className="btn__arrow" aria-hidden="true">←</span></button>
             <p className="lead-form__note">הפרטים משמשים רק כדי לחזור אליכם בנוגע לפנייה.</p>
           </div>
+          <ul className="channels channels--form" aria-label="דרכים נוספות ליצור קשר">
+            <li><a href={whatsappUrl('היי ARStudio, אשמח לשמוע פרטים')} target="_blank" rel="noopener noreferrer"><IconWhatsApp /><span>וואטסאפ<small className="num">{site.phone.display}</small></span><IconArrow className="channels__arrow" /></a></li>
+            <li><a href={`tel:${site.phone.tel}`}><IconPhone /><span>טלפון<small className="num">{site.phone.display}</small></span><IconArrow className="channels__arrow" /></a></li>
+            <li><a href={site.instagram.url} target="_blank" rel="noopener noreferrer"><IconInstagram /><span>אינסטגרם<small className="num">@{site.instagram.handle}</small></span><IconArrow className="channels__arrow" /></a></li>
+          </ul>
           <p className="sr-only" role="status" aria-live="polite" data-status />
         </form>
       </div>

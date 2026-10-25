@@ -1,7 +1,7 @@
 import { validateContact, leadText, type ContactInput, type FieldErrors } from '../contact'
 import { whatsappUrl } from '../site'
 
-const FIELDS: (keyof ContactInput)[] = ['name', 'phone', 'service', 'message']
+const FIELDS: (keyof ContactInput)[] = ['name', 'phone', 'service', 'message', 'consent']
 
 // The lead form. Validates in the browser, then opens WhatsApp to the studio's
 // number with everything the visitor wrote already in the message. WhatsApp
@@ -16,7 +16,7 @@ export function initForm() {
   const touched: Partial<Record<keyof ContactInput, boolean>> = {}
 
   const el = (k: keyof ContactInput) => form.elements.namedItem(k) as HTMLInputElement
-  const values = (): ContactInput => ({ name: el('name').value, phone: el('phone').value, service: el('service').value, message: el('message').value })
+  const values = (): ContactInput => ({ name: el('name').value, phone: el('phone').value, service: el('service').value, message: el('message').value, consent: el('consent').checked })
 
   function paint(errors: FieldErrors) {
     for (const k of FIELDS) {
@@ -92,11 +92,13 @@ export function initForm() {
   }
 
   form.addEventListener('input', onInput)
+  form.addEventListener('change', onInput) // checkboxes, in browsers that send no input event
   form.addEventListener('focusout', onBlur)
   form.addEventListener('submit', onSubmit)
   document.addEventListener('click', onPreselect)
   return () => {
     form.removeEventListener('input', onInput)
+    form.removeEventListener('change', onInput)
     form.removeEventListener('focusout', onBlur)
     form.removeEventListener('submit', onSubmit)
     document.removeEventListener('click', onPreselect)

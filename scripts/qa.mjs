@@ -162,8 +162,15 @@ for (const [w, h] of [[1440, 900], [390, 844]]) {
   check('invalid phone is caught before sending', (await page.evaluate(() => document.activeElement?.id)) === 'f-phone')
   await page.screenshot({ path: `${OUT}/form-errors.png` })
   await page.fill('#f-phone', '050-123-4567'); await page.fill('#f-message', 'צריך דף נחיתה לקמפיין')
-  // A valid lead opens WhatsApp to the studio with everything filled in.
+  // Without agreeing to the policies nothing opens, and the checkbox says why.
   await ctx.route('https://wa.me/**', r => r.fulfill({ status: 200, contentType: 'text/html', body: 'whatsapp' }))
+  let early = 0; const countTabs = () => early++; ctx.on('page', countTabs)
+  await page.click('[data-submit]'); await wait(800)
+  ctx.off('page', countTabs)
+  const noConsent = await page.evaluate(() => ({ focus: document.activeElement?.id, err: !!document.querySelector('#f-consent-err') }))
+  check('consent is required: no WhatsApp, an error, focus on the checkbox', early === 0 && noConsent.focus === 'f-consent' && noConsent.err, JSON.stringify({ early, ...noConsent }))
+  await page.click('#f-consent')
+  // A valid lead opens WhatsApp to the studio with everything filled in.
   const [tab] = await Promise.all([ctx.waitForEvent('page', { timeout: 8000 }), page.click('[data-submit]')])
   const waUrl = decodeURIComponent(tab.url())
   await tab.close()

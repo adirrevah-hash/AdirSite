@@ -1,5 +1,5 @@
-// Contact form rules, shared by the browser (instant feedback) and the server
-// (the only check that counts). Pure functions, no dependencies, unit-tested.
+// Contact form rules: what counts as a usable lead, and the WhatsApp message it
+// becomes. Pure functions, no dependencies, unit-tested.
 
 export const SERVICE_OPTIONS = [
   { value: 'website', label: 'אתר תדמית' },
@@ -18,6 +18,7 @@ export type ContactInput = {
   phone: string
   service: string
   message: string
+  consent: boolean // agreed to the privacy policy and the terms of use
 }
 
 export type Lead = {
@@ -69,6 +70,8 @@ export function validateContact(input: Partial<Record<keyof ContactInput, unknow
 
   if (message.length > LIMITS.message) errors.message = `התיאור ארוך מדי (עד ${LIMITS.message} תווים).`
 
+  if (input.consent !== true) errors.consent = 'יש לאשר את מדיניות הפרטיות ואת תנאי השימוש.'
+
   if (Object.keys(errors).length || !phone || !option) return { ok: false, errors }
   return { ok: true, lead: { name, phone, service: option.value, serviceLabel: option.label, message } }
 }
@@ -77,7 +80,7 @@ export function formatPhone(local: string) {
   return local.length === 10 ? `${local.slice(0, 3)}-${local.slice(3)}` : local.length === 9 ? `${local.slice(0, 2)}-${local.slice(2)}` : local
 }
 
-// The text a lead arrives as, on WhatsApp or in an email body.
+// The text a lead arrives as on WhatsApp.
 export function leadText(lead: Lead) {
   const lines = [
     'היי ARStudio, השארתי פרטים באתר:',
