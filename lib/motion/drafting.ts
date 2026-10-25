@@ -1,21 +1,11 @@
 import { gsap } from 'gsap'
 
 // The light sections read as a drafting table: a grid lit around the pointer
-// with guides and live coordinates, a selection box with real measurements
-// around the statement, icons that draw their own lines, and cells lit from the
-// pointer. All decorative.
+// with guides and live coordinates, icons that draw their own lines, and cells
+// lit from the pointer. All decorative.
 export function initDrafting(reduced: boolean) {
   const stops: Array<() => void> = []
   const fine = matchMedia('(hover: hover) and (pointer: fine)').matches
-
-  // Live measurements on the selection box, kept current at every width.
-  const box = document.querySelector<HTMLElement>('[data-select]')
-  const size = box?.querySelector<HTMLElement>('[data-select-size]')
-  if (box && size) {
-    const ro = new ResizeObserver(() => { size.textContent = `H2 · ${Math.round(box.offsetWidth)} × ${Math.round(box.offsetHeight)}` })
-    ro.observe(box)
-    stops.push(() => ro.disconnect())
-  }
 
   // Grid, guides and coordinates follow a mouse within each light section.
   if (fine && !reduced) {
@@ -55,15 +45,6 @@ export function initDrafting(reduced: boolean) {
   if (reduced) return () => stops.forEach(f => f())
 
   const ctx = gsap.context(() => {
-    // The selection box draws itself around the statement.
-    if (box) {
-      const frame = box.querySelector('.select-box__frame')
-      gsap.timeline({ scrollTrigger: { trigger: box, start: 'top 75%', once: true } })
-        .fromTo(frame, { clipPath: 'inset(0% 0% 100% 100%)' }, { clipPath: 'inset(0% 0% 0% 0%)', duration: 1.1, ease: 'expo.inOut' })
-        .fromTo(box.querySelectorAll('.select-box__frame i'), { scale: 0 }, { scale: 1, duration: 0.5, ease: 'back.out(3)', stagger: 0.06 }, '-=0.35')
-        .fromTo(size ?? [], { opacity: 0, y: 6 }, { opacity: 1, y: 0, duration: 0.5, ease: 'expo.out' }, '-=0.3')
-    }
-
     // Glyphs and icons draw their strokes the first time they are seen.
     document.querySelectorAll<SVGSVGElement>('.diff__icon').forEach(svg => {
       const shapes = [...svg.querySelectorAll<SVGGeometryElement>('path, rect, circle')]

@@ -170,15 +170,6 @@
 .blueprint__coord { left: 0; top: 0; transform: translate(calc(var(--mx) + 14px), calc(var(--my) + 14px)); padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.7rem; white-space: nowrap; background: var(--color-graphite); color: var(--color-off-white); }
 .blueprint.is-lit::after, .blueprint.is-lit .blueprint__guide, .blueprint.is-lit .blueprint__coord { opacity: 1; }
 
-/* Selection box around the statement, as in a design tool. */
-.select-box { position: relative; display: block; width: fit-content; max-width: 100%; margin-top: 2.75rem; }
-.select-box .philo__statement { margin: 0; }
-.select-box__frame { position: absolute; inset: -0.9rem -1.1rem; border: 1px solid var(--focus-ring); pointer-events: none; }
-.select-box__frame i { position: absolute; width: 9px; height: 9px; background: var(--color-white); border: 1px solid var(--focus-ring); }
-.select-box__frame i:nth-child(1) { top: -5px; left: -5px; } .select-box__frame i:nth-child(2) { top: -5px; right: -5px; }
-.select-box__frame i:nth-child(3) { bottom: -5px; left: -5px; } .select-box__frame i:nth-child(4) { bottom: -5px; right: -5px; }
-.select-box__tag { position: absolute; top: calc(-0.9rem - 1.75rem); inset-inline-start: -1.1rem; direction: ltr; padding: 0.2rem 0.55rem; border-radius: 4px; font-size: 0.72rem; background: var(--focus-ring); color: var(--color-midnight); white-space: nowrap; }
-
 /* Large outlined words that drift with the scroll behind light sections. */
 .ghost-word {
   position: absolute; z-index: 0; inset-inline-start: 0; margin: 0; white-space: nowrap; pointer-events: none; user-select: none; -webkit-user-select: none;

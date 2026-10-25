@@ -3,10 +3,9 @@ import Obj3D from './Obj3D'
 import Split from './Split'
 
 // The pause after the hero: light ground, one statement, three principles.
-// With motion the statement fills in word by word as it moves up the screen,
-// framed by a measured selection box as in a design tool. Beside it the three
-// principles, as 3D forms (sphere, cube, plus), come together into one
-// sculpture as the reader scrolls.
+// With motion the statement fills in word by word as it moves up the screen.
+// Beside it the three principles, as 3D forms (sphere, cube, plus), come
+// together into one sculpture as the reader scrolls.
 const principles = [
   { form: 'sphere', title: 'ברור לפני יפה', text: 'כל עמוד מתחיל בשאלה מה הגולש צריך להבין ומה הוא צריך לעשות. העיצוב בא לשרת את התשובה.' },
   { form: 'cube', title: 'הדיוק בפרטים', text: 'ריווח, טיפוגרפיה ותנועה הם מה שמבדיל אתר מקצועי מתבנית. כל אחד מהם נבחר במכוון.' },
@@ -21,15 +20,11 @@ export default function Philosophy() {
         <div className="philo__top">
           <div className="philo__pin" data-fill-pin>
             <p className="t-label">הגישה</p>
-            <div className="select-box" data-select>
-              <h2 id="approach-title" className="t-statement philo__statement" data-fill>
-                <span className="stmt-line"><Split by="words" text="אתר טוב לא רק נראה טוב." /></span>
-                <span className="stmt-line"><Split by="words" text="הוא מסביר, משכנע," /></span>
-                <span className="stmt-line"><Split by="words" text="ומביא את הפנייה הבאה." /></span>
-              </h2>
-              <span className="select-box__frame" aria-hidden="true"><i /><i /><i /><i /></span>
-              <span className="select-box__tag num" aria-hidden="true" data-select-size>H2</span>
-            </div>
+            <h2 id="approach-title" className="t-statement philo__statement" data-fill>
+              <span className="stmt-line"><Split by="words" text="אתר טוב לא רק נראה טוב." /></span>
+              <span className="stmt-line"><Split by="words" text="הוא מסביר, משכנע," /></span>
+              <span className="stmt-line"><Split by="words" text="ומביא את הפנייה הבאה." /></span>
+            </h2>
           </div>
           <div className="philo__scene" aria-hidden="true" data-forms>
             <div className="philo__fallback">
