@@ -359,12 +359,6 @@ button.link { background: none; border-inline: 0; border-top: 0; font: inherit; 
 .hp { position: absolute !important; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 .lead-form__submit { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem 1.5rem; margin-top: 0.25rem; }
 .lead-form__note { margin: 0; font-size: 0.85rem; color: var(--color-silver-muted); max-width: 36ch; }
-.form-status { display: grid; gap: 0.5rem; padding: 1.15rem 1.25rem; border-radius: 14px; border: 1px solid var(--border-dark); outline: none; }
-.form-status.is-success { border-color: var(--success); background: rgb(36 122 85 / 0.14); }
-.form-status.is-error { border-color: var(--error); background: rgb(180 35 50 / 0.14); }
-.form-status h3 { margin: 0; font-size: 1.05rem; font-weight: 600; }
-.form-status p { margin: 0; color: var(--color-silver); }
-.form-status .btn { justify-self: start; margin-top: 0.5rem; }
 
 /* ================================================================ footer */
 .footer { padding-block: clamp(4rem, 8vw, 6rem) max(2rem, env(safe-area-inset-bottom, 0px)); }

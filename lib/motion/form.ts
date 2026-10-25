@@ -1,12 +1,12 @@
-import { validateContact, leadText, type ContactInput, type FieldErrors, type Lead } from '../contact'
+import { validateContact, leadText, type ContactInput, type FieldErrors } from '../contact'
 import { whatsappUrl } from '../site'
 
 const FIELDS: (keyof ContactInput)[] = ['name', 'phone', 'service', 'message']
 
 // The lead form. Validates in the browser, then opens WhatsApp to the studio's
 // number with everything the visitor wrote already in the message. WhatsApp
-// still needs the visitor to press send, and the page says exactly that; it
-// never claims a message was sent.
+// still needs the visitor to press send; the page never claims a message was
+// sent, and tells screen readers that WhatsApp opened.
 export function initForm() {
   const found = document.querySelector<HTMLFormElement>('[data-lead-form]')
   if (!found) return () => {}
@@ -38,20 +38,7 @@ export function initForm() {
     }
   }
 
-  function show(title: string, text: string, lead: Lead) {
-    status.hidden = false
-    status.className = 'form-status is-success'
-    status.innerHTML = ''
-    const h = document.createElement('h3'); h.textContent = title
-    const p = document.createElement('p'); p.textContent = text
-    status.append(h, p)
-    const a = document.createElement('a')
-    a.className = 'btn btn--light'; a.target = '_blank'; a.rel = 'noopener noreferrer'
-    a.href = whatsappUrl(leadText(lead))
-    a.textContent = 'לא נפתח? פתיחת וואטסאפ עם הפרטים'
-    status.append(a)
-    status.focus()
-  }
+
 
   const onInput = (e: Event) => {
     const k = (e.target as HTMLInputElement).name as keyof ContactInput
@@ -86,12 +73,16 @@ export function initForm() {
     // inside a sandboxed frame (such as a preview) let a link through where
     // they block a redirect or window.open.
     const url = whatsappUrl(leadText(r.lead))
+    // Close the phone keyboard first, so the page is not left zoomed or
+    // offset when the visitor comes back from WhatsApp.
+    ;(document.activeElement as HTMLElement | null)?.blur()
     const link = document.createElement('a')
     link.href = url; link.target = '_blank'; link.rel = 'noopener noreferrer'
     document.body.appendChild(link)
     link.click()
     link.remove()
-    show('הפרטים מוכנים בוואטסאפ', 'פתחנו שיחה עם הסטודיו וכל מה שמילאתם כבר כתוב בהודעה. נשאר רק ללחוץ שליחה בוואטסאפ כדי שהיא תגיע אלינו.', r.lead)
+    // Nothing appears on the page; screen readers hear what happened.
+    status.textContent = 'וואטסאפ נפתח עם הפרטים. נשאר ללחוץ שליחה בוואטסאפ.'
   }
 
   // "לבקש הצעה" on a service card preselects that service.

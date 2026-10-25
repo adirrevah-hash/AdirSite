@@ -23,7 +23,14 @@ ScrollTrigger.config({ ignoreMobileResize: true })
 // own cleanup; this returns one that runs them all.
 export function initSite() {
   const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches
+  // The page only ever scrolls vertically. Nothing should push it sideways,
+  // but if anything does (a phone returning from another app, a focus jump),
+  // put it straight back.
+  const keepUpright = () => { if (window.scrollX !== 0) window.scrollTo(0, window.scrollY) }
+  addEventListener('scroll', keepUpright, { passive: true })
+  document.addEventListener('visibilitychange', keepUpright)
   const cleanups = [
+    () => { removeEventListener('scroll', keepUpright); document.removeEventListener('visibilitychange', keepUpright) },
     initHeader(),
     initReveals(reduced),
     initHero(reduced),

@@ -53,7 +53,7 @@ export default function Contact() {
             <button type="submit" className="btn btn--light" data-submit>שליחת פרטים <span className="btn__arrow" aria-hidden="true">←</span></button>
             <p className="lead-form__note">הפרטים משמשים רק כדי לחזור אליכם בנוגע לפנייה.</p>
           </div>
-          <div className="form-status" role="status" aria-live="polite" tabIndex={-1} data-status hidden />
+          <p className="sr-only" role="status" aria-live="polite" data-status />
         </form>
       </div>
     </section>
