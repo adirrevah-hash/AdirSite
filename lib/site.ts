@@ -87,8 +87,8 @@ export const processSteps = [
 ] as const
 
 // Portfolio. Screenshots are picked up from /public/work/<id>-desktop.jpg and
-// <id>-mobile.jpg (npm run capture:work). `goal` and `delivered` stay empty
-// until the studio writes them; the page marks them as pending.
+// <id>-mobile.jpg (npm run capture:work). The write-ups come from the studio;
+// a field it has not supplied shows as pending on the page.
 export type Project = {
   id: string
   name: string
@@ -96,19 +96,27 @@ export type Project = {
   kind: string // what was built, as the studio describes it
   goal?: string
   delivered?: string[]
+  result?: string // as reported by the studio
 }
+
+// What the studio delivered on every project, and the result it reports.
+const delivered = ['אתר מלא', 'מותאם למובייל', 'חיבור לוואטסאפ']
+const result = 'החיבור לוואטסאפ הביא לאחוזי המרה גבוהים.'
 
 export const projects: Project[] = [
   {
     id: 'wiserise', name: 'WiseRise', url: 'https://www.wiserise.co.il/', kind: 'אתר',
     goal: 'אתר ליועץ משכנתאות שמסביר בפשטות למה כדאי לבדוק משכנתא עם יועץ, בונה אמון מהמבט הראשון, ומוביל את הגולש לתאם שיחת ייעוץ ראשונה בטופס או בטלפון.',
+    delivered, result,
   },
   {
     id: 'alumina', name: 'Alumina Group', url: 'https://www.alumina-group.co.il/', kind: 'אתר',
     goal: 'אתר לחברת פרגולות, סוככי מסך, סוככי זרועות ופתרונות הצללה, שמציג את המוצרים והפרויקטים ברמה שמתאימה למוצר יוקרתי, ומוביל לתיאום פגישת ייעוץ.',
+    delivered, result,
   },
   {
     id: 'readytogoo', name: 'ReadyToGo', url: 'https://readytogoo.com/', kind: 'אתר',
     goal: 'אתר לסוכנות שיווק דיגיטלי שמציגה בבירור את השירותים שלה: קמפיינים, בניית אתרים, ניהול סושיאל ועוד, ומובילה לתיאום שיחת אפיון.',
+    delivered, result,
   },
 ]

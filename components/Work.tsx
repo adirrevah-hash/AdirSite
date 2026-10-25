@@ -103,6 +103,7 @@ export default function Work() {
               <div><dt>כתובת</dt><dd><a href={p.url} target="_blank" rel="noopener noreferrer" className="link"><span className="num">{p.domain}</span> <IconExternal width={16} height={16} /></a></dd></div>
               <div><dt>מטרת הפרויקט</dt><dd>{p.goal || <span className="pending">יתווסף בקרוב</span>}</dd></div>
               <div><dt>מה סופק</dt><dd>{p.delivered?.length ? p.delivered.join(' · ') : <span className="pending">יתווסף בקרוב</span>}</dd></div>
+              {p.result && <div><dt>תוצאה</dt><dd>{p.result}</dd></div>}
             </dl>
           </div>
         </dialog>

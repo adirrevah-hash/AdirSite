@@ -48,7 +48,7 @@ export function initForm() {
     const a = document.createElement('a')
     a.className = 'btn btn--light'; a.target = '_blank'; a.rel = 'noopener noreferrer'
     a.href = whatsappUrl(leadText(lead))
-    a.textContent = 'לא נפתח? לפתיחת וואטסאפ'
+    a.textContent = 'לא נפתח? פתיחת וואטסאפ עם הפרטים'
     status.append(a)
     status.focus()
   }
@@ -80,16 +80,17 @@ export function initForm() {
       return
     }
     paint({})
-    // Open WhatsApp inside the click, so no popup blocker stops it. Phones
-    // hand the link to the app; desktops get a new tab for WhatsApp Web or
-    // the desktop app, falling back to this tab if a new one is refused.
+    // Open WhatsApp from a real link, clicked inside the visitor's own click.
+    // That is the one way out that every context allows: a phone hands it to
+    // the app, a desktop opens WhatsApp Web or the desktop app, and pages shown
+    // inside a sandboxed frame (such as a preview) let a link through where
+    // they block a redirect or window.open.
     const url = whatsappUrl(leadText(r.lead))
-    if (matchMedia('(pointer: coarse)').matches) window.location.href = url
-    else {
-      const win = window.open(url, '_blank')
-      if (win) win.opener = null
-      else window.location.href = url
-    }
+    const link = document.createElement('a')
+    link.href = url; link.target = '_blank'; link.rel = 'noopener noreferrer'
+    document.body.appendChild(link)
+    link.click()
+    link.remove()
     show('הפרטים מוכנים בוואטסאפ', 'פתחנו שיחה עם הסטודיו וכל מה שמילאתם כבר כתוב בהודעה. נשאר רק ללחוץ שליחה בוואטסאפ כדי שהיא תגיע אלינו.', r.lead)
   }
 
