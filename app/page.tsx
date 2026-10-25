@@ -2,6 +2,7 @@ import Header from '@/components/Header'
 import Hero from '@/components/Hero'
 import Philosophy from '@/components/Philosophy'
 import Work from '@/components/Work'
+import About from '@/components/About'
 import Services from '@/components/Services'
 import Process from '@/components/Process'
 import Difference from '@/components/Difference'
@@ -18,6 +19,7 @@ export default function Home() {
         <Hero />
         <Philosophy />
         <Work />
+        <About />
         <Services />
         <Process />
         <Difference />

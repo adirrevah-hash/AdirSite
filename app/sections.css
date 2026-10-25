@@ -406,3 +406,57 @@ button.link { background: none; border-inline: 0; border-top: 0; font: inherit; 
 .wa-float.is-on { opacity: 1; transform: none; pointer-events: auto; }
 .wa-float svg { width: 1.55rem; height: 1.55rem; }
 @media (hover: hover) and (pointer: fine) { .wa-float:hover { background: var(--color-navy-deep); } }
+
+/* ================================================================= about */
+.about {
+  position: relative; isolation: isolate; overflow: clip; padding-block: var(--section-y);
+  --ink: var(--color-about-white); --ink-2: var(--color-about-text); --ink-3: var(--color-about-text);
+  color: var(--ink);
+  background:
+    radial-gradient(70% 60% at 82% 30%, color-mix(in oklab, var(--color-about-rise) 90%, transparent), transparent 70%),
+    linear-gradient(165deg, var(--color-about-deep) 35%, var(--color-about-rise) 100%);
+}
+/* a single hairline arc behind the portrait */
+.about__deco { position: absolute; inset: 0; z-index: -1; pointer-events: none; }
+.about__arc { position: absolute; top: 50%; right: -16vw; width: min(48vw, 760px); aspect-ratio: 1; border-radius: 50%; translate: 0 -50%; border: 1px solid color-mix(in oklab, var(--color-champagne) 34%, transparent); }
+.about__rule { position: absolute; top: calc(var(--section-y) * 0.55); left: var(--gutter); right: var(--gutter); height: 1px; background: linear-gradient(to left, transparent, color-mix(in oklab, var(--color-about-text) 22%, transparent) 30%, transparent); }
+.about__grid { display: grid; gap: clamp(2.5rem, 6vw, 3.5rem); align-items: center; }
+@media (min-width: 1024px) { .about__grid { grid-template-columns: minmax(0, 0.92fr) minmax(0, 1fr); gap: 7vw; } }
+
+.about__portrait { position: relative; margin: 0; width: 100%; max-width: 560px; justify-self: center; }
+@media (min-width: 1024px) { .about__portrait { justify-self: start; } }
+.about__frame {
+  position: relative; overflow: hidden; border-radius: 22px; aspect-ratio: 610 / 726;
+  border: 1px solid color-mix(in oklab, var(--color-champagne) 75%, transparent); background: var(--color-about-deep);
+  box-shadow: 0 60px 100px -70px rgb(0 0 0 / 0.85);
+}
+/* cinematic finish: a low vignette that settles the jacket into the ground */
+.about__frame::after { content: ''; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(to top, rgb(8 15 28 / 0.45), transparent 30%), radial-gradient(120% 90% at 50% 25%, transparent 55%, rgb(8 15 28 / 0.35)); }
+.about__img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: 50% 18%; }
+/* fine corner marks, offset from the frame */
+.about__tick { position: absolute; width: 26px; height: 26px; border-color: var(--color-champagne); border-style: solid; opacity: 0.8; }
+.about__tick--a { top: -12px; left: -12px; border-width: 1px 0 0 1px; }
+.about__tick--b { bottom: -12px; right: -12px; border-width: 0 1px 1px 0; }
+
+.about__copy { display: grid; justify-items: start; }
+.about__label { color: var(--color-champagne); letter-spacing: 0.12em; }
+.about__title { margin: 1.25rem 0 0; color: var(--color-about-white); }
+.about__text { margin: 1.75rem 0 0; max-width: 44ch; font-size: clamp(1.06rem, 1rem + 0.3vw, 1.2rem); line-height: 1.85; color: var(--color-about-text); text-wrap: pretty; }
+.about__motto { margin: 1.25rem 0 0; font-weight: 600; font-size: 1.02rem; letter-spacing: 0.01em; color: var(--color-about-white); }
+.about__signature { width: clamp(190px, 18vw, 250px); height: auto; margin-top: 2.25rem; overflow: visible; direction: ltr; }
+.about__sig-ink { stroke: var(--color-champagne); stroke-width: 2.2; }
+.about__sig-flourish { stroke-width: 1.4; opacity: 0.75; }
+.about__sig-sub { fill: var(--color-about-text); font: 500 9.5px var(--font-text); letter-spacing: 0.38em; }
+.about__cta {
+  margin-top: 2.25rem; display: inline-flex; align-items: center; gap: 0.75rem; min-height: 3.25rem; padding: 0 1.6rem;
+  border-radius: 999px; border: 1px solid var(--color-champagne); color: var(--color-about-white); font: 600 1rem/1 var(--font-text);
+  transition: background-color 220ms var(--ease), color 220ms var(--ease);
+}
+@media (hover: hover) and (pointer: fine) { .about__cta:hover { background: color-mix(in oklab, var(--color-champagne) 14%, transparent); } .about__cta:hover .btn__arrow { transform: translateX(-4px); } }
+
+@media (max-width: 1023px) {
+  .about__frame { aspect-ratio: 4 / 5; }
+  .about__arc { top: 22%; right: -40vw; width: 90vw; }
+  .about__rule { display: none; }
+}
+@media (max-width: 480px) { .about__tick { width: 20px; height: 20px; } .about__tick--a { top: -8px; left: -8px; } .about__tick--b { bottom: -8px; right: -8px; } }

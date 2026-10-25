@@ -43,6 +43,12 @@
   --success: #247A55;
   --error: #B42332;
   --header-scrolled: rgba(9, 19, 33, 0.88);
+  /* About section: its own deep ground, warm white type and a champagne accent. */
+  --color-about-deep: #080F1C;
+  --color-about-rise: #111B2B;
+  --color-about-white: #F5F5F3;
+  --color-about-text: #B8C0CC;
+  --color-champagne: #C9A779;
   /* Glass: translucent fills, a lit top edge and a hairline rim, per ground. */
   --glass-light-fill: linear-gradient(120deg, rgb(255 255 255 / 0.55), transparent 38%), linear-gradient(150deg, rgb(255 255 255 / 0.8), rgb(255 255 255 / 0.46));
   --glass-light-rim: linear-gradient(160deg, rgb(255 255 255 / 1), rgb(197 205 216 / 0.55) 45%, rgb(255 255 255 / 0.9));
