@@ -12,9 +12,12 @@ export function sideways(room: HTMLElement, panels: string, onProgress?: (p: num
   const setRoom = () => room.style.setProperty('--travel', distance() + 'px')
   setRoom()
   const startAt = () => room.getBoundingClientRect().top + window.scrollY
+  // Touch scrolling already has momentum; a shorter catch-up keeps the row
+  // under the finger instead of trailing behind it.
+  const touch = matchMedia('(hover: none), (pointer: coarse)').matches
   const travel = gsap.to(track, {
-    x: () => distance(), ease: 'none',
-    scrollTrigger: { start: startAt, end: () => startAt() + distance(), scrub: 0.7, invalidateOnRefresh: true, onRefreshInit: setRoom, onUpdate: self => onProgress?.(self.progress) },
+    x: () => distance(), ease: 'none', force3D: true,
+    scrollTrigger: { start: startAt, end: () => startAt() + distance(), scrub: touch ? 0.25 : 0.7, invalidateOnRefresh: true, onRefreshInit: setRoom, onUpdate: self => onProgress?.(self.progress) },
   })
 
   // Keyboard focus can land on a panel that is still off to the side: move
@@ -53,8 +56,12 @@ export function cardRow(room: HTMLElement, items: HTMLElement[], panels: string)
   })
   const st = travel.scrollTrigger!
   if (ghost) gsap.fromTo(ghost, { xPercent: 12 }, { xPercent: -30, ease: 'none', scrollTrigger: { start: () => st.start, end: () => st.end, scrub: 0.7 } })
-  items.forEach(item => {
-    gsap.fromTo(item, { y: 60, rotate: -3 }, { y: 0, rotate: 0, ease: 'power2.out', scrollTrigger: { trigger: item, containerAnimation: travel, start: 'right left', end: 'center 30%', scrub: true } })
-  })
+  // Cards lift in as they arrive on wide screens. On phones the row moves as
+  // one piece: animating every card as well costs frames there.
+  if (matchMedia('(min-width: 1024px) and (hover: hover)').matches) {
+    items.forEach(item => {
+      gsap.fromTo(item, { y: 60, rotate: -3 }, { y: 0, rotate: 0, ease: 'power2.out', scrollTrigger: { trigger: item, containerAnimation: travel, start: 'right left', end: 'center 30%', scrub: true } })
+    })
+  }
   return done
 }

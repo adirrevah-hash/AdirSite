@@ -15,6 +15,9 @@ import { initDrafting } from './drafting'
 import { initForms } from './forms'
 
 gsap.registerPlugin(ScrollTrigger)
+// A phone's address bar showing or hiding changes the viewport height; that
+// must not re-measure every trigger mid-scroll, which makes pinned rows jump.
+ScrollTrigger.config({ ignoreMobileResize: true })
 
 export type SiteOptions = {
   // Where the lead form posts. null in the static preview, where there is no
