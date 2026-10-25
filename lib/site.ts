@@ -100,5 +100,5 @@ export type Project = {
 export const projects: Project[] = [
   { id: 'wiserise', name: 'WiseRise', url: 'https://www.wiserise.co.il/', kind: 'אתר' },
   { id: 'alumina', name: 'Alumina Group', url: 'https://www.alumina-group.co.il/', kind: 'אתר' },
-  { id: 'readytogoo', name: 'Ready to Goo', url: 'https://readytogoo.com/', kind: 'אתר' },
+  { id: 'readytogoo', name: 'ReadyToGo', url: 'https://readytogoo.com/', kind: 'אתר' },
 ]

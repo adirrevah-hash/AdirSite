@@ -70,7 +70,7 @@
 .work__room.is-h .work__track { gap: 7vw; padding-inline: var(--gutter) 12vw; }
 .work__room.is-h .work__head { flex: none; width: min(32vw, 30rem); margin: 0; }
 .x-room.is-h .x-cue { display: inline-flex; }
-.work__room.is-h .project { flex: none; width: min(54vw, calc((100svh - var(--header-h) - 14rem) / 0.66)); margin: 0; }
+.work__room.is-h .project { flex: none; width: min(58vw, calc((100svh - var(--header-h) - 14rem) / 0.56)); margin: 0; }
 .work__room.is-h .project .devices { width: 100%; }
 .work__room.is-h .project__index { font-size: clamp(7rem, 14vw, 13rem); top: -0.62em; }
 .x-cue { display: none; align-items: center; gap: 0.9rem; margin: 1.5rem 0 0; font-size: 0.85rem; letter-spacing: 0.06em; color: var(--ink-3); }
@@ -240,3 +240,7 @@
 .philo__scene.is-3d .philo__canvas { opacity: 1; }
 .philo__scene.is-3d .philo__fallback { opacity: 0; }
 .philo__top .t-statement { font-size: clamp(2.1rem, 0.9rem + 3.1vw, 4rem); }
+
+/* A pinned section's spacer keeps its old pixel width for a moment after a
+   resize, until the triggers are measured again; never let it exceed the page. */
+main .pin-spacer { max-width: 100%; overflow-x: clip !important; } /* its inline style sets overflow */

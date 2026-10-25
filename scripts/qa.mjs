@@ -118,7 +118,13 @@ for (const [w, h] of [[360, 780], [390, 844], [430, 932], [768, 1024], [1024, 76
   const top = await page.evaluate(() => ({ y: scrollY, copy: Math.min(...[...document.querySelectorAll('.hero__inner, .hero__title .w, .hero__sub, .hero__actions')].map(e => +getComputedStyle(e).opacity)) }))
   check('reverse scroll restores the hero', top.y === 0 && +top.copy > 0.95, JSON.stringify(top))
 
-  for (const w of [1024, 1280, 1680]) { await page.setViewportSize({ width: w, height: 900 }); await wait(300); check(`resize to ${w}: no overflow`, (await overflowX(page)) <= 0) }
+  for (const w of [1024, 1280, 1680]) {
+    await page.setViewportSize({ width: w, height: 900 }); await wait(300)
+    const ox = await overflowX(page)
+    // Name the widest offender, so a failure says where to look.
+    const who = ox > 0 ? await page.evaluate(() => [...document.querySelectorAll('body *')].map(e => [e, e.getBoundingClientRect()]).filter(([, r]) => r.right > innerWidth + 1).sort((a, b) => b[1].right - a[1].right).slice(0, 3).map(([e, r]) => `${e.tagName.toLowerCase()}.${String(e.className).split(' ')[0]} ${Math.round(r.right)} ${getComputedStyle(e).position}`).join(' | ')) : ''
+    check(`resize to ${w}: no overflow`, ox <= 0, ox > 0 ? `${ox}px: ${who}` : '')
+  }
   check('desktop: no console errors', errors.length === 0, errors.join(' | '))
   await ctx.close()
 }

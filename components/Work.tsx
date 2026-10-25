@@ -38,9 +38,10 @@ function Devices({ p, large }: { p: ShowcaseProject; large?: boolean }) {
     <div className="devices">
       <div className="device-desk">
         <div className="device-desk__bar" aria-hidden="true"><i /><i /><i /><span className="num">{p.domain}</span></div>
-        <div className="device-desk__screen" data-parallax-screen><Screen p={p} kind="desktop" large={large} /></div>
+        {/* A captured screen sets the frame's proportions, so it is never cropped. */}
+        <div className="device-desk__screen" data-parallax-screen style={p.desktop ? { aspectRatio: `${p.desktop.width} / ${p.desktop.height}` } : undefined}><Screen p={p} kind="desktop" large={large} /></div>
       </div>
-      <div className="device-phone">
+      <div className={`device-phone${p.mobile ? ' has-shot' : ''}`}>
         <div className="device-phone__screen"><Screen p={p} kind="mobile" large={large} /></div>
       </div>
     </div>
