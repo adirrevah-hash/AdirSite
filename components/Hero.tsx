@@ -1,11 +1,10 @@
 import Split from './Split'
 import { CTA, site, whatsappUrl } from '@/lib/site'
 
-const FINS = 15
-
-// The opening. Type on the right, the louvre object on the left. Before
-// WebGL is ready (or if it never is) a CSS rendition of the same object holds
-// the frame, so the first paint already has its centrepiece.
+// The opening. Type on the right; on the left a website in exploded view,
+// its layers floating apart as in a design tool. Before WebGL is ready (or if
+// it never is) a CSS rendition of the same layers holds the frame, so the
+// first paint already has its centrepiece.
 export default function Hero() {
   return (
     <section id="top" className="hero on-dark bg-midnight" data-hero>
@@ -14,7 +13,11 @@ export default function Hero() {
 
       <div className="hero__art" aria-hidden="true">
         <div className="hero__fallback">
-          {Array.from({ length: FINS }, (_, i) => <i key={i} style={{ ['--i' as string]: i - (FINS - 1) / 2 }} />)}
+          <div className="hl">
+            <i className="hl__base" /><i className="hl__bar" /><i className="hl__img" />
+            <i className="hl__h1" /><i className="hl__h2" /><i className="hl__btn" />
+            <i className="hl__card hl__card--1" /><i className="hl__card hl__card--2" /><i className="hl__card hl__card--3" />
+          </div>
         </div>
         <canvas className="hero__canvas" data-hero-canvas />
       </div>

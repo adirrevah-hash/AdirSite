@@ -42,7 +42,7 @@ export function initHero(reduced: boolean) {
     import('./hero3d').then(m => {
       if (disposed || !m.webglAvailable()) return
       try {
-        const t = m.mountHero3D(canvas, { reduced, fins: small ? 13 : 15 })
+        const t = m.mountHero3D(canvas, { reduced, compact: small })
         three = t
         t.setProgress(progress * 0.95)
         t.ready.then(() => requestAnimationFrame(() => requestAnimationFrame(() => { if (!disposed) hero.classList.add('is-3d') })))

@@ -1,8 +1,11 @@
 import * as THREE from 'three'
+import { RoundedBoxGeometry } from 'three/examples/jsm/geometries/RoundedBoxGeometry.js'
 
-// The hero object: a fan of thin metal and glass fins that the scroll draws
-// into one aligned wall. Parts becoming one brand is the studio's whole
-// proposition, so the object carries it instead of decorating the page.
+// The hero object: a website in exploded view, as a designer sees it in the
+// layers panel. Browser frame, bar, hero image, headlines, button, cards, and
+// a phone beside it float apart in depth; the scroll presses them together
+// into one finished screen. Design becoming a working site is the studio's
+// whole proposition, so the object carries it instead of decorating the page.
 //
 // Framework-agnostic on purpose: the Next.js page and the static preview both
 // mount it the same way. Renders only while visible, pauses with the tab, and
@@ -10,7 +13,7 @@ import * as THREE from 'three'
 
 export type Hero3D = { setProgress: (p: number) => void; dispose: () => void; ready: Promise<void> }
 
-type Options = { reduced?: boolean; fins?: number }
+type Options = { reduced?: boolean; compact?: boolean }
 
 
 const clamp01 = (v: number) => (v < 0 ? 0 : v > 1 ? 1 : v)
@@ -57,48 +60,72 @@ export function mountHero3D(canvas: HTMLCanvasElement, opts: Options = {}): Hero
 
   const scene = new THREE.Scene()
   const camera = new THREE.PerspectiveCamera(28, 1, 0.1, 100)
-  camera.position.set(0, 0.2, 13)
+  camera.position.set(0, 0, 16)
 
   // Matcap materials: the studio lighting is baked into a small texture drawn
   // here, so the shader stays trivial and there is no environment map to
-  // build. Brushed steel, a darker gunmetal, and dark navy lacquer.
-  const steel = matcap(['#0b1422', '#2f3c50', '#6f7c8f', '#b8c2cf', '#e9edf3'], '#8eabc9')
-  const gunmetal = matcap(['#06090f', '#1a2433', '#4a5668', '#9aa5b4', '#dfe5ee'], '#5f7fa3')
-  const lacquer = matcap(['#04070c', '#0d1828', '#172b43', '#5f7fa3', '#c5cdd8'], '#8eabc9')
-  const metal = new THREE.MeshMatcapMaterial({ matcap: steel, side: THREE.DoubleSide })
-  const metalDark = new THREE.MeshMatcapMaterial({ matcap: gunmetal, side: THREE.DoubleSide })
-  const glass = new THREE.MeshMatcapMaterial({ matcap: lacquer, side: THREE.DoubleSide })
+  // build. A pale page, navy lacquer for the image, steel for the bar and
+  // cards, gunmetal for the phone and small type.
+  const textures = [
+    matcap(['#05080d', '#121a26', '#2c3646', '#7b8696', '#d9dfe7'], '#5f7fa3'),
+    matcap(['#0d1828', '#172b43', '#2e4a6e', '#7f9bbb', '#e5e9ef'], '#8eabc9'),
+    matcap(['#0b1422', '#2f3c50', '#6f7c8f', '#b8c2cf', '#e9edf3'], '#8eabc9'),
+    matcap(['#3a4656', '#8e9aaa', '#c5cdd8', '#eef1f5', '#ffffff'], '#c5cdd8'),
+  ]
+  const [frame, lacquer, steel, pale] = textures.map(t => new THREE.MeshMatcapMaterial({ matcap: t }))
 
-  const N = opts.fins ?? 15
-  const W = 0.3, H = 3.9, GAP = 0.07
-  // Each fin is a shallow curved blade (a slice of a wide cylinder), so the
-  // baked light runs across its face instead of filling it with one tone.
-  const R = 0.62, TH = W / R
-  const geo = new THREE.CylinderGeometry(R, R, H, 14, 1, true, -TH / 2, TH)
-  geo.translate(0, 0, -R)
-  const group = new THREE.Group()
-  scene.add(group)
-
-  type Fin = { mesh: THREE.Mesh; from: { pos: THREE.Vector3; rot: THREE.Euler }; to: { pos: THREE.Vector3; rot: THREE.Euler }; phase: number }
-  const fins: Fin[] = []
-  const wallWidth = N * W + (N - 1) * GAP
-  for (let i = 0; i < N; i++) {
-    const t = i / (N - 1)
-    const c = t - 0.5
-    const mat = i % 4 === 1 ? glass : i % 5 === 3 ? metalDark : metal
-    const mesh = new THREE.Mesh(geo, mat)
-    group.add(mesh)
-    const x = -wallWidth / 2 + W / 2 + i * (W + GAP)
-    // Twisted: a louvre wall whose fins turn progressively along its length,
-    // on a shallow arc, with a slow wave in height. Parametric, not random.
-    const from = {
-      pos: new THREE.Vector3(x * 1.08, Math.sin(t * Math.PI) * 0.28 - 0.14, -Math.cos(c * Math.PI) * 0.9 + 0.6),
-      rot: new THREE.Euler(0, c * 2.7, c * 0.12),
-    }
-    // Aligned: one flat wall, every fin facing the viewer.
-    const to = { pos: new THREE.Vector3(x, 0, 0), rot: new THREE.Euler(0, 0, 0) }
-    fins.push({ mesh, from, to, phase: i * 0.45 })
+  const geos = new Map<string, THREE.BufferGeometry>()
+  const slab = (w: number, h: number, d: number, r: number) => {
+    const key = [w, h, d, r].join()
+    if (!geos.has(key)) geos.set(key, new RoundedBoxGeometry(w, h, d, 3, r))
+    return geos.get(key)!
   }
+
+  type Layer = { mesh: THREE.Object3D; x: number; y: number; z0: number; z1: number; phase: number }
+  const layers: Layer[] = []
+  const add = (parent: THREE.Group, mesh: THREE.Object3D, x: number, y: number, z0: number, z1: number) => {
+    mesh.position.set(x, y, z0)
+    parent.add(mesh)
+    layers.push({ mesh, x, y, z0, z1, phase: layers.length * 0.7 })
+  }
+
+  // The desktop page, laid out right to left like the site itself.
+  const page = new THREE.Group()
+  add(page, new THREE.Mesh(slab(5.2, 3.5, 0.14, 0.09), pale), 0, 0, 0, 0)
+  add(page, new THREE.Mesh(slab(4.9, 0.24, 0.05, 0.05), steel), 0, 1.5, 0.12, 0.6)
+  for (let i = 0; i < 3; i++) add(page, new THREE.Mesh(slab(0.09, 0.09, 0.05, 0.04), frame), -2.25 + i * 0.16, 1.5, 0.16, 0.66)
+  add(page, new THREE.Mesh(slab(4.9, 1.55, 0.06, 0.07), lacquer), 0, 0.42, 0.12, 1.1)
+  add(page, new THREE.Mesh(slab(2.5, 0.2, 0.05, 0.05), pale), 1.05, 0.78, 0.17, 1.75)
+  add(page, new THREE.Mesh(slab(1.7, 0.2, 0.05, 0.05), pale), 1.45, 0.45, 0.17, 1.95)
+  add(page, new THREE.Mesh(slab(0.95, 0.32, 0.07, 0.15), pale), 1.82, 0.0, 0.18, 2.4)
+  for (let i = 0; i < 3; i++) {
+    const x = 1.62 - i * 1.62
+    add(page, new THREE.Mesh(slab(1.5, 0.95, 0.06, 0.07), steel), x, -1.08, 0.12, 1.15 + i * 0.18)
+    add(page, new THREE.Mesh(slab(0.9, 0.1, 0.04, 0.04), frame), x + 0.2, -1.25, 0.16, 1.5 + i * 0.18)
+  }
+
+  // The phone, standing in front and to the side of the page.
+  const phone = new THREE.Group()
+  add(phone, new THREE.Mesh(slab(1.2, 2.4, 0.14, 0.16), frame), 0, 0, 0, 0)
+  add(phone, new THREE.Mesh(slab(1.0, 0.9, 0.05, 0.06), lacquer), 0, 0.55, 0.11, 0.7)
+  add(phone, new THREE.Mesh(slab(0.7, 0.1, 0.04, 0.04), pale), 0.08, 0.72, 0.15, 1.05)
+  add(phone, new THREE.Mesh(slab(0.5, 0.18, 0.05, 0.09), pale), 0.18, -0.15, 0.15, 1.25)
+  add(phone, new THREE.Mesh(slab(1.0, 0.55, 0.05, 0.06), steel), 0, -0.75, 0.11, 0.85)
+
+  const group = new THREE.Group()
+  group.add(page, phone)
+  scene.add(group)
+  const compact = !!opts.compact
+  page.position.set(compact ? 0.35 : -0.15, 0.3, 0)
+  // The phone stands in front of the page's furthest layer, so the two never cross.
+  phone.position.set(compact ? -2.3 : -3.05, compact ? -1.1 : -1.3, 2.9)
+  phone.scale.setScalar(0.9)
+  phone.rotation.y = -0.3
+
+  // Poses of the whole object: tilted back in an exploded three-quarter view,
+  // then turned toward the reader as the layers close up.
+  const fromRot = new THREE.Euler(-0.38, 0.5, 0.08)
+  const toRot = new THREE.Euler(-0.06, 0.16, 0.0)
 
   const pointer = { x: 0, y: 0, tx: 0, ty: 0 }
   let progress = 0, target = 0
@@ -111,41 +138,40 @@ export function mountHero3D(canvas: HTMLCanvasElement, opts: Options = {}): Hero
     if (!w || !h) return
     renderer.setSize(w, h, false)
     camera.aspect = w / h
-    // Keep the fan inside the frame on narrow canvases.
-    camera.position.z = w / h < 0.9 ? 17 : 14.5
+    // Keep the whole object inside the frame on narrow canvases.
+    camera.position.z = w / h < 0.9 ? 19 : w / h < 1.3 ? 17.5 : 16.5
     camera.updateProjectionMatrix()
   }
 
-  function frame(now: number) {
+  function draw(now: number) {
     const time = reduced ? 0 : (now - start) / 1000
     progress += (target - progress) * (reduced ? 1 : 0.08)
     pointer.x += (pointer.tx - pointer.x) * 0.06
     pointer.y += (pointer.ty - pointer.y) * 0.06
     const u = smooth(clamp01(progress))
 
-    for (const f of fins) {
-      const idle = reduced ? 0 : (1 - u) * Math.sin(time * 0.6 + f.phase) * 0.08
-      f.mesh.position.lerpVectors(f.from.pos, f.to.pos, u)
-      f.mesh.position.y += idle
-      qa.setFromEuler(f.from.rot)
-      qb.setFromEuler(f.to.rot)
-      f.mesh.quaternion.slerpQuaternions(qa, qb, u)
-      if (!reduced) f.mesh.rotateY((1 - u) * Math.sin(time * 0.4 + f.phase) * 0.12)
+    for (const l of layers) {
+      // Exploded layers breathe in depth; closed ones sit flush.
+      const breathe = reduced ? 0 : Math.sin(time * 0.9 + l.phase) * 0.06 * (1 - u)
+      l.mesh.position.z = l.z1 + (l.z0 - l.z1) * u + breathe
     }
-    group.rotation.y = -0.22 * (1 - u) + pointer.x * 0.28 + (reduced ? 0 : Math.sin(time * 0.15) * 0.06 * (1 - u))
-    group.rotation.x = 0.08 + pointer.y * 0.12 - u * 0.12
-    group.position.y = u * 0.2
+    qa.setFromEuler(fromRot)
+    qb.setFromEuler(toRot)
+    group.quaternion.slerpQuaternions(qa, qb, u)
+    group.rotation.y += pointer.x * 0.22 + (reduced ? 0 : Math.sin(time * 0.25) * 0.05 * (1 - u))
+    group.rotation.x += -pointer.y * 0.1
+    group.position.y = (reduced ? 0 : Math.sin(time * 0.6) * 0.06) + u * 0.1
 
     renderer.render(scene, camera)
     const settled = reduced || (Math.abs(target - progress) < 0.0005 && Math.abs(pointer.tx - pointer.x) < 0.001 && Math.abs(pointer.ty - pointer.y) < 0.001)
-    if (running && !(reduced && settled)) raf = requestAnimationFrame(frame)
+    if (running && !(reduced && settled)) raf = requestAnimationFrame(draw)
     else running = false
   }
 
   function play() {
     if (!compiled || disposed || running || !visible || document.hidden) return
     running = true
-    raf = requestAnimationFrame(frame)
+    raf = requestAnimationFrame(draw)
   }
 
   const onPointer = (e: PointerEvent) => {
@@ -179,8 +205,10 @@ export function mountHero3D(canvas: HTMLCanvasElement, opts: Options = {}): Hero
       io.disconnect(); ro.disconnect()
       removeEventListener('pointermove', onPointer)
       document.removeEventListener('visibilitychange', onVis)
-      geo.dispose(); metal.dispose(); metalDark.dispose(); glass.dispose()
-      steel.dispose(); gunmetal.dispose(); lacquer.dispose(); renderer.dispose()
+      geos.forEach(g => g.dispose())
+      ;[frame, lacquer, steel, pale].forEach(m => m.dispose())
+      textures.forEach(t => t.dispose())
+      renderer.dispose()
     },
   }
 }
