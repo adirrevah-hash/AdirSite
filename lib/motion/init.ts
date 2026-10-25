@@ -60,8 +60,9 @@ export function initSite(opts: SiteOptions) {
   const idle = window.requestIdleCallback ?? ((cb: () => void) => window.setTimeout(cb, 200))
   const cancelIdle = window.cancelIdleCallback ?? window.clearTimeout
   later = idle(rest, { timeout: 1500 })
-  // Layout settles once the fonts are in; measure the triggers again then.
-  document.fonts?.ready.then(() => ScrollTrigger.refresh())
+  // Layout settles once the fonts are in; measure the triggers again then,
+  // unless the chapters below have not set up yet (their setup measures).
+  document.fonts?.ready.then(() => { if (!later) ScrollTrigger.refresh() })
   return () => {
     if (later) cancelIdle(later)
     cleanups.forEach(c => c?.())

@@ -1,8 +1,9 @@
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import type { Forms3D } from './forms3d'
+import { afterSettle } from './settle'
 
 // Mounts the approach section's 3D sculpture shortly before it scrolls into
-// view and ties its assembly to the reader's progress through the statement.
+// view (and not before the page has settled) and ties its assembly to the reader's progress through the statement.
 // Phones without the headroom, and browsers without WebGL, keep the CSS forms.
 export function initForms(reduced: boolean) {
   const scene = document.querySelector<HTMLElement>('[data-forms]')
@@ -26,7 +27,7 @@ export function initForms(reduced: boolean) {
   const io = new IntersectionObserver(([e]) => {
     if (!e.isIntersecting) return
     io.disconnect()
-    Promise.all([import('./forms3d'), import('./hero3d')]).then(([m, h]) => {
+    Promise.all([import('./forms3d'), import('./hero3d'), afterSettle()]).then(([m, h]) => {
       if (disposed || !h.webglAvailable()) return
       try {
         const f = m.mountForms3D(canvas, { reduced })

@@ -1,8 +1,9 @@
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import type { Hero3D } from './hero3d'
+import { afterSettle } from './settle'
 
-// Mounts the WebGL object once the page is idle, crossfades it over the CSS
+// Mounts the WebGL object once the page has settled, crossfades it over the CSS
 // rendition, and ties its alignment to how far the hero has scrolled away.
 // Without WebGL the CSS rendition simply stays.
 export function initHero(reduced: boolean) {
@@ -32,13 +33,12 @@ export function initHero(reduced: boolean) {
     scatter.fromTo('.hero__inner', { y: 0, opacity: 1 }, { y: -60, opacity: 0, ease: 'power1.in', immediateRender: false }, 0.1)
   }
 
-  const idle = (cb: () => void) => ('requestIdleCallback' in window ? (window as any).requestIdleCallback(cb, { timeout: 1200 }) : setTimeout(cb, 300))
   // Phones get the WebGL object only when they have the headroom for it;
   // weaker or data-saving devices keep the CSS rendition and their battery.
   const nav = navigator as Navigator & { deviceMemory?: number; connection?: { saveData?: boolean } }
   const small = matchMedia('(max-width: 767px)').matches
   const capable = !nav.connection?.saveData && (!small || ((nav.hardwareConcurrency ?? 4) >= 6 && (nav.deviceMemory ?? 4) >= 4))
-  if (capable) idle(() => {
+  if (capable) afterSettle().then(() => {
     import('./hero3d').then(m => {
       if (disposed || !m.webglAvailable()) return
       try {

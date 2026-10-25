@@ -61,7 +61,12 @@ for (const [w, h] of [[360, 780], [390, 844], [430, 932], [768, 1024], [1024, 76
   check('Hebrew RTL, one h1, title, description, structured data', meta.lang === 'he' && meta.dir === 'rtl' && meta.h1 === 1 && meta.title.length > 10 && meta.desc.length > 40 && meta.ld)
   check('every image has alt text', meta.imgsNoAlt === 0)
   check('heading levels never skip downward', meta.headings.every((l, i) => i === 0 || l <= meta.headings[i - 1] + 1), meta.headings.join(''))
-  check('hero: WebGL object mounted', await page.evaluate(() => document.querySelector('[data-hero]').classList.contains('is-3d')))
+  // The WebGL object mounts once the page has settled (first input, or a few
+  // seconds after load); the CSS rendition holds the frame until then.
+  const css = await page.evaluate(() => getComputedStyle(document.querySelector('.hero__fallback')).opacity)
+  await page.mouse.move(700, 400)
+  const mounted = await page.waitForFunction(() => document.querySelector('[data-hero]').classList.contains('is-3d'), null, { timeout: 8000 }).then(() => true, () => false)
+  check('hero: CSS rendition first, WebGL object mounts once the page settles', css === '1' && mounted, `css ${css}`)
 
   for (const [href, target] of [['#work', '#work-title'], ['#services', '#services-title'], ['#process', '#process-title'], ['#contact', '#contact-title']]) {
     await page.click(`.site-nav a[href="${href}"]`)
