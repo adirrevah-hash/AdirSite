@@ -88,12 +88,16 @@ for (const [w, h] of [[360, 780], [390, 844], [430, 932], [768, 1024], [1024, 76
   const after = await page.evaluate(() => ({ open: !!document.querySelector('dialog[open]'), focus: document.activeElement?.textContent?.trim().slice(0, 20) }))
   check('project dialog opens with focus inside and closes on Escape', dlg.open && dlg.focusIn && !after.open, JSON.stringify({ dlg, after }))
 
-  // services stage follows the card under the pointer
-  await scrollTo(page, '.svc-item[data-svc="cards"]', -300); await wait(700)
-  await page.hover('.svc-item[data-svc="cards"]'); await wait(600)
-  const stage = await page.evaluate(() => document.querySelector('[data-stage].is-active')?.dataset.stage)
+  // services travel sideways; keyboard focus brings every card into view
+  await scrollTo(page, '#services', 0); await wait(800)
+  const cards = []
+  for (const id of ['websites', 'landing', 'identity', 'cards', 'digital', 'hosting']) {
+    await page.focus(`.svc-item[data-svc="${id}"] a[data-service]`); await wait(900)
+    cards.push(await page.evaluate(i => { const r = document.querySelector(`.svc-item[data-svc="${i}"]`).getBoundingClientRect(); return r.left >= -1 && r.right <= innerWidth + 1 && r.top >= 0 && r.bottom <= innerHeight + 1 }, id))
+  }
+  const meter = await page.evaluate(() => document.querySelector('[data-svc-count]').textContent)
   await page.screenshot({ path: `${OUT}/services.png` })
-  check('services stage shows the hovered service', stage === 'cards', stage)
+  check('services: sideways row, keyboard focus brings each card fully into view', cards.every(Boolean) && meter === '06', cards.join(',') + ' meter ' + meter)
 
   // process line lights its nodes as it is read
   await scrollTo(page, '.steps-wrap', -200); await wait(600)
@@ -127,7 +131,7 @@ for (const [w, h] of [[1440, 900], [390, 844]]) {
 // ----------------------------------------------------------------- form
 {
   const { ctx, page, errors } = await open(browser, { viewport: { width: 1440, height: 900 } })
-  await scrollTo(page, '.svc-item[data-svc="landing"] a[data-service]', -400); await wait(500)
+  await page.focus('.svc-item[data-svc="landing"] a[data-service]'); await wait(1200)
   await page.click('.svc-item[data-svc="landing"] a[data-service]'); await wait(1200)
   check('"לבקש הצעה" preselects the service', (await page.inputValue('#f-service')) === 'landing')
 

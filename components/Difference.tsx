@@ -1,3 +1,4 @@
+import Blueprint from './Blueprint'
 import Split from './Split'
 
 const items = [
@@ -21,6 +22,8 @@ function Icon({ kind }: { kind: (typeof items)[number]['icon'] }) {
 export default function Difference() {
   return (
     <section id="difference" className="diff on-light bg-off-white" aria-labelledby="diff-title">
+      <Blueprint />
+      <p className="ghost-word diff__ghost" aria-hidden="true" data-ghost>בנויים בדיוק</p>
       <div className="wrap">
         <div className="diff__layout">
           <header className="diff__head">
@@ -31,8 +34,9 @@ export default function Difference() {
             </h2>
           </header>
           <ul className="diff__list" data-reveal="fade">
-            {items.map(it => (
-              <li key={it.title} className="diff__item">
+            {items.map((it, i) => (
+              <li key={it.title} className="diff__item" data-spot>
+                <span className="diff__num num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
                 <Icon kind={it.icon} />
                 <h3 className="t-h3">{it.title}</h3>
                 <p className="t-body">{it.text}</p>

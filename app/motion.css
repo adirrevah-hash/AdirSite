@@ -64,17 +64,18 @@
 .marquee__mark b:nth-child(2) { opacity: 0.75; } .marquee__mark b:nth-child(3) { opacity: 0.5; } .marquee__mark b:nth-child(4) { opacity: 0.3; }
 
 /* ------------------------------------------------- horizontal gallery */
-.work.is-h .work__room { height: calc(100svh + var(--travel, 0px)); }
-.work.is-h .work__pin { position: sticky; top: 0; height: 100svh; box-sizing: border-box; display: flex; align-items: center; padding-top: var(--header-h); overflow: clip; }
-.work.is-h .work__track { display: flex; align-items: center; gap: 7vw; width: max-content; max-width: none; margin: 0; padding-inline: var(--gutter) 12vw; will-change: transform; }
-.work.is-h .work__head { flex: none; width: min(32vw, 30rem); margin: 0; }
-.work.is-h .work__cue { display: inline-flex; }
-.work.is-h .project { flex: none; width: min(54vw, calc((100svh - var(--header-h) - 14rem) / 0.66)); margin: 0; }
-.work.is-h .project .devices { width: 100%; }
-.work.is-h .project__index { font-size: clamp(7rem, 14vw, 13rem); top: -0.62em; }
-.work__cue { display: none; align-items: center; gap: 0.9rem; margin: 1.5rem 0 0; font-size: 0.85rem; letter-spacing: 0.06em; color: var(--color-silver-muted); }
-.work__cue i { position: relative; width: 4.5rem; height: 1px; background: var(--border-dark); overflow: hidden; }
-.work__cue i::after { content: ''; position: absolute; inset: 0; background: var(--color-silver); transform: translateX(100%); animation: cue 2.2s var(--ease-io) infinite; }
+.x-room.is-h { height: calc(100svh + var(--travel, 0px)); }
+.x-room.is-h .x-pin { position: sticky; top: 0; height: 100svh; box-sizing: border-box; display: flex; align-items: center; padding-top: var(--header-h); overflow: clip; }
+.x-room.is-h .x-track { display: flex; align-items: center; width: max-content; max-width: none; margin: 0; will-change: transform; }
+.work__room.is-h .work__track { gap: 7vw; padding-inline: var(--gutter) 12vw; }
+.work__room.is-h .work__head { flex: none; width: min(32vw, 30rem); margin: 0; }
+.x-room.is-h .x-cue { display: inline-flex; }
+.work__room.is-h .project { flex: none; width: min(54vw, calc((100svh - var(--header-h) - 14rem) / 0.66)); margin: 0; }
+.work__room.is-h .project .devices { width: 100%; }
+.work__room.is-h .project__index { font-size: clamp(7rem, 14vw, 13rem); top: -0.62em; }
+.x-cue { display: none; align-items: center; gap: 0.9rem; margin: 1.5rem 0 0; font-size: 0.85rem; letter-spacing: 0.06em; color: var(--ink-3); }
+.x-cue i { position: relative; width: 4.5rem; height: 1px; background: var(--line); overflow: hidden; }
+.x-cue i::after { content: ''; position: absolute; inset: 0; background: var(--ink-2); transform: translateX(100%); animation: cue 2.2s var(--ease-io) infinite; }
 @keyframes cue { 60%, 100% { transform: translateX(-100%); } }
 
 /* ------------------------------------------------------ process chapter */
@@ -125,3 +126,71 @@
 .cursor__label { font-size: 0.85rem; font-weight: 600; color: var(--color-graphite); opacity: 0; transition: opacity 250ms var(--ease); }
 .cursor.is-label .cursor__label { opacity: 1; }
 .progress { position: fixed; top: env(safe-area-inset-top, 0px); inset-inline: 0; z-index: 90; height: 2px; background: var(--color-silver); transform: scaleX(0); transform-origin: right; pointer-events: none; }
+
+/* ------------------------------------------------- services, sideways */
+.services__room.is-h .services__track { gap: clamp(2.5rem, 4vw, 4.5rem); padding-inline: var(--gutter) 10vw; }
+.services__room.is-h .services__head { flex: none; width: min(30vw, 26rem); }
+.services__room.is-h .services__list { display: flex; gap: clamp(1rem, 1.8vw, 1.75rem); }
+.services__room.is-h .svc-item { flex: none; width: clamp(17rem, 27vw, 25rem); }
+.services__room.is-h .svc-item__visual { height: min(230px, 27svh); }
+.services__room.is-h .services__meter { position: absolute; z-index: 1; bottom: max(1.75rem, env(safe-area-inset-bottom, 0px)); inset-inline: var(--gutter); display: flex; align-items: center; gap: 1rem; font-size: 0.85rem; color: var(--ink-3); }
+.services__meter i { position: relative; flex: 1; height: 1px; background: var(--line); }
+.services__meter b { position: absolute; inset: 0; background: var(--ink); transform: scaleX(0); transform-origin: right; }
+@media (max-width: 699px) {
+  .services__room.is-h .services__head { width: 78vw; }
+  .services__room.is-h .svc-item { width: 80vw; }
+  .services__room.is-h .svc-item__visual { height: min(200px, 24svh); }
+}
+
+/* --------------------------------------------- light sections: drafting */
+.philo, .diff { position: relative; isolation: isolate; }
+.diff { overflow: clip; }
+.philo > .wrap, .diff > .wrap { position: relative; z-index: 1; }
+
+/* A drafting grid, lit around the pointer with guides and coordinates. */
+.blueprint { position: absolute; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; --mx: -999px; --my: -999px; }
+.blueprint::before, .blueprint::after {
+  content: ''; position: absolute; inset: 0;
+  background-image: linear-gradient(to left, var(--g) 1px, transparent 1px), linear-gradient(to bottom, var(--g) 1px, transparent 1px);
+  background-size: 72px 72px; background-position: 50% 0;
+}
+.blueprint::before { --g: var(--border-light); -webkit-mask-image: radial-gradient(110% 70% at 50% 45%, #000 20%, transparent 80%); mask-image: radial-gradient(110% 70% at 50% 45%, #000 20%, transparent 80%); }
+.blueprint::after {
+  --g: color-mix(in oklab, var(--color-graphite) 26%, transparent);
+  background-image: linear-gradient(to left, var(--g) 1px, transparent 1px), linear-gradient(to bottom, var(--g) 1px, transparent 1px), linear-gradient(to left, var(--border-light) 1px, transparent 1px), linear-gradient(to bottom, var(--border-light) 1px, transparent 1px);
+  background-size: 72px 72px, 72px 72px, 18px 18px, 18px 18px; background-position: 50% 0;
+  -webkit-mask-image: radial-gradient(240px circle at var(--mx) var(--my), #000 0%, transparent 100%); mask-image: radial-gradient(240px circle at var(--mx) var(--my), #000 0%, transparent 100%);
+  opacity: 0; transition: opacity 400ms var(--ease);
+}
+.blueprint__guide, .blueprint__coord { position: absolute; opacity: 0; transition: opacity 300ms var(--ease); }
+.blueprint__guide { background: color-mix(in oklab, var(--focus-ring) 75%, transparent); }
+.blueprint__guide--x { left: 0; right: 0; top: 0; height: 1px; transform: translateY(var(--my)); }
+.blueprint__guide--y { top: 0; bottom: 0; left: 0; width: 1px; transform: translateX(var(--mx)); }
+.blueprint__coord { left: 0; top: 0; transform: translate(calc(var(--mx) + 14px), calc(var(--my) + 14px)); padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.7rem; white-space: nowrap; background: var(--color-graphite); color: var(--color-off-white); }
+.blueprint.is-lit::after, .blueprint.is-lit .blueprint__guide, .blueprint.is-lit .blueprint__coord { opacity: 1; }
+
+/* Selection box around the statement, as in a design tool. */
+.select-box { position: relative; display: block; width: fit-content; max-width: 100%; margin-top: 2.75rem; }
+.select-box .philo__statement { margin: 0; }
+.select-box__frame { position: absolute; inset: -0.9rem -1.1rem; border: 1px solid var(--focus-ring); pointer-events: none; }
+.select-box__frame i { position: absolute; width: 9px; height: 9px; background: var(--color-white); border: 1px solid var(--focus-ring); }
+.select-box__frame i:nth-child(1) { top: -5px; left: -5px; } .select-box__frame i:nth-child(2) { top: -5px; right: -5px; }
+.select-box__frame i:nth-child(3) { bottom: -5px; left: -5px; } .select-box__frame i:nth-child(4) { bottom: -5px; right: -5px; }
+.select-box__tag { position: absolute; top: calc(-0.9rem - 1.75rem); inset-inline-start: -1.1rem; direction: ltr; padding: 0.2rem 0.55rem; border-radius: 4px; font-size: 0.72rem; background: var(--focus-ring); color: var(--color-midnight); white-space: nowrap; }
+
+/* Large outlined words that drift with the scroll behind light sections. */
+.ghost-word {
+  position: absolute; z-index: 0; inset-inline-start: 0; margin: 0; white-space: nowrap; pointer-events: none; user-select: none; -webkit-user-select: none;
+  font-family: var(--font-display); font-weight: 600; font-size: clamp(7rem, 24vw, 24rem); line-height: 0.8; letter-spacing: -0.05em;
+  color: transparent; -webkit-text-stroke: 1.2px color-mix(in oklab, var(--color-graphite) 14%, transparent);
+}
+.services__ghost { translate: 0 -50%; }
+.diff__ghost { top: clamp(3rem, 8vw, 7rem); }
+
+/* Difference cells: a light that follows the pointer, and an index. */
+.diff__item { position: relative; overflow: hidden; }
+.diff__item > * { position: relative; }
+.diff__item::before { content: ''; position: absolute; inset: 0; background: radial-gradient(280px circle at var(--sx, -400px) var(--sy, -400px), var(--color-white), transparent 70%); opacity: 0; transition: opacity 300ms var(--ease); pointer-events: none; }
+@media (hover: hover) and (pointer: fine) { .diff__item:hover::before { opacity: 1; } }
+.diff__item > .diff__num { position: absolute; top: clamp(1.75rem, 3vw, 2.5rem); inset-inline-end: clamp(1.75rem, 3vw, 2.5rem); font-size: 0.8rem; color: var(--ink-3); }
+.services__room { position: relative; z-index: 1; }

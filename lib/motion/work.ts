@@ -1,5 +1,6 @@
 import { gsap } from 'gsap'
 import type { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { sideways } from './sideways'
 
 // Project dialogs (native <dialog>: focus trap, Escape and focus return come
 // from the platform), and the gallery's movement: sideways on wide screens,
@@ -21,9 +22,7 @@ export function initWork(reduced: boolean) {
   dialogs.forEach(d => { d.addEventListener('click', onDialogClick); d.addEventListener('close', onClose) })
 
   const mm = gsap.matchMedia()
-  const section = document.querySelector<HTMLElement>('[data-work]')
-  const pin = section?.querySelector<HTMLElement>('[data-work-pin]')
-  const track = section?.querySelector<HTMLElement>('[data-work-track]')
+  const room = document.querySelector<HTMLElement>('#work .x-room')
   const projects = [...document.querySelectorAll<HTMLElement>('[data-project]')]
 
   // A captured screenshot scrolls inside its frame while the project passes.
@@ -34,22 +33,10 @@ export function initWork(reduced: boolean) {
     gsap.to(shot, { y: () => -Math.max(shot.offsetHeight - screen.clientHeight, 0) * 0.6, ease: 'none', scrollTrigger: { ...trigger, scrub: true, invalidateOnRefresh: true } })
   }
 
-  if (!reduced && section && pin && track) {
-    // Wide screens: the gallery holds and the projects travel sideways. In
-    // RTL the row runs leftward, so the track moves right to bring it in.
+  if (!reduced && room) {
+    // Wide screens: the gallery holds and the projects travel sideways.
     mm.add('(min-width: 1024px)', () => {
-      section.classList.add('is-h')
-      // The pin is CSS sticky (smooth, and no layout shift); the section is
-      // lengthened by exactly the distance the track travels.
-      const marquee = section.querySelector<HTMLElement>('.marquee')
-      const distance = () => Math.max(track.scrollWidth - window.innerWidth, 0)
-      const setRoom = () => section.style.setProperty('--travel', distance() + 'px')
-      setRoom()
-      const startAt = () => (marquee ? marquee.getBoundingClientRect().bottom + window.scrollY : section.getBoundingClientRect().top + window.scrollY)
-      const travel = gsap.to(track, {
-        x: () => distance(), ease: 'none',
-        scrollTrigger: { start: startAt, end: () => startAt() + distance(), scrub: 0.7, invalidateOnRefresh: true, onRefreshInit: setRoom },
-      })
+      const { travel, done } = sideways(room, '[data-project], .work__head')
       projects.forEach(p => {
         const devices = p.querySelector('.devices')
         const phone = p.querySelector('.device-phone')
@@ -60,21 +47,7 @@ export function initWork(reduced: boolean) {
         if (index) gsap.fromTo(index, { xPercent: -60 }, { xPercent: 60, ease: 'none', scrollTrigger: { ...along, start: 'right left', end: 'left right', scrub: true } })
         scrollShot(p, { ...along, start: 'right left', end: 'left right' })
       })
-      // Keyboard focus can land on a project that is still off to the side:
-      // move the page to the point where that project is centred.
-      const st = travel.scrollTrigger!
-      const onFocus = (e: FocusEvent) => {
-        const panel = (e.target as HTMLElement).closest<HTMLElement>('[data-project], .work__head')
-        const dist = distance()
-        if (!panel || !dist) return
-        const r = panel.getBoundingClientRect()
-        const x = gsap.getProperty(track, 'x') as number
-        const want = gsap.utils.clamp(0, dist, x + (window.innerWidth / 2 - (r.left + r.width / 2)))
-        travel.progress(want / dist)
-        window.scrollTo({ top: st.start + (want / dist) * (st.end - st.start), behavior: 'instant' })
-      }
-      track.addEventListener('focusin', onFocus)
-      return () => { track.removeEventListener('focusin', onFocus); section.classList.remove('is-h'); section.style.removeProperty('--travel') }
+      return done
     })
     // Narrower screens: projects stack and lift in as they arrive.
     mm.add('(max-width: 1023px)', () => {

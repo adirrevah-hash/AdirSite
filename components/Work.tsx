@@ -52,9 +52,9 @@ export default function Work() {
   return (
     <section id="work" className="work on-dark bg-graphite" aria-labelledby="work-title" data-work>
       <Marquee />
-      <div className="work__room">
-        <div className="work__pin" data-work-pin>
-          <div className="work__track" data-work-track>
+      <div className="work__room x-room">
+        <div className="work__pin x-pin">
+          <div className="work__track x-track">
             <header className="work__head">
               <p className="t-label">עבודות נבחרות</p>
               <h2 id="work-title" className="t-h2" data-reveal="chars">
@@ -62,7 +62,7 @@ export default function Work() {
                 <span className="line"><Split text="לעסקים אמיתיים." start={11} /></span>
               </h2>
               <p className="work__count"><span className="num">{String(items.length).padStart(2, '0')}</span> פרויקטים באוויר</p>
-              <p className="work__cue" aria-hidden="true"><span>גללו</span><i /></p>
+              <p className="x-cue" aria-hidden="true"><span>גללו</span><i /></p>
             </header>
 
             {items.map((p, i) => (

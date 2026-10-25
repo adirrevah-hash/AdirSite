@@ -1,27 +1,36 @@
-// The services stage follows the reader: the card nearest the middle of the
-// screen, or the one under the pointer or keyboard focus, owns the stage.
-// The business-card visual also tilts toward a fine pointer.
+import { gsap } from 'gsap'
+import { sideways } from './sideways'
+
+// The services travel sideways while the section holds: each card lifts in
+// as it arrives, the meter counts them, and the outlined word behind drifts
+// the other way. The business-card visual tilts toward a fine pointer.
 export function initServices(reduced: boolean) {
+  const room = document.querySelector<HTMLElement>('#services .x-room')
   const items = [...document.querySelectorAll<HTMLElement>('.svc-item[data-svc]')]
-  const layers = [...document.querySelectorAll<HTMLElement>('[data-stage]')]
-  if (!items.length) return () => {}
+  if (!room || !items.length) return () => {}
 
-  let active = ''
-  const setActive = (id: string) => {
-    if (id === active) return
-    active = id
-    items.forEach(i => i.classList.toggle('is-active', i.dataset.svc === id))
-    layers.forEach(l => l.classList.toggle('is-active', l.dataset.stage === id))
+  const mm = gsap.matchMedia()
+  if (!reduced) {
+    mm.add('(min-width: 0px)', () => {
+      const count = room.querySelector<HTMLElement>('[data-svc-count]')
+      const bar = room.querySelector<HTMLElement>('[data-svc-bar]')
+      const ghost = room.querySelector<HTMLElement>('[data-ghost]')
+      const { travel, done } = sideways(room, '.svc-item, .services__head', p => {
+        if (bar) gsap.set(bar, { scaleX: p })
+        if (count) count.textContent = String(Math.min(items.length, Math.floor(p * items.length) + 1)).padStart(2, '0')
+      })
+      const st = travel.scrollTrigger!
+      if (ghost) gsap.fromTo(ghost, { xPercent: 12 }, { xPercent: -30, ease: 'none', scrollTrigger: { start: () => st.start, end: () => st.end, scrub: 0.7 } })
+      items.forEach(item => {
+        const along = { trigger: item, containerAnimation: travel }
+        gsap.fromTo(item, { y: 60, rotate: -3 }, { y: 0, rotate: 0, ease: 'power2.out', scrollTrigger: { ...along, start: 'right left', end: 'center 30%', scrub: true } })
+      })
+      return done
+    })
   }
-  setActive(items[0].dataset.svc!)
-
-  const io = new IntersectionObserver(entries => {
-    for (const e of entries) if (e.isIntersecting) setActive((e.target as HTMLElement).dataset.svc!)
-  }, { rootMargin: '-45% 0px -45% 0px' })
+  // A card's one-off drawing plays the first time it is on screen.
+  const io = new IntersectionObserver(entries => entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('is-seen'); io.unobserve(e.target) } }), { threshold: 0.4 })
   items.forEach(i => io.observe(i))
-
-  const onEnter = (e: Event) => setActive((e.currentTarget as HTMLElement).dataset.svc!)
-  items.forEach(i => { i.addEventListener('pointerenter', onEnter); i.addEventListener('focusin', onEnter) })
 
   const fine = matchMedia('(hover: hover) and (pointer: fine)').matches
   const tilts = reduced || !fine ? [] : [...document.querySelectorAll<HTMLElement>('[data-tilt]')]
@@ -38,8 +47,8 @@ export function initServices(reduced: boolean) {
   if (tilts.length) addEventListener('pointermove', onMove, { passive: true })
 
   return () => {
+    mm.revert()
     io.disconnect()
-    items.forEach(i => { i.removeEventListener('pointerenter', onEnter); i.removeEventListener('focusin', onEnter) })
     removeEventListener('pointermove', onMove)
   }
 }

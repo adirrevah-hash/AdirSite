@@ -160,40 +160,34 @@ button.link { background: none; border-inline: 0; border-top: 0; font: inherit; 
 .pending { display: inline-block; font-size: 0.85rem; color: var(--color-silver-muted); padding: 0.2rem 0.7rem; border: 1px dashed var(--border-dark); border-radius: 999px; }
 
 /* ============================================================== services */
-.services { padding-block: var(--section-y); }
-.services__head { display: grid; gap: 1.25rem; justify-items: start; margin-bottom: clamp(3rem, 6vw, 5rem); }
+.services { position: relative; isolation: isolate; padding-block: var(--section-y); }
+.services__track { position: relative; z-index: 1; display: grid; gap: clamp(3rem, 6vw, 5rem); max-width: var(--maxw); margin-inline: auto; padding-inline: var(--gutter); }
+.services__head { display: grid; gap: 1.25rem; justify-items: start; align-content: start; }
 .services__head h2 { margin: 0; }
-.services__layout { display: grid; gap: 2rem; }
-@media (min-width: 1024px) { .services__layout { grid-template-columns: minmax(0, 1fr) minmax(0, 0.95fr); gap: 4vw; align-items: start; } }
 .services__list { list-style: none; margin: 0; padding: 0; display: grid; gap: 1rem; }
+@media (min-width: 700px) { .services__list { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (min-width: 1100px) { .services__list { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
 .svc-item {
-  display: grid; gap: 0.75rem; padding: clamp(1.5rem, 3vw, 2.25rem); outline: none;
+  position: relative; display: grid; align-content: start; gap: 0.75rem; padding: clamp(1rem, 2vw, 1.25rem) clamp(1rem, 2vw, 1.25rem) clamp(1.5rem, 3vw, 2rem);
   background: var(--color-white); border: 1px solid var(--border-light); border-radius: var(--radius-lg);
-  transition: border-color 300ms var(--ease), box-shadow 400ms var(--ease);
+  transition: border-color 300ms var(--ease), box-shadow 400ms var(--ease), transform 500ms var(--ease);
 }
 .svc-item h3, .svc-item p { margin: 0; }
-.svc-item.is-active { border-color: color-mix(in oklab, var(--color-graphite) 38%, transparent); box-shadow: 0 30px 60px -40px rgb(9 19 33 / 0.45); }
+.svc-item > h3, .svc-item > p, .svc-item > .link { margin-inline: 0.5rem; }
+@media (hover: hover) and (pointer: fine) {
+  .svc-item:hover { border-color: color-mix(in oklab, var(--color-graphite) 38%, transparent); box-shadow: 0 40px 70px -45px rgb(9 19 33 / 0.5); transform: translateY(-6px); }
+}
 .svc-item__value { display: flex; align-items: center; gap: 0.65rem; font-size: 0.95rem; color: var(--color-navy-secondary); font-weight: 500; }
 .svc-item__value::before { content: ''; width: 1.1rem; height: 1px; background: currentColor; }
 .svc-item .link { justify-self: start; margin-top: 0.4rem; }
-.svc-item__visual { position: relative; height: 230px; margin-bottom: 0.5rem; border-radius: var(--radius); overflow: hidden; background: radial-gradient(120% 100% at 30% 0%, var(--color-navy-secondary), var(--color-navy-deep) 60%, var(--color-midnight)); display: grid; place-items: center; }
-.services__stage { display: none; }
-@media (min-width: 1024px) {
-  .svc-item__visual { display: none; }
-  .services__stage {
-    display: block; position: sticky; top: calc(var(--header-h) + 2rem); height: min(640px, calc(100svh - var(--header-h) - 4rem));
-    border-radius: var(--radius-lg); overflow: hidden; box-shadow: inset 0 0 0 1px var(--border-dark);
-    background: radial-gradient(120% 90% at 30% 0%, var(--color-navy-secondary), var(--color-navy-deep) 55%, var(--color-midnight));
-  }
-}
-.services__stage-inner { position: absolute; inset: 0; }
-.stage-layer { position: absolute; inset: 0; display: grid; place-items: center; opacity: 0; transform: scale(0.97); transition: opacity 500ms var(--ease), transform 800ms var(--ease); }
-.stage-layer.is-active { opacity: 1; transform: none; }
-.stage-layer__label { position: absolute; bottom: 1.5rem; inset-inline-start: 1.75rem; margin: 0; font-size: 0.85rem; color: var(--color-silver-muted); }
+.svc-item__visual { position: relative; height: 230px; margin-bottom: 0.75rem; border-radius: var(--radius); overflow: hidden; background: radial-gradient(120% 100% at 30% 0%, var(--color-navy-secondary), var(--color-navy-deep) 60%, var(--color-midnight)); display: grid; place-items: center; }
+.svc-item__num { position: absolute; top: 0.9rem; inset-inline-start: 1rem; z-index: 2; font-size: 0.85rem; color: var(--color-silver-muted); }
+.services__meter { display: none; }
+.services__ghost { top: 50%; }
 
-/* service visuals: drawn on the dark stage */
+/* service visuals: drawn on the dark card */
 .sv { position: relative; width: 78%; aspect-ratio: 4 / 3; }
-.svc-item__visual .sv { width: min(86%, 340px); }
+.svc-item__visual .sv { width: min(82%, 320px); }
 .sv--websites .sv-browser { position: absolute; inset: 4% 16% 14% 0; border-radius: 10px; overflow: hidden; background: var(--color-off-white); box-shadow: 0 40px 70px -40px rgb(0 0 0 / 0.8); }
 .sv-browser__bar { height: 8%; display: flex; align-items: center; gap: 4px; padding: 0 3%; background: var(--hover-on-light); direction: ltr; }
 .sv-browser__bar i { width: 5px; height: 5px; border-radius: 50%; background: var(--color-silver-muted); }
@@ -267,11 +261,11 @@ button.link { background: none; border-inline: 0; border-top: 0; font: inherit; 
 .sv-rack b { height: 4px; border-radius: 2px; background: linear-gradient(to left, var(--color-silver) 0 62%, var(--border-dark) 62%); }
 
 @media (prefers-reduced-motion: no-preference) {
-  .is-active .sv-phone, .svc-item__visual .sv-phone { animation: floatY 6s ease-in-out infinite; }
-  .is-active .sv-cursor, .svc-item__visual .sv-cursor { animation: cursorClick 4.5s var(--ease-io) infinite; }
-  .is-active .sv-toast, .svc-item__visual .sv-toast { animation: toast 4.5s var(--ease) infinite; }
-  .is-active .sv-flow { animation: dash 1.2s linear infinite; }
-  .is-active .sv-construct__mark { stroke-dasharray: 400; animation: draw 2.4s var(--ease) both; }
+  .svc-item__visual .sv-phone { animation: floatY 6s ease-in-out infinite; }
+  .svc-item__visual .sv-cursor { animation: cursorClick 4.5s var(--ease-io) infinite; }
+  .svc-item__visual .sv-toast { animation: toast 4.5s var(--ease) infinite; }
+  .svc-item__visual .sv-flow { animation: dash 1.2s linear infinite; }
+  .svc-item.is-seen .sv-construct__mark { stroke-dasharray: 400; animation: draw 2.4s var(--ease) both; }
 }
 @keyframes floatY { 50% { transform: translateY(-8px); } }
 @keyframes cursorClick { 0%, 15% { transform: translate(0, 0); } 45% { transform: translate(-14px, 30px); } 50% { transform: translate(-14px, 30px) scale(0.85); } 56%, 100% { transform: translate(-14px, 30px); } }
