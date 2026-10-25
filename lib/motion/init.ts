@@ -12,6 +12,7 @@ import { initFloat } from './float'
 import { initMagnetic } from './magnetic'
 import { initCursor, initStory } from './story'
 import { initDrafting } from './drafting'
+import { initForms } from './forms'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -46,6 +47,7 @@ export function initSite(opts: SiteOptions) {
       initStory(reduced),
       initCursor(reduced),
       initDrafting(reduced),
+      initForms(reduced),
     )
     // Pinned chapters add scroll distance, so every trigger has to be
     // measured in page order, whichever module created it.

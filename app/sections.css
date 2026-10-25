@@ -87,9 +87,9 @@
 .philo__grid { margin-top: clamp(4rem, 8vw, 7rem); padding-top: 2.5rem; border-top: 1px solid var(--line); display: grid; gap: 2.75rem; }
 @media (min-width: 900px) { .philo__grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 3.5vw; } }
 @media (min-width: 1200px) { .philo__grid { margin-inline-start: 22%; } }
-.principle h3 { margin: 1rem 0 0.6rem; }
+.principle h3 { margin: 1.25rem 0 0.6rem; }
+.principle .principle__form { --s: 52px; }
 .principle p { margin: 0; }
-.principle__glyph { width: 40px; height: 40px; fill: none; stroke: var(--color-navy-secondary); stroke-width: 1.2; }
 
 /* ================================================================== work */
 .work { padding-bottom: var(--section-y); }

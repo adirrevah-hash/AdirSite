@@ -206,3 +206,46 @@
   .diff__room.is-h .diff__head { width: 78vw; }
   .diff__room.is-h .diff__item { width: 80vw; min-height: min(22rem, 50svh); }
 }
+
+/* ------------------------------------------------------- CSS 3D forms */
+.obj3d { --s: 48px; position: relative; display: inline-block; width: var(--s); height: var(--s); perspective: calc(var(--s) * 12); }
+.obj3d__rot { position: absolute; inset: 0; transform-style: preserve-3d; transform: rotateX(-24deg) rotateY(38deg); }
+@media (prefers-reduced-motion: no-preference) { .obj3d__rot { animation: turn3d 16s linear infinite; } .obj3d--plus .obj3d__rot { animation-duration: 11s; } }
+@keyframes turn3d { from { transform: rotateX(-24deg) rotateY(0deg); } to { transform: rotateX(-24deg) rotateY(360deg); } }
+.obj3d i { position: absolute; display: block; }
+
+.obj3d__ball { inset: 6%; border-radius: 50%; transform-style: preserve-3d;
+  background: radial-gradient(circle at 34% 28%, var(--color-white) 0%, var(--color-silver) 14%, var(--color-navy-secondary) 52%, var(--color-midnight) 100%);
+  box-shadow: inset -0.12em -0.12em 0.3em rgb(9 19 33 / 0.5); }
+/* the ball is billboarded: it counter-turns so its light stays put */
+@media (prefers-reduced-motion: no-preference) { .obj3d__ball { animation: turn3dBack 16s linear infinite; } }
+@keyframes turn3dBack { from { transform: rotateY(0deg); } to { transform: rotateY(-360deg); } }
+.obj3d__ring { inset: -14%; border-radius: 50%; border: 1.5px solid var(--color-silver-muted); transform: rotateX(72deg); }
+
+.obj3d__face { inset: 12%; border: 1px solid color-mix(in oklab, var(--color-white) 40%, transparent); border-radius: 3px; }
+.obj3d__face--f { transform: translateZ(calc(var(--s) * 0.38)); background: linear-gradient(135deg, var(--color-silver), var(--color-silver-muted)); }
+.obj3d__face--b { transform: rotateY(180deg) translateZ(calc(var(--s) * 0.38)); background: var(--color-navy-secondary); }
+.obj3d__face--r { transform: rotateY(90deg) translateZ(calc(var(--s) * 0.38)); background: linear-gradient(135deg, var(--color-silver-muted), var(--color-navy-secondary)); }
+.obj3d__face--l { transform: rotateY(-90deg) translateZ(calc(var(--s) * 0.38)); background: linear-gradient(135deg, var(--color-navy-secondary), var(--color-midnight)); }
+.obj3d__face--t { transform: rotateX(90deg) translateZ(calc(var(--s) * 0.38)); background: var(--color-white); }
+.obj3d__face--d { transform: rotateX(-90deg) translateZ(calc(var(--s) * 0.38)); background: var(--color-midnight); }
+
+.obj3d__bar { left: 50%; top: 50%; border-radius: 2px; }
+.obj3d__bar--x1, .obj3d__bar--x2 { width: 92%; height: 20%; margin: -10% 0 0 -46%; background: linear-gradient(to bottom, var(--color-silver), var(--color-graphite-elevated)); }
+.obj3d__bar--x2 { transform: rotateX(90deg); background: linear-gradient(to bottom, var(--color-silver-muted), var(--color-graphite)); }
+.obj3d__bar--y1, .obj3d__bar--y2 { width: 20%; height: 92%; margin: -46% 0 0 -10%; background: linear-gradient(to right, var(--color-silver), var(--color-graphite-elevated)); }
+.obj3d__bar--y2 { transform: rotateY(90deg); background: linear-gradient(to right, var(--color-silver-muted), var(--color-graphite)); }
+.obj3d__bar--z1, .obj3d__bar--z2 { width: 92%; height: 20%; margin: -10% 0 0 -46%; transform: rotateY(90deg); background: linear-gradient(to bottom, var(--color-navy-secondary), var(--color-midnight)); }
+.obj3d__bar--z2 { transform: rotateY(90deg) rotateX(90deg); }
+
+/* approach: statement beside the 3D sculpture */
+.philo__top { display: grid; gap: 2rem; align-items: center; }
+@media (min-width: 1024px) { .philo__top { grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr); gap: 3vw; } }
+.philo__scene { position: relative; height: clamp(300px, 70vw, 420px); }
+@media (min-width: 1024px) { .philo__scene { height: clamp(420px, 38vw, 560px); } }
+.philo__canvas { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity 1200ms var(--ease); }
+.philo__fallback { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; gap: 12%; transition: opacity 800ms var(--ease); }
+.philo__fallback .obj3d { --s: clamp(64px, 9vw, 110px); }
+.philo__scene.is-3d .philo__canvas { opacity: 1; }
+.philo__scene.is-3d .philo__fallback { opacity: 0; }
+.philo__top .t-statement { font-size: clamp(2.1rem, 0.9rem + 3.1vw, 4rem); }

@@ -65,7 +65,7 @@ export function initDrafting(reduced: boolean) {
     }
 
     // Glyphs and icons draw their strokes the first time they are seen.
-    document.querySelectorAll<SVGSVGElement>('.principle__glyph, .diff__icon').forEach(svg => {
+    document.querySelectorAll<SVGSVGElement>('.diff__icon').forEach(svg => {
       const shapes = [...svg.querySelectorAll<SVGGeometryElement>('path, rect, circle')]
       shapes.forEach(s => { const len = s.getTotalLength(); gsap.set(s, { strokeDasharray: len, strokeDashoffset: len }) })
       gsap.to(shapes, { strokeDashoffset: 0, duration: 1.6, ease: 'expo.inOut', stagger: 0.12, scrollTrigger: { trigger: svg, start: 'top 88%', once: true } })

@@ -18,7 +18,7 @@ const smooth = (t: number) => t * t * (3 - 2 * t)
 
 // A matcap is a sphere photographed under the studio lights: centre-left is
 // the key highlight, the rim picks up a cool edge light. Drawn on a canvas.
-function matcap(stops: string[], rim: string) {
+export function matcap(stops: string[], rim: string) {
   const size = 256
   const c = document.createElement('canvas')
   c.width = c.height = size
