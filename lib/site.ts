@@ -99,7 +99,16 @@ export type Project = {
 }
 
 export const projects: Project[] = [
-  { id: 'wiserise', name: 'WiseRise', url: 'https://www.wiserise.co.il/', kind: 'אתר' },
-  { id: 'alumina', name: 'Alumina Group', url: 'https://www.alumina-group.co.il/', kind: 'אתר' },
-  { id: 'readytogoo', name: 'ReadyToGo', url: 'https://readytogoo.com/', kind: 'אתר' },
+  {
+    id: 'wiserise', name: 'WiseRise', url: 'https://www.wiserise.co.il/', kind: 'אתר',
+    goal: 'אתר ליועץ משכנתאות שמסביר בפשטות למה כדאי לבדוק משכנתא עם יועץ, בונה אמון מהמבט הראשון, ומוביל את הגולש לתאם שיחת ייעוץ ראשונה בטופס או בטלפון.',
+  },
+  {
+    id: 'alumina', name: 'Alumina Group', url: 'https://www.alumina-group.co.il/', kind: 'אתר',
+    goal: 'אתר לחברת פרגולות, סוככי מסך, סוככי זרועות ופתרונות הצללה, שמציג את המוצרים והפרויקטים ברמה שמתאימה למוצר יוקרתי, ומוביל לתיאום פגישת ייעוץ.',
+  },
+  {
+    id: 'readytogoo', name: 'ReadyToGo', url: 'https://readytogoo.com/', kind: 'אתר',
+    goal: 'אתר לסוכנות שיווק דיגיטלי שמציגה בבירור את השירותים שלה: קמפיינים, בניית אתרים, ניהול סושיאל ועוד, ומובילה לתיאום שיחת אפיון.',
+  },
 ]

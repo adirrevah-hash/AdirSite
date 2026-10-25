@@ -270,3 +270,8 @@ main .pin-spacer { max-width: 100%; overflow-x: clip !important; } /* its inline
   .x-track .svc-item, .x-track .diff__item { transform: translateZ(0); backface-visibility: hidden; }
   .glass-orbs i { animation: none !important; filter: blur(44px); }
 }
+
+/* Side panels scroll inside themselves, so a drawn rim would scroll away with
+   the content; they keep the glass fill and take a plain edge instead. */
+.pdialog__panel.glass::after { content: none; }
+.pdialog__panel.glass { border-inline-start-color: var(--border-dark) !important; }
