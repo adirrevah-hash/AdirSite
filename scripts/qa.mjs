@@ -95,9 +95,15 @@ for (const [w, h] of [[360, 780], [390, 844], [430, 932], [768, 1024], [1024, 76
     await page.focus(`.svc-item[data-svc="${id}"] a[data-service]`); await wait(900)
     cards.push(await page.evaluate(i => { const r = document.querySelector(`.svc-item[data-svc="${i}"]`).getBoundingClientRect(); return r.left >= -1 && r.right <= innerWidth + 1 && r.top >= 0 && r.bottom <= innerHeight + 1 }, id))
   }
-  const meter = await page.evaluate(() => document.querySelector('[data-svc-count]').textContent)
+  const meter = await page.evaluate(() => document.querySelector('#services [data-row-count]').textContent)
   await page.screenshot({ path: `${OUT}/services.png` })
   check('services: sideways row, keyboard focus brings each card fully into view', cards.every(Boolean) && meter === '06', cards.join(',') + ' meter ' + meter)
+
+  // difference also travels sideways: by the end of its room every card has passed
+  const diff = await page.evaluate(() => { const r = document.querySelector('#difference .x-room'); return { top: r.getBoundingClientRect().top + scrollY, travel: parseFloat(getComputedStyle(r).getPropertyValue('--travel')) || 0 } })
+  await page.evaluate(y => scrollTo({ top: y, behavior: 'instant' }), diff.top + diff.travel); await wait(1500)
+  const last = await page.evaluate(() => { const r = document.querySelector('#difference .diff__item:last-child').getBoundingClientRect(); return { count: document.querySelector('#difference [data-row-count]').textContent, inView: r.left >= -1 && r.right <= innerWidth + 1 } })
+  check('difference: sideways row ends with the last card in view', diff.travel > 0 && last.count === '04' && last.inView, JSON.stringify({ ...diff, ...last }))
 
   // process line lights its nodes as it is read
   await scrollTo(page, '.steps-wrap', -200); await wait(600)

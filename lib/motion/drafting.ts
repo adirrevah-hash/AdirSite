@@ -2,8 +2,8 @@ import { gsap } from 'gsap'
 
 // The light sections read as a drafting table: a grid lit around the pointer
 // with guides and live coordinates, a selection box with real measurements
-// around the statement, icons that draw their own lines, cells lit from the
-// pointer, and an outlined phrase drifting behind. All decorative.
+// around the statement, icons that draw their own lines, and cells lit from the
+// pointer. All decorative.
 export function initDrafting(reduced: boolean) {
   const stops: Array<() => void> = []
   const fine = matchMedia('(hover: hover) and (pointer: fine)').matches
@@ -71,10 +71,6 @@ export function initDrafting(reduced: boolean) {
       gsap.to(shapes, { strokeDashoffset: 0, duration: 1.6, ease: 'expo.inOut', stagger: 0.12, scrollTrigger: { trigger: svg, start: 'top 88%', once: true } })
     })
 
-    // The outlined phrase drifts across behind the difference section.
-    document.querySelectorAll<HTMLElement>('.diff [data-ghost]').forEach(g => {
-      gsap.fromTo(g, { xPercent: 25 }, { xPercent: -45, ease: 'none', scrollTrigger: { trigger: g.parentElement!, start: 'top bottom', end: 'bottom top', scrub: 0.6 } })
-    })
   })
   return () => { stops.forEach(f => f()); ctx.revert() }
 }

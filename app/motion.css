@@ -133,9 +133,10 @@
 .services__room.is-h .services__list { display: flex; gap: clamp(1rem, 1.8vw, 1.75rem); }
 .services__room.is-h .svc-item { flex: none; width: clamp(17rem, 27vw, 25rem); }
 .services__room.is-h .svc-item__visual { height: min(230px, 27svh); }
-.services__room.is-h .services__meter { position: absolute; z-index: 1; bottom: max(1.75rem, env(safe-area-inset-bottom, 0px)); inset-inline: var(--gutter); display: flex; align-items: center; gap: 1rem; font-size: 0.85rem; color: var(--ink-3); }
-.services__meter i { position: relative; flex: 1; height: 1px; background: var(--line); }
-.services__meter b { position: absolute; inset: 0; background: var(--ink); transform: scaleX(0); transform-origin: right; }
+.row-meter { display: none; }
+.x-room.is-h .row-meter { position: absolute; z-index: 1; bottom: max(1.75rem, env(safe-area-inset-bottom, 0px)); inset-inline: var(--gutter); display: flex; align-items: center; gap: 1rem; font-size: 0.85rem; color: var(--ink-3); }
+.row-meter i { position: relative; flex: 1; height: 1px; background: var(--line); }
+.row-meter b { position: absolute; inset: 0; background: var(--ink); transform: scaleX(0); transform-origin: right; }
 @media (max-width: 699px) {
   .services__room.is-h .services__head { width: 78vw; }
   .services__room.is-h .svc-item { width: 80vw; }
@@ -145,7 +146,7 @@
 /* --------------------------------------------- light sections: drafting */
 .philo, .diff { position: relative; isolation: isolate; }
 .diff { overflow: clip; }
-.philo > .wrap, .diff > .wrap { position: relative; z-index: 1; }
+.philo > .wrap { position: relative; z-index: 1; }
 
 /* A drafting grid, lit around the pointer with guides and coordinates. */
 .blueprint { position: absolute; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; --mx: -999px; --my: -999px; }
@@ -185,12 +186,23 @@
   color: transparent; -webkit-text-stroke: 1.2px color-mix(in oklab, var(--color-graphite) 14%, transparent);
 }
 .services__ghost { translate: 0 -50%; }
-.diff__ghost { top: clamp(3rem, 8vw, 7rem); }
+.diff__ghost { top: 50%; translate: 0 -50%; }
 
 /* Difference cells: a light that follows the pointer, and an index. */
 .diff__item { position: relative; overflow: hidden; }
 .diff__item > * { position: relative; }
-.diff__item::before { content: ''; position: absolute; inset: 0; background: radial-gradient(280px circle at var(--sx, -400px) var(--sy, -400px), var(--color-white), transparent 70%); opacity: 0; transition: opacity 300ms var(--ease); pointer-events: none; }
+.diff__item::before { content: ''; position: absolute; inset: 0; background: radial-gradient(280px circle at var(--sx, -400px) var(--sy, -400px), var(--hover-on-light), transparent 70%); opacity: 0; transition: opacity 300ms var(--ease); pointer-events: none; }
 @media (hover: hover) and (pointer: fine) { .diff__item:hover::before { opacity: 1; } }
-.diff__item > .diff__num { position: absolute; top: clamp(1.75rem, 3vw, 2.5rem); inset-inline-end: clamp(1.75rem, 3vw, 2.5rem); font-size: 0.8rem; color: var(--ink-3); }
+.diff__item > .diff__num { position: absolute; top: clamp(1.75rem, 3vw, 2.5rem); left: clamp(1.75rem, 3vw, 2.5rem); font-size: 0.8rem; color: var(--ink-3); }
 .services__room { position: relative; z-index: 1; }
+
+/* difference, sideways */
+.diff__room.is-h .diff__track { gap: clamp(2.5rem, 4vw, 4.5rem); padding-inline: var(--gutter) 10vw; }
+.diff__room.is-h .diff__head { flex: none; width: min(30vw, 26rem); }
+.diff__room.is-h .diff__list { display: flex; gap: clamp(1rem, 1.8vw, 1.75rem); }
+.diff__room.is-h .diff__item { flex: none; width: clamp(17rem, 28vw, 26rem); min-height: min(26rem, 52svh); display: flex; flex-direction: column; justify-content: flex-end; }
+.diff__room.is-h .diff__icon { width: 72px; height: 72px; margin-bottom: auto; }
+@media (max-width: 699px) {
+  .diff__room.is-h .diff__head { width: 78vw; }
+  .diff__room.is-h .diff__item { width: 80vw; min-height: min(22rem, 50svh); }
+}

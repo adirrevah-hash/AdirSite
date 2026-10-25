@@ -39,3 +39,22 @@ export function sideways(room: HTMLElement, panels: string, onProgress?: (p: num
   }
   return { travel, done }
 }
+
+// A row of cards on the sideways travel: each card lifts in as it arrives,
+// a meter ([data-row-count], [data-row-bar]) counts them, and an outlined
+// word ([data-ghost]) drifts the other way. Used by services and difference.
+export function cardRow(room: HTMLElement, items: HTMLElement[], panels: string) {
+  const count = room.querySelector<HTMLElement>('[data-row-count]')
+  const bar = room.querySelector<HTMLElement>('[data-row-bar]')
+  const ghost = room.querySelector<HTMLElement>('[data-ghost]')
+  const { travel, done } = sideways(room, panels, p => {
+    if (bar) gsap.set(bar, { scaleX: p })
+    if (count) count.textContent = String(Math.min(items.length, Math.floor(p * items.length) + 1)).padStart(2, '0')
+  })
+  const st = travel.scrollTrigger!
+  if (ghost) gsap.fromTo(ghost, { xPercent: 12 }, { xPercent: -30, ease: 'none', scrollTrigger: { start: () => st.start, end: () => st.end, scrub: 0.7 } })
+  items.forEach(item => {
+    gsap.fromTo(item, { y: 60, rotate: -3 }, { y: 0, rotate: 0, ease: 'power2.out', scrollTrigger: { trigger: item, containerAnimation: travel, start: 'right left', end: 'center 30%', scrub: true } })
+  })
+  return done
+}

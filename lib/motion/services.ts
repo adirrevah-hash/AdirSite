@@ -1,5 +1,5 @@
 import { gsap } from 'gsap'
-import { sideways } from './sideways'
+import { cardRow } from './sideways'
 
 // The services travel sideways while the section holds: each card lifts in
 // as it arrives, the meter counts them, and the outlined word behind drifts
@@ -11,22 +11,7 @@ export function initServices(reduced: boolean) {
 
   const mm = gsap.matchMedia()
   if (!reduced) {
-    mm.add('(min-width: 0px)', () => {
-      const count = room.querySelector<HTMLElement>('[data-svc-count]')
-      const bar = room.querySelector<HTMLElement>('[data-svc-bar]')
-      const ghost = room.querySelector<HTMLElement>('[data-ghost]')
-      const { travel, done } = sideways(room, '.svc-item, .services__head', p => {
-        if (bar) gsap.set(bar, { scaleX: p })
-        if (count) count.textContent = String(Math.min(items.length, Math.floor(p * items.length) + 1)).padStart(2, '0')
-      })
-      const st = travel.scrollTrigger!
-      if (ghost) gsap.fromTo(ghost, { xPercent: 12 }, { xPercent: -30, ease: 'none', scrollTrigger: { start: () => st.start, end: () => st.end, scrub: 0.7 } })
-      items.forEach(item => {
-        const along = { trigger: item, containerAnimation: travel }
-        gsap.fromTo(item, { y: 60, rotate: -3 }, { y: 0, rotate: 0, ease: 'power2.out', scrollTrigger: { ...along, start: 'right left', end: 'center 30%', scrub: true } })
-      })
-      return done
-    })
+    mm.add('(min-width: 0px)', () => cardRow(room, items, '.svc-item, .services__head'))
   }
   // A card's one-off drawing plays the first time it is on screen.
   const io = new IntersectionObserver(entries => entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('is-seen'); io.unobserve(e.target) } }), { threshold: 0.4 })

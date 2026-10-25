@@ -41,9 +41,9 @@ export default function Services() {
             </ol>
           </div>
 
-          <div className="services__meter" aria-hidden="true">
-            <span className="num" data-svc-count>01</span>
-            <i><b data-svc-bar /></i>
+          <div className="row-meter" aria-hidden="true">
+            <span className="num" data-row-count>01</span>
+            <i><b data-row-bar /></i>
             <span className="num">{total}</span>
           </div>
         </div>

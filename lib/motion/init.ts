@@ -5,6 +5,7 @@ import { initReveals } from './reveals'
 import { initHero } from './hero'
 import { initWork } from './work'
 import { initServices } from './services'
+import { initDifference } from './difference'
 import { initProcess } from './process'
 import { initForm } from './form'
 import { initFloat } from './float'
@@ -39,6 +40,7 @@ export function initSite(opts: SiteOptions) {
     cleanups.push(
       initWork(reduced),
       initServices(reduced),
+      initDifference(reduced),
       initProcess(reduced),
       initMagnetic(reduced),
       initStory(reduced),
