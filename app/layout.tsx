@@ -7,8 +7,9 @@ import ClientInit from '@/components/ClientInit'
 import Intro from '@/components/Intro'
 
 // Before first paint: apply the visitor's saved accessibility choices, and
-// decide whether this visit opens with the intro (never when motion is off).
-const introScript = `try{var h=document.documentElement,a=JSON.parse(localStorage.getItem('ar-a11y')||'{}');if(a.text)h.classList.add('a11y-text-'+a.text);['contrast','links','font','still'].forEach(function(k){if(a[k])h.classList.add('a11y-'+k)});if(!a.still&&!matchMedia('(prefers-reduced-motion: reduce)').matches&&!sessionStorage.getItem('ar-intro')){h.classList.add('has-intro');sessionStorage.setItem('ar-intro','1')}}catch(e){}`
+// decide whether this visit opens with the intro (on the home page only, and
+// never when motion is off).
+const introScript = `try{var h=document.documentElement,a=JSON.parse(localStorage.getItem('ar-a11y')||'{}');if(a.text)h.classList.add('a11y-text-'+a.text);['contrast','links','font','still'].forEach(function(k){if(a[k])h.classList.add('a11y-'+k)});if(location.pathname==='/'&&!a.still&&!matchMedia('(prefers-reduced-motion: reduce)').matches&&!sessionStorage.getItem('ar-intro')){h.classList.add('has-intro');sessionStorage.setItem('ar-intro','1')}}catch(e){}`
 
 const title = 'ARStudio | אתרי תדמית, דפי נחיתה וזהות חזותית'
 
@@ -16,7 +17,11 @@ export const metadata: Metadata = {
   ...(site.url ? { metadataBase: new URL(site.url), alternates: { canonical: '/' } } : {}),
   title,
   description: site.description,
-  openGraph: { type: 'website', locale: 'he_IL', siteName: site.name, title, description: site.description },
+  openGraph: {
+    type: 'website', locale: 'he_IL', siteName: site.name, title, description: site.description,
+    images: [{ url: '/og.jpg', width: 1200, height: 630, alt: 'ARStudio: נוכחות דיגיטלית שמביאה תוצאות' }],
+  },
+  twitter: { card: 'summary_large_image', images: ['/og.jpg'] },
   formatDetection: { telephone: false },
 }
 

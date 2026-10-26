@@ -6,7 +6,10 @@ export const site = {
   name: 'ARStudio',
   description:
     'ARStudio בונה אתרי תדמית, דפי נחיתה וזהות חזותית לעסקים, יזמים ומותגים שרוצים נוכחות דיגיטלית ברמה של מה שהם עושים.',
-  url: process.env.NEXT_PUBLIC_SITE_URL || '',
+  // The domain, once set (NEXT_PUBLIC_SITE_URL). Until then, on Vercel, the
+  // project's production address, which becomes the custom domain when one
+  // is connected. Used on the server only: canonical, sitemap, share image.
+  url: process.env.NEXT_PUBLIC_SITE_URL || (process.env.VERCEL_PROJECT_PRODUCTION_URL ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}` : ''),
   phone: { display: '053-800-7008', tel: '+972538007008', whatsapp: '972538007008' },
   instagram: { handle: 'ar_studio1', url: 'https://www.instagram.com/ar_studio1/' },
   email: '', // not supplied yet

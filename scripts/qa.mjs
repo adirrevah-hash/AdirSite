@@ -378,9 +378,16 @@ async function fillLead(page) {
     return true
   }))
   check('every link resolves: anchors exist, external links open safely', bad.length === 0, JSON.stringify(bad))
-  for (const p of ['/robots.txt', '/sitemap.xml', '/icon.svg']) check(`${p} served`, (await fetch(BASE + p)).ok)
+  for (const p of ['/robots.txt', '/sitemap.xml', '/icon.svg', '/og.jpg']) check(`${p} served`, (await fetch(BASE + p)).ok)
+  const head = await (await fetch(BASE)).text()
+  check('share image: og:image 1200x630 and a large card', /property="og:image" content="[^"]*\/og\.jpg"/.test(head) && /og:image:width" content="1200"/.test(head) && /twitter:card" content="summary_large_image"/.test(head))
   const res = await fetch(BASE)
   check('security headers set', res.headers.get('x-content-type-options') === 'nosniff' && !!res.headers.get('referrer-policy') && !res.headers.get('x-powered-by'))
+  // A missing address answers 404 with the studio's own page and a way home.
+  const page404 = await ctx.newPage()
+  const r404 = await page404.goto(BASE + '/no/such/page', { waitUntil: 'networkidle' })
+  const nf = await page404.evaluate(() => ({ h1: document.querySelector('h1')?.textContent, home: !!document.querySelector('main a[href="/"].btn'), intro: document.documentElement.classList.contains('has-intro'), x: document.documentElement.scrollWidth - innerWidth }))
+  check('404: Hebrew page with a link home, no intro', r404.status() === 404 && /לא נמצא/.test(nf.h1 || '') && nf.home && !nf.intro && nf.x <= 0, JSON.stringify(nf))
   await ctx.close()
 }
 

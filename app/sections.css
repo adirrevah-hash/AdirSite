@@ -535,3 +535,12 @@ button.link { background: none; border-inline: 0; border-top: 0; font: inherit; 
   .about__arc { top: 30%; left: -55vw; width: 95vw; }
   .about__rule { display: none; }
 }
+
+/* ================================================================== 404 */
+.nf { min-height: 100svh; display: grid; align-items: center; color: var(--color-off-white); }
+.nf__inner { display: grid; justify-items: start; gap: 1.25rem; padding-block: 3rem; }
+.nf__inner .wordmark { margin-bottom: 1.5rem; }
+.nf__code { margin: 0; font-size: clamp(5rem, 3rem + 10vw, 11rem); font-weight: 300; line-height: 0.9; letter-spacing: -0.04em; color: transparent; -webkit-text-stroke: 1px var(--color-silver-muted); }
+.nf h1 { margin: 0; }
+.nf .t-lede { margin: 0; color: var(--color-silver); }
+.nf__actions { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 0.75rem; }
