@@ -45,7 +45,19 @@ export function initA11y(onMotion: () => void) {
     toggle.setAttribute('aria-expanded', String(on))
     if (on) opts[0].focus()
   }
-  const onToggle = () => open(panel.hidden)
+  // Closing with the pointer tucks the tab back in at once, even while the
+  // pointer is still over it; it slides out again on the next hover.
+  const tuck = () => {
+    root.classList.add('is-tucked')
+    if (root.contains(document.activeElement)) (document.activeElement as HTMLElement).blur()
+  }
+  const onLeave = () => root.classList.remove('is-tucked')
+  const onToggle = (e: MouseEvent) => {
+    const opening = panel.hidden
+    open(opening)
+    if (opening) root.classList.remove('is-tucked')
+    else if (e.detail !== 0) tuck()
+  }
   // After a choice the panel closes on its own and the drawer slides back:
   // a short pause first, so the choice is seen to take. A keyboard user is
   // returned to the tab; a pointer user's focus is dropped so the tab retracts.
@@ -56,7 +68,7 @@ export function initA11y(onMotion: () => void) {
     closer = window.setTimeout(() => {
       open(false)
       if (byKeyboard) toggle.focus()
-      else if (root.contains(document.activeElement)) (document.activeElement as HTMLElement).blur()
+      else tuck()
     }, 450)
   }
   const onOpt = (e: Event) => {
@@ -85,6 +97,7 @@ export function initA11y(onMotion: () => void) {
 
   apply()
   toggle.addEventListener('click', onToggle)
+  root.addEventListener('pointerleave', onLeave)
   opts.forEach(b => b.addEventListener('click', onOpt))
   root.querySelector('[data-a11y-reset]')!.addEventListener('click', onReset)
   root.querySelector('[data-a11y-close]')!.addEventListener('click', () => { open(false); toggle.focus() })
@@ -94,6 +107,7 @@ export function initA11y(onMotion: () => void) {
   return () => {
     clearTimeout(closer)
     toggle.removeEventListener('click', onToggle)
+    root.removeEventListener('pointerleave', onLeave)
     opts.forEach(b => b.removeEventListener('click', onOpt))
     panel.removeEventListener('click', onDoc)
     document.removeEventListener('keydown', onKey)

@@ -208,6 +208,12 @@ for (const [w, h] of [[1440, 900], [390, 844]]) {
   check('accessibility: after each choice the panel closes and the tab slides back', closes === 6, `${closes}/6`)
   check('accessibility panel: opens with focus, every option applies, page stays phone-wide', opened.open && opened.focus === 'text' && ['a11y-text-2', 'a11y-contrast', 'a11y-links', 'a11y-font', 'a11y-still'].every(c => on.cls.includes(c)) && on.vw === 390, JSON.stringify({ opened, on }))
   check('accessibility: stopping motion turns the sideways rows off; choices survive a reload; reset restores', on.sideways === 0 && kept && !reset.left && reset.sideways > 0, JSON.stringify({ kept, reset }))
+  check('accessibility: tapping the tab again closes the panel and tucks the tab back', await (async () => {
+    await tapDrawer(); await wait(400)
+    const open = await page.evaluate(() => !document.querySelector('[data-a11y-panel]').hidden)
+    await tapDrawer(); await wait(600)
+    return open && await page.evaluate(() => document.querySelector('[data-a11y-panel]').hidden && innerWidth - document.querySelector('[data-a11y-toggle]').getBoundingClientRect().left < 30)
+  })())
   check('accessibility: no console errors', errors.length === 0, errors.join(' | '))
   await ctx.close()
 }

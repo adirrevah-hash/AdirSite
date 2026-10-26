@@ -403,8 +403,8 @@ main .pin-spacer { max-width: 100%; overflow-x: clip !important; } /* its inline
 /* Only a real pointer reveals on hover: a touch screen keeps the last tapped
    element "hovered", which would leave the tab out after the panel closes. */
 @media (hover: hover) and (pointer: fine) {
-  .a11y:hover .a11y__fab { transform: none; }
-  .a11y:hover .a11y__fab::before { opacity: 0; }
+  .a11y:not(.is-tucked):hover .a11y__fab { transform: none; }
+  .a11y:not(.is-tucked):hover .a11y__fab::before { opacity: 0; }
 }
 /* touch screens have no hover: a wider strip, easy to tap */
 @media (hover: none), (pointer: coarse) { .a11y { --a11y-peek: 22px; } }
