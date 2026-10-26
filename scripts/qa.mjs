@@ -194,7 +194,7 @@ for (const [w, h] of [[1440, 900], [390, 844]]) {
   let closes = 0
   for (const [k, id] of ['text', 'text', 'contrast', 'links', 'font', 'still'].entries()) {
     if (k) { await tapDrawer(); await wait(300) }
-    await page.tap(`[data-a11y-opt="${id}"]`); await wait(700)
+    await page.tap(`[data-a11y-opt="${id}"]`); await wait(1200) // 450ms pause, then the tab's 420ms slide
     // closed means the panel is gone and the tab is back to its strip
     if (await page.evaluate(() => document.querySelector('[data-a11y-panel]').hidden && innerWidth - document.querySelector('[data-a11y-toggle]').getBoundingClientRect().left < 30)) closes++
   }
