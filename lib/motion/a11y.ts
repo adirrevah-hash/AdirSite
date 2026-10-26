@@ -46,6 +46,19 @@ export function initA11y(onMotion: () => void) {
     if (on) opts[0].focus()
   }
   const onToggle = () => open(panel.hidden)
+  // After a choice the panel closes on its own and the drawer slides back:
+  // a short pause first, so the choice is seen to take. A keyboard user is
+  // returned to the tab; a pointer user's focus is dropped so the tab retracts.
+  let closer = 0
+  const closeSoon = (e: Event) => {
+    const byKeyboard = (e as MouseEvent).detail === 0
+    clearTimeout(closer)
+    closer = window.setTimeout(() => {
+      open(false)
+      if (byKeyboard) toggle.focus()
+      else (document.activeElement as HTMLElement | null)?.blur()
+    }, 450)
+  }
   const onOpt = (e: Event) => {
     const id = (e.currentTarget as HTMLElement).dataset.a11yOpt as keyof Prefs
     const was = prefs.still
@@ -55,13 +68,15 @@ export function initA11y(onMotion: () => void) {
     if (prefs.still !== was) onMotion()
     // Text size and fonts change the layout: measure the scroll scenes again.
     else if (id === 'text' || id === 'font') dispatchEvent(new Event('resize'))
+    closeSoon(e)
   }
-  const onReset = () => {
+  const onReset = (e: Event) => {
     const was = prefs.still
     prefs = { ...EMPTY }
     apply()
     if (was) onMotion()
     else dispatchEvent(new Event('resize'))
+    closeSoon(e)
   }
   const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape' && !panel.hidden) { open(false); toggle.focus() } }
   const onOutside = (e: PointerEvent) => { if (!panel.hidden && !root.contains(e.target as Node)) open(false) }
@@ -77,6 +92,7 @@ export function initA11y(onMotion: () => void) {
   document.addEventListener('keydown', onKey)
   document.addEventListener('pointerdown', onOutside)
   return () => {
+    clearTimeout(closer)
     toggle.removeEventListener('click', onToggle)
     opts.forEach(b => b.removeEventListener('click', onOpt))
     panel.removeEventListener('click', onDoc)
