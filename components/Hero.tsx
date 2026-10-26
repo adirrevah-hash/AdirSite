@@ -1,51 +1,36 @@
 import Split from './Split'
-import { CTA, site, whatsappUrl } from '@/lib/site'
+import { CTA } from '@/lib/site'
 
-// The opening. Type on the right, its second line turning through what the
-// sites do; on the left a website in exploded view, its layers floating apart
-// as in a design tool. Before WebGL is ready (or if it never is) a CSS
-// rendition of the same layers holds the frame.
-const WORDS = ['שמוכרים.', 'שבולטים.', 'שמביאים פניות.', 'שעובדים בשבילכם.']
-const CHIPS = ['עיצוב מותאם אישית', 'מותאם לכל מסך', 'חיבור לוואטסאפ ולטפסים']
+// The opening, after the studio's reference: the studio's own desk scene (a
+// laptop, phone, business cards and pen on dark marble) on one side, the
+// statement on the other. Phones stack the statement over the scene and close
+// on a short signature line.
+const SERVICES = ['עיצוב', 'פיתוח', 'מיתוג', 'שיווק דיגיטלי']
 
 export default function Hero() {
   return (
     <section id="top" className="hero on-dark bg-midnight" data-hero>
       <div className="hero__depth" aria-hidden="true" />
-      <div className="hero__grid" aria-hidden="true" />
 
-      <div className="hero__art" aria-hidden="true">
-        <div className="hero__fallback">
-          <div className="hl">
-            <i className="hl__base" /><i className="hl__bar" /><i className="hl__img" />
-            <i className="hl__h1" /><i className="hl__h2" /><i className="hl__btn" />
-            <i className="hl__card hl__card--1" /><i className="hl__card hl__card--2" /><i className="hl__card hl__card--3" />
-          </div>
-        </div>
-        <canvas className="hero__canvas" data-hero-canvas />
+      <div className="hero__art" aria-hidden="true" data-hero-art>
+        <picture>
+          <source media="(max-width: 959px)" srcSet="/hero/scene-mobile.jpg" width={940} height={778} />
+          <img src="/hero/scene-desktop.jpg" width={950} height={831} alt="" fetchPriority="high" decoding="async" className="hero__scene" />
+        </picture>
       </div>
 
       <div className="wrap hero__inner">
-        <p className="t-label hero__kicker">סטודיו לעיצוב ובניית אתרים</p>
-        <h1 className="t-hero hero__title">
-          <span className="sr-only">אתרים שמוכרים, בולטים, מביאים פניות ועובדים בשבילכם.</span>
-          <span aria-hidden="true">
-            <span className="line"><Split text="אתרים" /></span>
-            <span className="line hero__rotator" data-rotator>
-              {WORDS.map((w, i) => (
-                <span key={w} className={`hero__word${i === 0 ? ' is-on' : ''}`}><Split text={w} start={5} /></span>
-              ))}
-              <i className="hero__underline" data-underline />
-            </span>
-          </span>
+        <p className="hero__kicker" dir="ltr">Digital solutions for your business</p>
+        <h1 className="hero__title">
+          <span className="line hero__line1"><Split text="נוכחות דיגיטלית" /></span>
+          <span className="line hero__line2"><Split text="שמביאה תוצאות" start={14} /></span>
         </h1>
-        <p className="t-lede hero__sub">
-          אתרי תדמית ודפי נחיתה בעיצוב מוקפד, שהופכים גולשים לפניות, וזהות חזותית שמבדלת אתכם מהמתחרים.
+        <p className="hero__sub">
+          אתרים מקצועיים, לוגואים מרשימים, כרטיסי ביקור וכל מה שהעסק שלך צריך כדי לבלוט ולהצליח.
         </p>
-        <ul className="hero__chips" aria-label="מה מקבלים">
-          {CHIPS.map(c => (
-            <li key={c} className="glass"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 8.5l3 3 6-7" /></svg>{c}</li>
-          ))}
+        <span className="hero__rule" aria-hidden="true" />
+        <ul className="hero__services" aria-label="מה עושים בסטודיו">
+          {SERVICES.map(s => <li key={s}>{s}</li>)}
         </ul>
         <div className="hero__actions">
           <a href="#contact" className="btn btn--light" data-magnetic>{CTA.primary} <span className="btn__arrow" aria-hidden="true">←</span></a>
@@ -53,10 +38,7 @@ export default function Hero() {
         </div>
       </div>
 
-      <div className="wrap hero__meta">
-        <a href={whatsappUrl()} target="_blank" rel="noopener noreferrer">וואטסאפ <span className="num">{site.phone.display}</span></a>
-        <a href={site.instagram.url} target="_blank" rel="noopener noreferrer">אינסטגרם <span className="num">@{site.instagram.handle}</span></a>
-      </div>
+      <p className="hero__sign" dir="ltr" aria-hidden="true"><i />Your vision<br />our design</p>
     </section>
   )
 }

@@ -37,11 +37,12 @@
 @media (prefers-reduced-motion: no-preference) {
   .hero .c { animation: charIn 1.1s var(--ease) backwards; animation-delay: calc(120ms + var(--ci) * 26ms); }
   .has-intro .hero .c { animation-delay: calc(1.85s + var(--ci) * 26ms); }
-  .has-intro .hero__kicker, .has-intro .hero__sub, .has-intro .hero__actions, .has-intro .hero__meta { animation: fadeUp 1s var(--ease) backwards; }
+  .has-intro .hero__kicker, .has-intro .hero__sub, .has-intro .hero__rule, .has-intro .hero__services, .has-intro .hero__actions, .has-intro .hero__sign { animation: fadeUp 1s var(--ease) backwards; }
   .has-intro .hero__kicker { animation-delay: 1.8s; }
   .has-intro .hero__sub { animation-delay: 2.3s; }
   .has-intro .hero__actions { animation-delay: 2.42s; }
-  .has-intro .hero__meta { animation-delay: 2.55s; }
+  .has-intro .hero__rule, .has-intro .hero__services { animation-delay: 2.36s; }
+  .has-intro .hero__sign { animation-delay: 2.6s; }
   .has-intro .hero__art { animation: artIn 1.8s var(--ease) 1.7s backwards; }
 }
 @keyframes charIn { from { transform: translateY(112%) rotate(7deg); } to { transform: none; } }
@@ -277,36 +278,6 @@ main .pin-spacer { max-width: 100%; overflow-x: clip !important; } /* its inline
    the content; they keep the glass fill and take a plain edge instead. */
 .pdialog__panel.glass::after { content: none; }
 .pdialog__panel.glass { border-inline-start-color: var(--border-dark) !important; }
-
-/* ------------------------------------------------------- hero, living line
-   The second line turns through what the sites do. One word is in the flow;
-   the others wait out of sight in the same place, and the script turns them
-   letter by letter. A silver rule draws itself under each new word. */
-.hero__rotator { position: relative; font-size: 0.8em; padding-bottom: 0.18em; margin-bottom: -0.1em; }
-.hero__word:not(.is-on) { position: absolute; top: 0; inset-inline-start: 0; visibility: hidden; }
-.hero__word.is-out { visibility: visible; }
-.hero__underline { position: absolute; bottom: 0.05em; inset-inline-start: 0; height: 0.055em; width: var(--uw, 3.2em); border-radius: 999px; background: linear-gradient(to left, var(--color-off-white), var(--color-silver-muted)); transform-origin: right; }
-@media (prefers-reduced-motion: no-preference) { .hero__underline { animation: underlineIn 1s var(--ease) 0.6s backwards; } .has-intro .hero__underline { animation-delay: 2.35s; } }
-@keyframes underlineIn { from { transform: scaleX(0); } }
-
-/* what every site includes, as quiet glass pills */
-.hero__chips { list-style: none; margin: 1.5rem 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 0.55rem; }
-.hero__chips li { display: inline-flex; align-items: center; gap: 0.45rem; padding: 0.45rem 0.85rem; border-radius: 999px; font-size: 0.85rem; color: var(--color-silver); }
-.hero__chips svg { width: 0.95rem; height: 0.95rem; fill: none; stroke: var(--color-off-white); stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
-@media (prefers-reduced-motion: no-preference) { .has-intro .hero__chips { animation: fadeUp 1s var(--ease) 2.36s backwards; } }
-
-
-/* phones: the object a little shorter and the copy a little tighter, so the
-   two buttons stay on the first screen with the chips added */
-@media (max-width: 959px) {
-  .hero__art { height: 38svh; }
-  .hero__inner { padding-top: calc(var(--header-h) + 38svh); }
-  .hero__title { margin-top: 1rem; }
-  .hero__sub { margin-top: 1.1rem; }
-  .hero__chips { margin-top: 1rem; gap: 0.45rem; }
-  .hero__chips li { padding: 0.35rem 0.7rem; font-size: 0.8rem; }
-  .hero__actions { margin-top: 1.4rem; }
-}
 
 /* ------------------------------------------- difference: living scenes
    Each card opens on a small scene that acts out its promise. The resting

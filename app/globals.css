@@ -43,6 +43,9 @@
   --success: #247A55;
   --error: #B42332;
   --header-scrolled: rgba(9, 19, 33, 0.88);
+  /* Hero accent, after the studio's reference: a cool steel blue. */
+  --color-hero-accent-1: #9DB8E3;
+  --color-hero-accent-2: #5585D6;
   /* About section: its own deep ground, warm white type and a champagne accent. */
   --color-about-deep: #080F1C;
   --color-about-rise: #111B2B;

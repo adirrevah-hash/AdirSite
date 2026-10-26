@@ -61,12 +61,9 @@ for (const [w, h] of [[360, 780], [390, 844], [430, 932], [768, 1024], [1024, 76
   check('Hebrew RTL, one h1, title, description, structured data', meta.lang === 'he' && meta.dir === 'rtl' && meta.h1 === 1 && meta.title.length > 10 && meta.desc.length > 40 && meta.ld)
   check('every image has alt text', meta.imgsNoAlt === 0)
   check('heading levels never skip downward', meta.headings.every((l, i) => i === 0 || l <= meta.headings[i - 1] + 1), meta.headings.join(''))
-  // The WebGL object mounts once the page has settled (first input, or a few
-  // seconds after load); the CSS rendition holds the frame until then.
-  const css = await page.evaluate(() => getComputedStyle(document.querySelector('.hero__fallback')).opacity)
-  await page.mouse.move(700, 400)
-  const mounted = await page.waitForFunction(() => document.querySelector('[data-hero]').classList.contains('is-3d'), null, { timeout: 8000 }).then(() => true, () => false)
-  check('hero: CSS rendition first, WebGL object mounts once the page settles', css === '1' && mounted, `css ${css}`)
+  // The hero's desk scene is loaded and shown (it is the page's largest image).
+  const scene = await page.evaluate(() => { const i = document.querySelector('.hero__scene'); const r = i.getBoundingClientRect(); return { loaded: i.complete && i.naturalWidth > 0, w: Math.round(r.width), src: i.currentSrc.split('/').pop() } })
+  check('hero: desk scene loaded and in view', scene.loaded && scene.w > 400 && scene.src === 'scene-desktop.jpg', JSON.stringify(scene))
 
   for (const [href, target] of [['#work', '#work-title'], ['#services', '#services-title'], ['#process', '#process-title'], ['#contact', '#contact-title']]) {
     await page.click(`.site-nav a[href="${href}"]`)
@@ -285,14 +282,14 @@ for (const [w, h] of [[1440, 900], [390, 844]]) {
   await ctx.close()
 }
 
-// ------------------------------------------------------- no-WebGL fallback
+// ------------------------------------------------------- no-WebGL
 {
+  // Only the approach section uses WebGL; without it the page still runs clean.
   const b2 = await chromium.launch({ executablePath: EXE, args: ['--disable-webgl', '--disable-3d-apis'] })
   const { ctx, page, errors } = await open(b2, { viewport: { width: 1440, height: 900 } })
-  await wait(1500)
-  const fb = await page.evaluate(() => ({ is3d: document.querySelector('[data-hero]').classList.contains('is-3d'), fallback: getComputedStyle(document.querySelector('.hero__fallback')).opacity }))
-  await page.screenshot({ path: `${OUT}/hero-nowebgl.png` })
-  check('without WebGL the CSS rendition holds the hero', !fb.is3d && +fb.fallback > 0.9 && errors.length === 0, JSON.stringify(fb))
+  await page.evaluate(() => document.querySelector('#approach').scrollIntoView()); await wait(2500)
+  const fb = await page.evaluate(() => ({ is3d: document.querySelector('[data-forms]').classList.contains('is-3d'), css: getComputedStyle(document.querySelector('.philo__fallback')).opacity }))
+  check('without WebGL the CSS forms hold the approach section', !fb.is3d && +fb.css > 0.9 && errors.length === 0, JSON.stringify(fb))
   await ctx.close(); await b2.close()
 }
 
