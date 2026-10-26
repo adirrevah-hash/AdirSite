@@ -10,8 +10,10 @@ const FIELDS: (keyof ContactInput)[] = ['name', 'phone', 'service', 'message', '
 // visitor types. A tap on a real link is the one way out that every context
 // lets through: a phone hands it to the WhatsApp app, a desktop opens WhatsApp
 // Web or the desktop app, and a page shown inside a frame (such as a preview)
-// lets it out where it refuses script-opened windows and redirects. The tap
-// is stopped only while the form still needs fixing. WhatsApp
+// lets it out where it refuses script-opened windows and redirects. Until
+// every required field is filled in, the link has no address at all, looks
+// inactive, and says what is still missing; a tap on it then marks the
+// fields to fix. WhatsApp
 // still needs the visitor to press send; the page never claims a message was
 // sent, and tells screen readers that WhatsApp opened.
 export function initForm() {
@@ -20,6 +22,7 @@ export function initForm() {
   const form: HTMLFormElement = found
   const status = form.querySelector<HTMLElement>('[data-status]')!
   const send = form.querySelector<HTMLAnchorElement>('[data-submit]')!
+  const hint = form.querySelector<HTMLElement>('[data-send-hint]')!
   const touched: Partial<Record<keyof ContactInput, boolean>> = {}
 
   const el = (k: keyof ContactInput) => form.elements.namedItem(k) as HTMLInputElement
@@ -63,19 +66,32 @@ export function initForm() {
     const r = validateContact(values()); paint(r.ok ? {} : r.errors)
   }
 
-  // Keep the link's address in step with the form.
+  // What is still missing, in the words of the form.
+  const MISSING: Record<keyof ContactInput, string> = { name: 'שם', phone: 'טלפון תקין', service: 'שירות', message: 'תיאור קצר יותר', consent: 'אישור המדיניות' }
+
+  // Keep the link in step with the form: an address only when it is complete.
   function refresh() {
     const r = validateContact(values())
-    send.href = whatsappUrl(r.ok ? leadText(r.lead) : undefined)
+    if (r.ok) {
+      send.href = whatsappUrl(leadText(r.lead))
+      send.removeAttribute('aria-disabled')
+      hint.textContent = 'הכול מוכן. הלחיצה תפתח את וואטסאפ עם הפרטים.'
+    } else {
+      send.removeAttribute('href')
+      send.setAttribute('aria-disabled', 'true')
+      hint.textContent = `חסר עדיין: ${FIELDS.filter(k => r.errors[k]).map(k => MISSING[k]).join(', ')}.`
+    }
+    hint.classList.toggle('is-ready', r.ok)
   }
 
   function onSend(e: MouseEvent) {
     // The hidden field only a bot fills: do nothing.
     if ((form.elements.namedItem('company') as HTMLInputElement).value) { e.preventDefault(); return }
-    FIELDS.forEach(k => { touched[k] = true })
     const r = validateContact(values())
     if (!r.ok) {
+      // Inactive: nothing opens; the fields that need fixing say why.
       e.preventDefault()
+      FIELDS.forEach(k => { touched[k] = true })
       paint(r.errors)
       const first = FIELDS.find(k => r.errors[k]); if (first) el(first).focus()
       return
@@ -93,7 +109,7 @@ export function initForm() {
   function onSubmit(e: SubmitEvent) { e.preventDefault(); send.click() }
   const onKey = (e: KeyboardEvent) => {
     const t = e.target as HTMLElement
-    if (e.key === 'Enter' && t.matches('input:not([type=checkbox])')) { e.preventDefault(); send.click() }
+    if (e.key === 'Enter' && (t === send ? !send.href : t.matches('input:not([type=checkbox])'))) { e.preventDefault(); send.click() }
   }
 
   // "לבקש הצעה" on a service card preselects that service.

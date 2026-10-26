@@ -415,6 +415,10 @@ button.link { background: none; border-inline: 0; border-top: 0; font: inherit; 
 .hp { position: absolute !important; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 .lead-form__submit { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem 1.5rem; margin-top: 0.25rem; }
 .lead-form__note { margin: 0; font-size: 0.85rem; color: var(--color-silver-muted); max-width: 36ch; }
+.lead-form__hint { flex-basis: 100%; margin: 0; font-size: 0.9rem; color: var(--color-silver); }
+.lead-form__hint.is-ready { color: var(--color-off-white); }
+.lead-form__submit .btn[aria-disabled="true"] { opacity: 0.45; cursor: not-allowed; transform: none; }
+@media (hover: hover) and (pointer: fine) { .lead-form__submit .btn[aria-disabled="true"]:hover { background: var(--color-white); transform: none; } }
 
 /* ================================================================ footer
    Centred: the wordmark and its line, one row of channels and documents, and
