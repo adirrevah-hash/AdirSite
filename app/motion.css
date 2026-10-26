@@ -398,8 +398,14 @@ main .pin-spacer { max-width: 100%; overflow-x: clip !important; } /* its inline
 }
 .a11y__fab::before { content: ''; position: absolute; left: 4px; top: 50%; width: 3px; height: 1.4rem; margin-top: -0.7rem; border-radius: 2px; background: var(--color-silver); opacity: 0.8; transition: opacity 300ms var(--ease); }
 .a11y__fab svg { width: 1.6rem; height: 1.6rem; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
-.a11y:hover .a11y__fab, .a11y:focus-within .a11y__fab, .a11y__fab[aria-expanded='true'] { transform: none; }
-.a11y:hover .a11y__fab::before, .a11y:focus-within .a11y__fab::before, .a11y__fab[aria-expanded='true']::before { opacity: 0; }
+.a11y:focus-within .a11y__fab, .a11y__fab[aria-expanded='true'] { transform: none; }
+.a11y:focus-within .a11y__fab::before, .a11y__fab[aria-expanded='true']::before { opacity: 0; }
+/* Only a real pointer reveals on hover: a touch screen keeps the last tapped
+   element "hovered", which would leave the tab out after the panel closes. */
+@media (hover: hover) and (pointer: fine) {
+  .a11y:hover .a11y__fab { transform: none; }
+  .a11y:hover .a11y__fab::before { opacity: 0; }
+}
 /* touch screens have no hover: a wider strip, easy to tap */
 @media (hover: none), (pointer: coarse) { .a11y { --a11y-peek: 22px; } }
 .a11y__panel {

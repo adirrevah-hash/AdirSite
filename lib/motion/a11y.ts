@@ -56,7 +56,7 @@ export function initA11y(onMotion: () => void) {
     closer = window.setTimeout(() => {
       open(false)
       if (byKeyboard) toggle.focus()
-      else (document.activeElement as HTMLElement | null)?.blur()
+      else if (root.contains(document.activeElement)) (document.activeElement as HTMLElement).blur()
     }, 450)
   }
   const onOpt = (e: Event) => {

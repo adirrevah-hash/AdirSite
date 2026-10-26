@@ -195,7 +195,8 @@ for (const [w, h] of [[1440, 900], [390, 844]]) {
   for (const [k, id] of ['text', 'text', 'contrast', 'links', 'font', 'still'].entries()) {
     if (k) { await tapDrawer(); await wait(300) }
     await page.tap(`[data-a11y-opt="${id}"]`); await wait(700)
-    if (await page.evaluate(() => document.querySelector('[data-a11y-panel]').hidden)) closes++
+    // closed means the panel is gone and the tab is back to its strip
+    if (await page.evaluate(() => document.querySelector('[data-a11y-panel]').hidden && innerWidth - document.querySelector('[data-a11y-toggle]').getBoundingClientRect().left < 30)) closes++
   }
   await wait(800)
   const on = await page.evaluate(() => ({ cls: document.documentElement.className, vw: innerWidth, sideways: document.querySelectorAll('.x-room.is-h').length }))
@@ -204,7 +205,7 @@ for (const [w, h] of [[1440, 900], [390, 844]]) {
   await tapDrawer(); await wait(300); await page.tap('[data-a11y-reset]'); await wait(1200)
   const reset = await page.evaluate(() => ({ left: /a11y-/.test(document.documentElement.className), sideways: document.querySelectorAll('.x-room.is-h').length }))
   check('accessibility drawer: a 20-30px strip on the edge, opens by tap', peek >= 20 && peek <= 30, `${peek}px`)
-  check('accessibility: the panel closes by itself after each choice', closes === 6, `${closes}/6`)
+  check('accessibility: after each choice the panel closes and the tab slides back', closes === 6, `${closes}/6`)
   check('accessibility panel: opens with focus, every option applies, page stays phone-wide', opened.open && opened.focus === 'text' && ['a11y-text-2', 'a11y-contrast', 'a11y-links', 'a11y-font', 'a11y-still'].every(c => on.cls.includes(c)) && on.vw === 390, JSON.stringify({ opened, on }))
   check('accessibility: stopping motion turns the sideways rows off; choices survive a reload; reset restores', on.sideways === 0 && kept && !reset.left && reset.sideways > 0, JSON.stringify({ kept, reset }))
   check('accessibility: no console errors', errors.length === 0, errors.join(' | '))
