@@ -10,6 +10,7 @@ import Statement from '@/components/Statement'
 import Contact from '@/components/Contact'
 import Footer from '@/components/Footer'
 import WhatsAppFloat from '@/components/WhatsAppFloat'
+import A11yFloat from '@/components/A11yFloat'
 
 export default function Home() {
   return (
@@ -28,6 +29,7 @@ export default function Home() {
       </main>
       <Footer />
       <WhatsAppFloat />
+      <A11yFloat />
     </>
   )
 }

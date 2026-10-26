@@ -13,16 +13,25 @@ import { initMagnetic } from './magnetic'
 import { initCursor, initStory } from './story'
 import { initDrafting } from './drafting'
 import { initForms } from './forms'
+import { initA11y, motionStopped } from './a11y'
 
 gsap.registerPlugin(ScrollTrigger)
 // A phone's address bar showing or hiding changes the viewport height; that
 // must not re-measure every trigger mid-scroll, which makes pinned rows jump.
 ScrollTrigger.config({ ignoreMobileResize: true })
 
-// One entry point for every interaction on the page. Each module returns its
-// own cleanup; this returns one that runs them all.
+// One entry point for every interaction on the page. The accessibility panel
+// lives for the whole visit; the rest restarts in reduced mode (or back) when
+// the visitor stops or resumes motion from it.
 export function initSite() {
-  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches
+  let stop = startSite()
+  const a11y = initA11y(() => { stop(); window.scrollTo(0, window.scrollY); stop = startSite() })
+  return () => { a11y(); stop() }
+}
+
+// Each module returns its own cleanup; this returns one that runs them all.
+function startSite() {
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches || motionStopped()
   // The page only ever scrolls vertically. Nothing should push it sideways,
   // but if anything does (a phone returning from another app, a focus jump),
   // put it straight back.

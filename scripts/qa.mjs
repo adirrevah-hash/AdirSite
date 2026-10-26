@@ -183,6 +183,24 @@ for (const [w, h] of [[1440, 900], [390, 844]]) {
   await ctx.close()
 }
 
+// ------------------------------------------------------- accessibility panel
+{
+  const { ctx, page, errors } = await open(browser, { viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true })
+  await page.tap('[data-a11y-toggle]'); await wait(400)
+  const opened = await page.evaluate(() => ({ open: !document.querySelector('[data-a11y-panel]').hidden, focus: document.activeElement?.dataset.a11yOpt }))
+  for (const id of ['text', 'text', 'contrast', 'links', 'font', 'still']) { await page.tap(`[data-a11y-opt="${id}"]`); await wait(300) }
+  await wait(800)
+  const on = await page.evaluate(() => ({ cls: document.documentElement.className, vw: innerWidth, sideways: document.querySelectorAll('.x-room.is-h').length }))
+  await page.reload({ waitUntil: 'networkidle' }); await wait(1000)
+  const kept = await page.evaluate(() => document.documentElement.classList.contains('a11y-text-2') && document.documentElement.classList.contains('a11y-still'))
+  await page.tap('[data-a11y-toggle]'); await wait(300); await page.tap('[data-a11y-reset]'); await wait(1200)
+  const reset = await page.evaluate(() => ({ left: /a11y-/.test(document.documentElement.className), sideways: document.querySelectorAll('.x-room.is-h').length }))
+  check('accessibility panel: opens with focus, every option applies, page stays phone-wide', opened.open && opened.focus === 'text' && ['a11y-text-2', 'a11y-contrast', 'a11y-links', 'a11y-font', 'a11y-still'].every(c => on.cls.includes(c)) && on.vw === 390, JSON.stringify({ opened, on }))
+  check('accessibility: stopping motion turns the sideways rows off; choices survive a reload; reset restores', on.sideways === 0 && kept && !reset.left && reset.sideways > 0, JSON.stringify({ kept, reset }))
+  check('accessibility: no console errors', errors.length === 0, errors.join(' | '))
+  await ctx.close()
+}
+
 // ---------------------------------------------------------------- mobile
 {
   const { ctx, page, errors } = await open(browser, { viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true, deviceScaleFactor: 2 })

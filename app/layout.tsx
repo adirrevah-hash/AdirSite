@@ -6,8 +6,9 @@ import { site } from '@/lib/site'
 import ClientInit from '@/components/ClientInit'
 import Intro from '@/components/Intro'
 
-// Decides before first paint whether this visit opens with the intro.
-const introScript = `try{if(!matchMedia('(prefers-reduced-motion: reduce)').matches&&!sessionStorage.getItem('ar-intro')){document.documentElement.classList.add('has-intro');sessionStorage.setItem('ar-intro','1')}}catch(e){}`
+// Before first paint: apply the visitor's saved accessibility choices, and
+// decide whether this visit opens with the intro (never when motion is off).
+const introScript = `try{var h=document.documentElement,a=JSON.parse(localStorage.getItem('ar-a11y')||'{}');if(a.text)h.classList.add('a11y-text-'+a.text);['contrast','links','font','still'].forEach(function(k){if(a[k])h.classList.add('a11y-'+k)});if(!a.still&&!matchMedia('(prefers-reduced-motion: reduce)').matches&&!sessionStorage.getItem('ar-intro')){h.classList.add('has-intro');sessionStorage.setItem('ar-intro','1')}}catch(e){}`
 
 const title = 'ARStudio | אתרי תדמית, דפי נחיתה וזהות חזותית'
 
