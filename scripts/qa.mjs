@@ -14,8 +14,10 @@ const results = []
 const check = (name, ok, detail = '') => { results.push({ name, ok }); console.log(`${ok ? 'PASS' : 'FAIL'} ${name}${detail ? '  ' + detail : ''}`) }
 const wait = ms => new Promise(r => setTimeout(r, ms))
 
-async function open(browser, opts = {}) {
+async function open(browser, { cookies = false, ...opts } = {}) {
   const ctx = await browser.newContext({ locale: 'he-IL', ...opts })
+  // The cookie notice is approved up front, except in its own test.
+  if (!cookies) await ctx.addInitScript(() => { try { localStorage.setItem('ar-cookies', '1') } catch {} })
   const page = await ctx.newPage()
   const errors = []
   page.on('pageerror', e => errors.push(e.message))
@@ -220,6 +222,30 @@ async function fillLead(page) {
   await fillLead(frame)
   const link = await frame.evaluate(() => { const a = document.querySelector('[data-submit]'); return { tag: a.tagName, blank: a.target === '_blank', href: decodeURIComponent(a.href) } })
   check('send is a real link to WhatsApp that carries the details', link.tag === 'A' && link.blank && link.href.startsWith('https://wa.me/972538007008?text=') && link.href.includes('בדיקה אוטומטית'), JSON.stringify(link).slice(0, 90))
+  await ctx.close()
+}
+
+// --------------------------------------------------------- cookie notice
+{
+  const { ctx, page, errors } = await open(browser, { cookies: true, viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true })
+  // It waits for the opening to play first.
+  await wait(3200)
+  const shown = await page.evaluate(() => {
+    const bar = document.querySelector('[data-cookie-bar]'), r = bar.getBoundingClientRect()
+    const a11y = document.querySelector('[data-a11y]').getBoundingClientRect()
+    return { visible: !bar.hidden && getComputedStyle(bar).opacity === '1', inside: r.left >= 0 && r.right <= innerWidth && r.bottom <= innerHeight, clear: a11y.bottom <= r.top + 1, x: document.documentElement.scrollWidth - innerWidth }
+  })
+  check('cookie notice shows on a first visit, inside the screen, floating buttons above it', shown.visible && shown.inside && shown.clear && shown.x <= 0, JSON.stringify(shown))
+  await page.tap('[data-cookie-bar] [data-dialog="dlg-privacy"]'); await wait(500)
+  const policy = await page.evaluate(() => document.getElementById('dlg-privacy').open)
+  await page.keyboard.press('Escape'); await wait(300)
+  check('cookie notice links to the privacy policy', policy)
+  await page.tap('[data-cookie-ok]'); await wait(600)
+  const gone = await page.evaluate(() => document.querySelector('[data-cookie-bar]').hidden)
+  await page.reload({ waitUntil: 'networkidle' }); await wait(1500)
+  const again = await page.evaluate(() => document.querySelector('[data-cookie-bar]').hidden)
+  check('approving hides the notice, and it stays hidden on the next visit', gone && again, `${gone},${again}`)
+  check('cookie notice: no console errors', errors.length === 0, errors.join(' | '))
   await ctx.close()
 }
 

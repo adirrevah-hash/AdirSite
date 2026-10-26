@@ -11,6 +11,7 @@ import Contact from '@/components/Contact'
 import Footer from '@/components/Footer'
 import WhatsAppFloat from '@/components/WhatsAppFloat'
 import A11yFloat from '@/components/A11yFloat'
+import CookieBar from '@/components/CookieBar'
 
 export default function Home() {
   return (
@@ -30,6 +31,7 @@ export default function Home() {
       <Footer />
       <WhatsAppFloat />
       <A11yFloat />
+      <CookieBar />
     </>
   )
 }

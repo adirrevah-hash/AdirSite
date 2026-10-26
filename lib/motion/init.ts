@@ -14,6 +14,7 @@ import { initCursor, initStory } from './story'
 import { initDrafting } from './drafting'
 import { initForms } from './forms'
 import { initA11y, motionStopped } from './a11y'
+import { initCookies } from './cookies'
 
 gsap.registerPlugin(ScrollTrigger)
 // A phone's address bar showing or hiding changes the viewport height; that
@@ -21,12 +22,13 @@ gsap.registerPlugin(ScrollTrigger)
 ScrollTrigger.config({ ignoreMobileResize: true })
 
 // One entry point for every interaction on the page. The accessibility panel
-// lives for the whole visit; the rest restarts in reduced mode (or back) when
+// and the cookie notice live for the whole visit; the rest restarts in reduced mode (or back) when
 // the visitor stops or resumes motion from it.
 export function initSite() {
   let stop = startSite()
   const a11y = initA11y(() => { stop(); window.scrollTo(0, window.scrollY); stop = startSite() })
-  return () => { a11y(); stop() }
+  const cookies = initCookies()
+  return () => { cookies(); a11y(); stop() }
 }
 
 // Each module returns its own cleanup; this returns one that runs them all.
