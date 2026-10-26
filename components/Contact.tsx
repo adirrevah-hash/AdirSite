@@ -1,5 +1,6 @@
 import Split from './Split'
 import { SERVICE_OPTIONS } from '@/lib/contact'
+import { whatsappUrl } from '@/lib/site'
 
 // Conversion. The form is plain markup; lib/motion/form.ts validates it and
 // opens WhatsApp to the studio with everything filled in already written.
@@ -52,9 +53,9 @@ export default function Contact() {
             </label>
           </div>
           <div className="lead-form__submit">
-            <button type="submit" className="btn btn--light" data-submit>שליחת פרטים <span className="btn__arrow" aria-hidden="true">←</span></button>
+            {/* A real link, so a tap opens WhatsApp wherever the page runs. */}
+            <a href={whatsappUrl()} target="_blank" rel="noopener noreferrer" className="btn btn--light" data-submit>שליחת פרטים <span className="btn__arrow" aria-hidden="true">←</span></a>
             <p className="lead-form__note">הפרטים משמשים רק כדי לחזור אליכם בנוגע לפנייה.</p>
-            <a className="lead-form__fallback" data-wa-fallback hidden rel="noopener noreferrer">וואטסאפ לא נפתח? לחצו כאן לפתיחה עם הפרטים</a>
           </div>
           <p className="sr-only" role="status" aria-live="polite" data-status />
         </form>

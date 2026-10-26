@@ -4,8 +4,14 @@ import { whatsappUrl } from '../site'
 const FIELDS: (keyof ContactInput)[] = ['name', 'phone', 'service', 'message', 'consent']
 
 // The lead form. Validates in the browser, then opens WhatsApp to the studio's
-// number with everything the visitor wrote already in the message (see
-// openWhatsApp for how). WhatsApp
+// number with everything the visitor wrote already in the message.
+//
+// The send button is a real link to WhatsApp whose address follows what the
+// visitor types. A tap on a real link is the one way out that every context
+// lets through: a phone hands it to the WhatsApp app, a desktop opens WhatsApp
+// Web or the desktop app, and a page shown inside a frame (such as a preview)
+// lets it out where it refuses script-opened windows and redirects. The tap
+// is stopped only while the form still needs fixing. WhatsApp
 // still needs the visitor to press send; the page never claims a message was
 // sent, and tells screen readers that WhatsApp opened.
 export function initForm() {
@@ -13,8 +19,7 @@ export function initForm() {
   if (!found) return () => {}
   const form: HTMLFormElement = found
   const status = form.querySelector<HTMLElement>('[data-status]')!
-  const submit = form.querySelector<HTMLButtonElement>('[data-submit]')!
-  const fallback = form.querySelector<HTMLAnchorElement>('[data-wa-fallback]')!
+  const send = form.querySelector<HTMLAnchorElement>('[data-submit]')!
   const touched: Partial<Record<keyof ContactInput, boolean>> = {}
 
   const el = (k: keyof ContactInput) => form.elements.namedItem(k) as HTMLInputElement
@@ -43,6 +48,7 @@ export function initForm() {
 
 
   const onInput = (e: Event) => {
+    refresh()
     const k = (e.target as HTMLInputElement).name as keyof ContactInput
     if (!FIELDS.includes(k) || !touched[k]) return
     const r = validateContact(values()); paint(r.ok ? {} : r.errors)
@@ -57,61 +63,60 @@ export function initForm() {
     const r = validateContact(values()); paint(r.ok ? {} : r.errors)
   }
 
-  function onSubmit(e: SubmitEvent) {
-    e.preventDefault()
+  // Keep the link's address in step with the form.
+  function refresh() {
+    const r = validateContact(values())
+    send.href = whatsappUrl(r.ok ? leadText(r.lead) : undefined)
+  }
+
+  function onSend(e: MouseEvent) {
     // The hidden field only a bot fills: do nothing.
-    if ((form.elements.namedItem('company') as HTMLInputElement).value) return
+    if ((form.elements.namedItem('company') as HTMLInputElement).value) { e.preventDefault(); return }
     FIELDS.forEach(k => { touched[k] = true })
     const r = validateContact(values())
     if (!r.ok) {
+      e.preventDefault()
       paint(r.errors)
       const first = FIELDS.find(k => r.errors[k]); if (first) el(first).focus()
       return
     }
     paint({})
-    const url = whatsappUrl(leadText(r.lead))
+    send.href = whatsappUrl(leadText(r.lead))
     // Close the phone keyboard first, so the page is not left zoomed or
     // offset when the visitor comes back from WhatsApp.
     ;(document.activeElement as HTMLElement | null)?.blur()
+    // Nothing appears on the page; screen readers hear what happened.
     status.textContent = 'וואטסאפ נפתח עם הפרטים. נשאר ללחוץ שליחה בוואטסאפ.'
-    openWhatsApp(url)
   }
 
-  // Phones hand a same-tab visit to wa.me straight to the WhatsApp app, which
-  // a new tab opened from script does not do reliably. A desktop keeps the
-  // site and opens WhatsApp Web or the desktop app in a new tab. A page shown
-  // inside a frame (such as a preview) can only open a new window, and only if
-  // the frame allows it. Whenever the automatic way is refused, a link to
-  // WhatsApp appears under the button, for one more tap.
-  function openWhatsApp(url: string) {
-    let framed = true
-    try { framed = window.top !== window.self } catch { /* cross-origin parent */ }
-    if (!framed && matchMedia('(pointer: coarse)').matches) { location.href = url; return }
-    const tab = window.open(url, '_blank')
-    if (tab) { tab.opener = null; fallback.hidden = true; return }
-    if (!framed) { location.href = url; return }
-    fallback.href = url
-    fallback.target = '_top'
-    fallback.hidden = false
-    status.textContent = 'וואטסאפ לא נפתח אוטומטית. אפשר לפתוח אותו בקישור שמתחת לכפתור.'
+  // Enter in a field sends, as it would with a submit button.
+  function onSubmit(e: SubmitEvent) { e.preventDefault(); send.click() }
+  const onKey = (e: KeyboardEvent) => {
+    const t = e.target as HTMLElement
+    if (e.key === 'Enter' && t.matches('input:not([type=checkbox])')) { e.preventDefault(); send.click() }
   }
 
   // "לבקש הצעה" on a service card preselects that service.
   const onPreselect = (e: MouseEvent) => {
     const a = (e.target as Element).closest<HTMLElement>('[data-service]')
-    if (a?.dataset.service) el('service').value = a.dataset.service
+    if (a?.dataset.service) { el('service').value = a.dataset.service; refresh() }
   }
 
   form.addEventListener('input', onInput)
   form.addEventListener('change', onInput) // checkboxes, in browsers that send no input event
   form.addEventListener('focusout', onBlur)
   form.addEventListener('submit', onSubmit)
+  form.addEventListener('keydown', onKey)
+  send.addEventListener('click', onSend)
+  refresh()
   document.addEventListener('click', onPreselect)
   return () => {
     form.removeEventListener('input', onInput)
     form.removeEventListener('change', onInput)
     form.removeEventListener('focusout', onBlur)
     form.removeEventListener('submit', onSubmit)
+    form.removeEventListener('keydown', onKey)
+    send.removeEventListener('click', onSend)
     document.removeEventListener('click', onPreselect)
   }
 }

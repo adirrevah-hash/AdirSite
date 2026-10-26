@@ -415,7 +415,6 @@ button.link { background: none; border-inline: 0; border-top: 0; font: inherit; 
 .hp { position: absolute !important; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 .lead-form__submit { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem 1.5rem; margin-top: 0.25rem; }
 .lead-form__note { margin: 0; font-size: 0.85rem; color: var(--color-silver-muted); max-width: 36ch; }
-.lead-form__fallback:not([hidden]) { display: inline-block; font-size: 0.95rem; color: var(--color-off-white); text-decoration: underline; text-underline-offset: 0.25em; }
 
 /* ================================================================ footer
    Centred: the wordmark and its line, one row of channels and documents, and
