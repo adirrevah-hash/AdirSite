@@ -74,7 +74,7 @@ export default function Footer() {
           </div>
           <span className="footer__divider" aria-hidden="true" />
           <ul className="footer__legal-links">
-            {[...legal].reverse().map(d => (
+            {legal.map(d => (
               <li key={d.id}>
                 <button type="button" className="legal-btn glass" data-dialog={`dlg-${d.id}`} aria-haspopup="dialog">
                   <span>{d.title}</span>
