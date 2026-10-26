@@ -97,7 +97,7 @@ export default function Footer() {
             <header className="pdialog__head">
               <div>
                 <p className="t-label">עודכן לאחרונה: {d.updated}</p>
-                <h2 id={`dlg-${d.id}-title`} className="t-h2">{d.title}</h2>
+                <h2 id={`dlg-${d.id}-title`} className="t-h2">{d.heading ?? d.title}</h2>
               </div>
               <button type="button" className="pdialog__close" data-dialog-close aria-label="סגירה"><IconClose width={22} height={22} /></button>
             </header>
@@ -105,7 +105,9 @@ export default function Footer() {
               {d.sections.map((s, i) => (
                 <section key={i}>
                   {s.h && <h3>{s.h}</h3>}
-                  {s.p.map((t, j) => <p key={j}>{t}</p>)}
+                  {s.p.map((t, j) => typeof t === 'string'
+                    ? <p key={j}>{t}</p>
+                    : <ul key={j}>{t.map((li, k) => <li key={k}>{li}</li>)}</ul>)}
                 </section>
               ))}
             </div>

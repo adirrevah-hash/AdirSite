@@ -481,6 +481,9 @@ button.link { background: none; border-inline: 0; border-top: 0; font: inherit; 
 .legal-body section + section { margin-top: 1.75rem; }
 .legal-body h3 { margin: 0 0 0.6rem; font-family: var(--font-display); font-weight: 500; font-size: 1.25rem; color: var(--color-off-white); }
 .legal-body p { margin: 0 0 0.75rem; color: var(--color-silver); line-height: 1.8; }
+.legal-body ul { list-style: none; margin: 0 0 0.75rem; padding: 0; color: var(--color-silver); line-height: 1.8; }
+.legal-body li { position: relative; margin-bottom: 0.35rem; padding-inline-start: 1.25rem; }
+.legal-body li::before { content: ''; position: absolute; inset-inline-start: 0.2rem; top: 0.8em; width: 6px; height: 6px; border-radius: 50%; background: var(--focus-ring); }
 /* ========================================================= whatsapp float */
 .wa-float {
   position: fixed; z-index: 60; left: max(1.1rem, env(safe-area-inset-left, 0px)); bottom: max(1.1rem, env(safe-area-inset-bottom, 0px));
