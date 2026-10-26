@@ -9,6 +9,8 @@ const securityHeaders = [
 
 const config: NextConfig = {
   poweredByHeader: false,
+  // Project screenshots go out as AVIF where the browser takes it.
+  images: { formats: ['image/avif', 'image/webp'] },
   async headers() {
     return [{ source: '/:path*', headers: securityHeaders }]
   },

@@ -65,7 +65,7 @@ for (const [w, h] of [[360, 780], [390, 844], [430, 932], [768, 1024], [1024, 76
   check('heading levels never skip downward', meta.headings.every((l, i) => i === 0 || l <= meta.headings[i - 1] + 1), meta.headings.join(''))
   // The hero's desk scene is loaded and shown (it is the page's largest image).
   const scene = await page.evaluate(() => { const i = document.querySelector('.hero__scene'); const r = i.getBoundingClientRect(); return { loaded: i.complete && i.naturalWidth > 0, w: Math.round(r.width), src: i.currentSrc.split('/').pop() } })
-  check('hero: desk scene loaded and in view', scene.loaded && scene.w > 400 && scene.src === 'scene-desktop.jpg', JSON.stringify(scene))
+  check('hero: desk scene loaded and in view', scene.loaded && scene.w > 400 && /^scene-desktop\.(avif|webp|jpg)$/.test(scene.src), JSON.stringify(scene))
 
   for (const [href, target] of [['#work', '#work-title'], ['#services', '#services-title'], ['#process', '#process-title'], ['#contact', '#contact-title']]) {
     await page.click(`.site-nav a[href="${href}"]`)

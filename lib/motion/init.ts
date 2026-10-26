@@ -49,32 +49,37 @@ function startSite() {
     initFloat(),
   ]
   // The chapters further down set up once the first screen is interactive,
-  // which keeps the main thread free while the page is loading.
+  // one module per idle moment, so no single task holds up a phone's main
+  // thread for long.
+  const steps = [
+    () => initWork(reduced),
+    () => initServices(reduced),
+    () => initDifference(reduced),
+    () => initProcess(reduced),
+    () => initMagnetic(reduced),
+    () => initStory(reduced),
+    () => initCursor(reduced),
+    () => initDrafting(reduced),
+    () => initForms(reduced),
+  ]
+  const idle = window.requestIdleCallback ?? ((cb: () => void) => window.setTimeout(cb, 200))
+  const cancelIdle = window.cancelIdleCallback ?? window.clearTimeout
   let later = 0
-  const rest = () => {
+  let ready = false
+  const step = () => {
     later = 0
-    cleanups.push(
-      initWork(reduced),
-      initServices(reduced),
-      initDifference(reduced),
-      initProcess(reduced),
-      initMagnetic(reduced),
-      initStory(reduced),
-      initCursor(reduced),
-      initDrafting(reduced),
-      initForms(reduced),
-    )
+    cleanups.push(steps.shift()!())
+    if (steps.length) { later = idle(step, { timeout: 1500 }); return }
     // Pinned chapters add scroll distance, so every trigger has to be
     // measured in page order, whichever module created it.
+    ready = true
     ScrollTrigger.sort()
     ScrollTrigger.refresh()
   }
-  const idle = window.requestIdleCallback ?? ((cb: () => void) => window.setTimeout(cb, 200))
-  const cancelIdle = window.cancelIdleCallback ?? window.clearTimeout
-  later = idle(rest, { timeout: 1500 })
+  later = idle(step, { timeout: 1500 })
   // Layout settles once the fonts are in; measure the triggers again then,
-  // unless the chapters below have not set up yet (their setup measures).
-  document.fonts?.ready.then(() => { if (!later) ScrollTrigger.refresh() })
+  // unless the chapters below have not all set up yet (the last one measures).
+  document.fonts?.ready.then(() => { if (ready) ScrollTrigger.refresh() })
   return () => {
     if (later) cancelIdle(later)
     cleanups.forEach(c => c?.())

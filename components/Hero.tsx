@@ -14,7 +14,12 @@ export default function Hero() {
 
       <div className="hero__art" aria-hidden="true" data-hero-art>
         <picture>
-          <source media="(max-width: 959px)" srcSet="/hero/scene-mobile.jpg" width={940} height={778} />
+          {/* AVIF, then WebP, then JPEG; phones get a narrower file when it is enough. */}
+          <source media="(max-width: 959px)" type="image/avif" srcSet="/hero/scene-mobile-640.avif 640w, /hero/scene-mobile.avif 940w" sizes="94vw" width={940} height={778} />
+          <source media="(max-width: 959px)" type="image/webp" srcSet="/hero/scene-mobile-640.webp 640w, /hero/scene-mobile.webp 940w" sizes="94vw" width={940} height={778} />
+          <source media="(max-width: 959px)" srcSet="/hero/scene-mobile-640.jpg 640w, /hero/scene-mobile.jpg 940w" sizes="94vw" width={940} height={778} />
+          <source type="image/avif" srcSet="/hero/scene-desktop.avif" width={950} height={831} />
+          <source type="image/webp" srcSet="/hero/scene-desktop.webp" width={950} height={831} />
           <img src="/hero/scene-desktop.jpg" width={950} height={831} alt="" fetchPriority="high" decoding="async" className="hero__scene" />
         </picture>
       </div>
