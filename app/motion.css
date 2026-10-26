@@ -388,18 +388,28 @@ main .pin-spacer { max-width: 100%; overflow-x: clip !important; } /* its inline
 /* ------------------------------------------------- accessibility panel
    A glass button at the bottom right (WhatsApp keeps the left), opening a
    small panel of adjustments. Each adjustment is a class on <html>. */
-.a11y { position: fixed; z-index: 95; right: max(1.1rem, env(safe-area-inset-right, 0px)); bottom: max(1.1rem, env(safe-area-inset-bottom, 0px)); }
-.a11y__fab { display: grid; place-items: center; width: 3.5rem; height: 3.5rem; border-radius: 50%; color: var(--color-off-white); cursor: pointer; transition: transform 300ms var(--ease); }
+.a11y { position: fixed; z-index: 95; right: 0; top: 50%; margin-top: -1.75rem; }
+/* a drawer on the right edge: only a strip shows until the pointer (or focus)
+   arrives, then the tab slides out */
+.a11y__fab {
+  display: grid; place-items: center; width: 3.5rem; height: 3.5rem; padding-right: env(safe-area-inset-right, 0px);
+  border-radius: 16px 0 0 16px; color: var(--color-off-white); cursor: pointer;
+  transform: translateX(calc(100% - var(--a11y-peek, 12px))); transition: transform 420ms var(--ease);
+}
+.a11y__fab::before { content: ''; position: absolute; left: 4px; top: 50%; width: 3px; height: 1.4rem; margin-top: -0.7rem; border-radius: 2px; background: var(--color-silver); opacity: 0.8; transition: opacity 300ms var(--ease); }
 .a11y__fab svg { width: 1.6rem; height: 1.6rem; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
-@media (hover: hover) and (pointer: fine) { .a11y__fab:hover { transform: translateY(-3px); } }
-.a11y__fab[aria-expanded='true'] { transform: none; }
+.a11y:hover .a11y__fab, .a11y:focus-within .a11y__fab, .a11y__fab[aria-expanded='true'] { transform: none; }
+.a11y:hover .a11y__fab::before, .a11y:focus-within .a11y__fab::before, .a11y__fab[aria-expanded='true']::before { opacity: 0; }
+/* touch screens have no hover: a wider strip, easy to tap */
+@media (hover: none), (pointer: coarse) { .a11y { --a11y-peek: 22px; } }
 .a11y__panel {
-  position: absolute; right: 0; bottom: calc(100% + 0.75rem); width: min(21rem, calc(100vw - 2.2rem));
+  position: absolute; right: calc(100% + 0.6rem); top: 50%; translate: 0 -50%; width: min(21rem, calc(100vw - 6rem));
   padding: 1.1rem; border-radius: 20px; color: var(--color-off-white);
   --glass-fill: linear-gradient(150deg, rgb(23 43 67 / 0.96), rgb(9 19 33 / 0.97));
 }
+@media (max-width: 600px) { .a11y__panel { position: fixed; right: auto; left: 1rem; width: calc(100vw - 6rem); } }
 .a11y__panel:not([hidden]) { animation: a11yIn 260ms var(--ease) both; }
-@keyframes a11yIn { from { opacity: 0; transform: translateY(8px); } }
+@keyframes a11yIn { from { opacity: 0; transform: translateX(10px); } }
 .a11y__head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.9rem; }
 .a11y__title { margin: 0; font-weight: 600; font-size: 1.05rem; }
 .a11y__close { width: 2.4rem; height: 2.4rem; display: grid; place-items: center; border-radius: 50%; border: 1px solid var(--border-dark); background: transparent; color: var(--color-off-white); cursor: pointer; }

@@ -1,6 +1,6 @@
-// The floating accessibility button and its panel. The markup is static; the
-// choices are applied by lib/motion/a11y.ts and remembered for the next visit
-// (and applied before first paint by the script in the layout).
+// The accessibility drawer on the right edge, and its panel. The markup is
+// static; the choices are applied by lib/motion/a11y.ts and remembered for the
+// next visit (and applied before first paint by the script in the layout).
 const OPTIONS = [
   { id: 'text', label: 'הגדלת טקסט', icon: <><path d="M4 18L9 6l5 12M5.8 14h6.4" /><path d="M16 18l2.5-6 2.5 6M16.8 16.3h3.4" /></> },
   { id: 'contrast', label: 'ניגודיות גבוהה', icon: <><circle cx="12" cy="12" r="8" /><path d="M12 4a8 8 0 0 1 0 16z" fill="currentColor" /></> },
