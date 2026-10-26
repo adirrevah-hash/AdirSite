@@ -54,6 +54,7 @@ export default function Contact() {
           <div className="lead-form__submit">
             <button type="submit" className="btn btn--light" data-submit>שליחת פרטים <span className="btn__arrow" aria-hidden="true">←</span></button>
             <p className="lead-form__note">הפרטים משמשים רק כדי לחזור אליכם בנוגע לפנייה.</p>
+            <a className="lead-form__fallback" data-wa-fallback hidden rel="noopener noreferrer">וואטסאפ לא נפתח? לחצו כאן לפתיחה עם הפרטים</a>
           </div>
           <p className="sr-only" role="status" aria-live="polite" data-status />
         </form>

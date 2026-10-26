@@ -4,7 +4,8 @@ import { whatsappUrl } from '../site'
 const FIELDS: (keyof ContactInput)[] = ['name', 'phone', 'service', 'message', 'consent']
 
 // The lead form. Validates in the browser, then opens WhatsApp to the studio's
-// number with everything the visitor wrote already in the message. WhatsApp
+// number with everything the visitor wrote already in the message (see
+// openWhatsApp for how). WhatsApp
 // still needs the visitor to press send; the page never claims a message was
 // sent, and tells screen readers that WhatsApp opened.
 export function initForm() {
@@ -13,6 +14,7 @@ export function initForm() {
   const form: HTMLFormElement = found
   const status = form.querySelector<HTMLElement>('[data-status]')!
   const submit = form.querySelector<HTMLButtonElement>('[data-submit]')!
+  const fallback = form.querySelector<HTMLAnchorElement>('[data-wa-fallback]')!
   const touched: Partial<Record<keyof ContactInput, boolean>> = {}
 
   const el = (k: keyof ContactInput) => form.elements.namedItem(k) as HTMLInputElement
@@ -67,22 +69,31 @@ export function initForm() {
       return
     }
     paint({})
-    // Open WhatsApp from a real link, clicked inside the visitor's own click.
-    // That is the one way out that every context allows: a phone hands it to
-    // the app, a desktop opens WhatsApp Web or the desktop app, and pages shown
-    // inside a sandboxed frame (such as a preview) let a link through where
-    // they block a redirect or window.open.
     const url = whatsappUrl(leadText(r.lead))
     // Close the phone keyboard first, so the page is not left zoomed or
     // offset when the visitor comes back from WhatsApp.
     ;(document.activeElement as HTMLElement | null)?.blur()
-    const link = document.createElement('a')
-    link.href = url; link.target = '_blank'; link.rel = 'noopener noreferrer'
-    document.body.appendChild(link)
-    link.click()
-    link.remove()
-    // Nothing appears on the page; screen readers hear what happened.
     status.textContent = 'וואטסאפ נפתח עם הפרטים. נשאר ללחוץ שליחה בוואטסאפ.'
+    openWhatsApp(url)
+  }
+
+  // Phones hand a same-tab visit to wa.me straight to the WhatsApp app, which
+  // a new tab opened from script does not do reliably. A desktop keeps the
+  // site and opens WhatsApp Web or the desktop app in a new tab. A page shown
+  // inside a frame (such as a preview) can only open a new window, and only if
+  // the frame allows it. Whenever the automatic way is refused, a link to
+  // WhatsApp appears under the button, for one more tap.
+  function openWhatsApp(url: string) {
+    let framed = true
+    try { framed = window.top !== window.self } catch { /* cross-origin parent */ }
+    if (!framed && matchMedia('(pointer: coarse)').matches) { location.href = url; return }
+    const tab = window.open(url, '_blank')
+    if (tab) { tab.opener = null; fallback.hidden = true; return }
+    if (!framed) { location.href = url; return }
+    fallback.href = url
+    fallback.target = '_top'
+    fallback.hidden = false
+    status.textContent = 'וואטסאפ לא נפתח אוטומטית. אפשר לפתוח אותו בקישור שמתחת לכפתור.'
   }
 
   // "לבקש הצעה" on a service card preselects that service.

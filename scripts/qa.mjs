@@ -180,6 +180,46 @@ for (const [w, h] of [[1440, 900], [390, 844]]) {
   await ctx.close()
 }
 
+// A filled-in lead, ready to send.
+async function fillLead(page) {
+  await page.evaluate(() => document.querySelector('#contact').scrollIntoView())
+  await page.fill('#f-name', 'בדיקה אוטומטית'); await page.fill('#f-phone', '050-123-4567')
+  await page.selectOption('#f-service', 'landing')
+  await page.evaluate(() => { document.querySelector('#f-consent').checked = true })
+}
+
+// On a phone the lead goes to WhatsApp in the same tab, which hands it to the app.
+{
+  const { ctx, page } = await open(browser, { viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true })
+  await ctx.route('https://wa.me/**', r => r.fulfill({ status: 200, contentType: 'text/html', body: 'whatsapp' }))
+  await fillLead(page)
+  let tabs = 0; ctx.on('page', () => tabs++)
+  await Promise.all([page.waitForURL('https://wa.me/**', { timeout: 8000 }), page.tap('[data-submit]')])
+  const url = decodeURIComponent(page.url())
+  check('phone: the lead opens WhatsApp in the same tab, with the details', tabs === 0 && url.startsWith('https://wa.me/972538007008?text=') && url.includes('בדיקה אוטומטית'), url.slice(0, 70))
+  await ctx.close()
+}
+
+// In a frame that refuses new windows, a link to WhatsApp appears instead.
+{
+  const ctx = await browser.newContext({ locale: 'he-IL', viewport: { width: 1280, height: 900 } })
+  // The site forbids framing; this test lifts that for its own frame.
+  await ctx.route(`${BASE}/`, async r => {
+    const res = await r.fetch()
+    const headers = { ...res.headers() }; delete headers['x-frame-options']; delete headers['content-security-policy']
+    r.fulfill({ response: res, headers })
+  })
+  const page = await ctx.newPage()
+  await page.setContent(`<iframe id="f" src="${BASE}" sandbox="allow-scripts allow-same-origin allow-forms" style="width:1200px;height:880px;border:0"></iframe>`)
+  const frame = await (await page.waitForSelector('#f')).contentFrame()
+  await frame.waitForSelector('[data-lead-form]', { state: 'attached' }); await wait(2500)
+  await fillLead(frame)
+  await frame.click('[data-submit]'); await wait(500)
+  const fb = await frame.evaluate(() => { const a = document.querySelector('[data-wa-fallback]'); return { shown: !a.hidden && a.offsetHeight > 0, href: decodeURIComponent(a.href) } })
+  check('framed without popups: a WhatsApp link with the details appears', fb.shown && fb.href.startsWith('https://wa.me/972538007008?text=') && fb.href.includes('בדיקה אוטומטית'), JSON.stringify(fb).slice(0, 90))
+  await ctx.close()
+}
+
 // ------------------------------------------------------- accessibility panel
 {
   const { ctx, page, errors } = await open(browser, { viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true })
