@@ -23,20 +23,45 @@
 .menu-btn span { display: block; width: 18px; height: 1.5px; background: var(--color-off-white); transition: transform 260ms var(--ease); }
 .menu-btn[aria-expanded='true'] span:first-child { transform: translateY(3.75px) rotate(45deg); }
 .menu-btn[aria-expanded='true'] span:last-child { transform: translateY(-3.75px) rotate(-45deg); }
+/* phones and tablets: logo on the left, the menu button on the right */
+@media (max-width: 959px) { .site-header__row { flex-direction: row-reverse; } }
 @media (min-width: 960px) {
   .site-nav { display: flex; gap: 2.25rem; }
   .site-header__cta { display: inline-flex !important; }
   .menu-btn { display: none; }
 }
 .menu-sheet {
-  position: fixed; inset: 0; z-index: 70; display: flex; flex-direction: column; justify-content: space-between;
-  padding: calc(var(--header-h) + env(safe-area-inset-top, 0px) + 2rem) var(--gutter) max(2rem, env(safe-area-inset-bottom, 0px));
-  background: var(--color-midnight); opacity: 0; transition: opacity 260ms var(--ease);
+  position: fixed; inset: 0; z-index: 70; overflow: hidden; display: flex; flex-direction: column; justify-content: space-between; gap: 2rem;
+  padding: calc(var(--header-h) + env(safe-area-inset-top, 0px) + 2.5rem) var(--gutter) max(2.25rem, env(safe-area-inset-bottom, 0px));
+  background: linear-gradient(160deg, rgb(23 43 67 / 0.62), rgb(9 19 33 / 0.8));
+  -webkit-backdrop-filter: blur(22px) saturate(140%); backdrop-filter: blur(22px) saturate(140%);
+  clip-path: circle(0% at calc(100% - var(--gutter) - 1.4rem) calc(env(safe-area-inset-top, 0px) + var(--header-h) / 2));
+  transition: clip-path 700ms var(--ease-io);
 }
-.menu-sheet.is-open { opacity: 1; }
-.menu-sheet__nav { display: grid; gap: 0.35rem; }
-.menu-sheet__nav a { font-family: var(--font-display); font-weight: 500; font-size: clamp(2.2rem, 10vw, 3rem); line-height: 1.2; padding-block: 0.25rem; }
-.menu-sheet__foot { display: grid; gap: 1.25rem; justify-items: start; }
+.menu-sheet.is-open { clip-path: circle(150% at calc(100% - var(--gutter) - 1.4rem) calc(env(safe-area-inset-top, 0px) + var(--header-h) / 2)); }
+.menu-sheet__ghost {
+  position: absolute; left: -0.08em; bottom: -0.18em; z-index: -1; pointer-events: none; direction: ltr;
+  font-family: var(--font-display); font-weight: 700; font-size: min(70vw, 26rem); line-height: 1; letter-spacing: -0.06em;
+  color: transparent; -webkit-text-stroke: 1px rgb(197 205 216 / 0.14);
+}
+.menu-sheet__nav { display: grid; }
+.menu-sheet__nav a {
+  display: grid; grid-template-columns: 2.6rem 1fr auto; align-items: baseline; gap: 0.5rem;
+  padding-block: 0.9rem; border-bottom: 1px solid var(--border-dark);
+  opacity: 0; transform: translateY(24px); transition: opacity 500ms var(--ease), transform 700ms var(--ease);
+  transition-delay: calc(180ms + var(--i) * 60ms);
+}
+.menu-sheet.is-open .menu-sheet__nav a, .menu-sheet.is-open .menu-sheet__foot { opacity: 1; transform: none; }
+.menu-sheet__num { font-size: 0.8rem; color: var(--color-hero-accent-1); }
+.menu-sheet__label { font-family: var(--font-display); font-weight: 500; font-size: clamp(2rem, 9vw, 2.9rem); line-height: 1.1; color: var(--color-off-white); }
+.menu-sheet__arrow { font-size: 1.4rem; color: var(--color-silver-muted); transition: transform 300ms var(--ease), color 300ms var(--ease); }
+.menu-sheet__nav a:active .menu-sheet__arrow, .menu-sheet__nav a:focus-visible .menu-sheet__arrow { transform: translateX(-6px); color: var(--color-off-white); }
+.menu-sheet__foot {
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem;
+  opacity: 0; transform: translateY(24px); transition: opacity 500ms var(--ease), transform 700ms var(--ease);
+  transition-delay: calc(180ms + var(--i) * 60ms);
+}
+.menu-sheet__social { display: flex; gap: 0.7rem; }
 
 /* ================================================================== hero
    After the studio's reference: the statement on the left, the desk scene on

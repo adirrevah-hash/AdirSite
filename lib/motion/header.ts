@@ -28,7 +28,7 @@ export function initHeader() {
       sheet.querySelector<HTMLElement>('a')?.focus()
     } else {
       sheet.classList.remove('is-open')
-      setTimeout(() => { if (!open) sheet.hidden = true }, 260)
+      setTimeout(() => { if (!open) sheet.hidden = true }, 700) // after the circle closes
     }
   }
   const onBtn = () => set(!open)
