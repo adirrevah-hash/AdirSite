@@ -388,7 +388,8 @@ main .pin-spacer { max-width: 100%; overflow-x: clip !important; } /* its inline
 /* ------------------------------------------------- accessibility panel
    A glass button at the bottom right (WhatsApp keeps the left), opening a
    small panel of adjustments. Each adjustment is a class on <html>. */
-.a11y { position: fixed; z-index: 95; right: 0; top: 50%; margin-top: -1.75rem; }
+/* level with the WhatsApp button on the other side */
+.a11y { position: fixed; z-index: 95; right: 0; bottom: max(1.1rem, env(safe-area-inset-bottom, 0px)); }
 /* a drawer on the right edge: only a strip shows until the pointer (or focus)
    arrives, then the tab slides out */
 .a11y__fab {
@@ -409,11 +410,12 @@ main .pin-spacer { max-width: 100%; overflow-x: clip !important; } /* its inline
 /* touch screens have no hover: a wider strip, easy to tap */
 @media (hover: none), (pointer: coarse) { .a11y { --a11y-peek: 22px; } }
 .a11y__panel {
-  position: absolute; right: calc(100% + 0.6rem); top: 50%; translate: 0 -50%; width: min(21rem, calc(100vw - 6rem));
+  position: absolute; right: calc(100% + 0.6rem); bottom: 0; width: min(21rem, calc(100vw - 6rem));
   padding: 1.1rem; border-radius: 20px; color: var(--color-off-white);
   --glass-fill: linear-gradient(150deg, rgb(23 43 67 / 0.96), rgb(9 19 33 / 0.97));
 }
-@media (max-width: 600px) { .a11y__panel { position: fixed; right: auto; left: 1rem; width: calc(100vw - 6rem); } }
+/* phones: the panel opens across the screen, just above the two buttons */
+@media (max-width: 600px) { .a11y__panel { position: fixed; right: auto; left: 1rem; bottom: calc(max(1.1rem, env(safe-area-inset-bottom, 0px)) + 4.25rem); width: calc(100vw - 2rem); } }
 .a11y__panel:not([hidden]) { animation: a11yIn 260ms var(--ease) both; }
 @keyframes a11yIn { from { opacity: 0; transform: translateX(10px); } }
 .a11y__head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.9rem; }
