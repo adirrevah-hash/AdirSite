@@ -227,10 +227,15 @@ for (const [w, h] of [[1440, 900], [390, 844]]) {
   await page.tap('[data-menu-btn]'); await wait(400)
   const m = await page.evaluate(() => {
     const b = document.querySelector('[data-menu-btn]'), r = b.getBoundingClientRect()
-    return { exp: b.getAttribute('aria-expanded'), sheet: !document.querySelector('[data-menu]').hidden, onTop: b.contains(document.elementFromPoint(r.x + r.width / 2, r.y + r.height / 2)), lock: document.documentElement.style.overflow }
+    return { exp: b.getAttribute('aria-expanded'), sheet: !document.querySelector('[data-menu]').hidden, onTop: b.contains(document.elementFromPoint(r.x + r.width / 2, r.y + r.height / 2)), y: scrollY }
   })
+  // the page behind holds still: a swipe over the menu does not scroll it
+  const cdp = await ctx.newCDPSession(page)
+  await cdp.send('Input.synthesizeScrollGesture', { x: 200, y: 600, yDistance: -400, speed: 2000 })
+  await wait(400)
+  m.lock = (await page.evaluate(() => scrollY)) === m.y
   await page.screenshot({ path: `${OUT}/menu.png` })
-  check('menu opens, locks scroll, close button stays tappable', m.exp === 'true' && m.sheet && m.onTop && m.lock === 'hidden', JSON.stringify(m))
+  check('menu opens, locks scroll, close button stays tappable', m.exp === 'true' && m.sheet && m.onTop && m.lock === true, JSON.stringify(m))
   await page.tap('[data-menu-btn]'); await wait(400)
   check('tapping the button closes the menu', (await page.getAttribute('[data-menu-btn]', 'aria-expanded')) === 'false')
   await page.tap('[data-menu-btn]'); await wait(400)

@@ -31,15 +31,25 @@
   .menu-btn { display: none; }
 }
 .menu-sheet {
-  position: fixed; inset: 0; z-index: 70; overflow: hidden; display: flex; flex-direction: column; justify-content: space-between; gap: 2rem;
+  position: fixed; inset: 0; z-index: 70; overflow: hidden; isolation: isolate; display: flex; flex-direction: column; justify-content: space-between; gap: 2rem;
   padding: calc(var(--header-h) + env(safe-area-inset-top, 0px) + 2.5rem) var(--gutter) max(2.25rem, env(safe-area-inset-bottom, 0px));
-  background: linear-gradient(160deg, rgb(23 43 67 / 0.62), rgb(9 19 33 / 0.8));
-  -webkit-backdrop-filter: blur(22px) saturate(140%); backdrop-filter: blur(22px) saturate(140%);
-  clip-path: circle(0% at calc(100% - var(--gutter) - 1.4rem) calc(env(safe-area-inset-top, 0px) + var(--header-h) / 2));
-  transition: clip-path 700ms var(--ease-io);
+  visibility: hidden; transition: visibility 0s linear 700ms;
 }
-.menu-sheet.is-open { clip-path: circle(150% at calc(100% - var(--gutter) - 1.4rem) calc(env(safe-area-inset-top, 0px) + var(--header-h) / 2)); }
+.menu-sheet.is-open { visibility: visible; transition: none; }
+.menu-sheet { overscroll-behavior: contain; }
+/* The veil: a small circle centred on the menu button, scaled up until it
+   covers the screen (the script sets --veil to the factor needed). It is a
+   soft gradient, so it can be painted small once and scaled on its own layer:
+   opening never repaints the page or a screen-sized image. */
+.menu-sheet__veil {
+  position: absolute; z-index: -2; width: 120px; height: 120px; border-radius: 50%;
+  top: calc(env(safe-area-inset-top, 0px) + var(--header-h) / 2 - 60px); right: calc(var(--gutter) + 1.4rem - 60px);
+  background: radial-gradient(circle, rgb(23 43 67 / 0.95) 30%, rgb(9 19 33 / 0.97) 70%);
+  transform: scale(0); will-change: transform; transition: transform 650ms var(--ease-io);
+}
+.menu-sheet.is-open .menu-sheet__veil { transform: scale(var(--veil, 24)); }
 .menu-sheet__ghost {
+  opacity: 0; transition: opacity 600ms var(--ease) 250ms;
   position: absolute; left: -0.08em; bottom: -0.18em; z-index: -1; pointer-events: none; direction: ltr;
   font-family: var(--font-display); font-weight: 700; font-size: min(70vw, 26rem); line-height: 1; letter-spacing: -0.06em;
   color: transparent; -webkit-text-stroke: 1px rgb(197 205 216 / 0.14);
@@ -48,20 +58,24 @@
 .menu-sheet__nav a {
   display: grid; grid-template-columns: 2.6rem 1fr auto; align-items: baseline; gap: 0.5rem;
   padding-block: 0.9rem; border-bottom: 1px solid var(--border-dark);
-  opacity: 0; transform: translateY(24px); transition: opacity 500ms var(--ease), transform 700ms var(--ease);
-  transition-delay: calc(180ms + var(--i) * 60ms);
+  opacity: 0; transform: translateY(24px); transition: opacity 450ms var(--ease), transform 600ms var(--ease);
+  transition-delay: calc(220ms + var(--i) * 55ms);
 }
-.menu-sheet.is-open .menu-sheet__nav a, .menu-sheet.is-open .menu-sheet__foot { opacity: 1; transform: none; }
+.menu-sheet.is-open .menu-sheet__nav a, .menu-sheet.is-open .menu-sheet__foot, .menu-sheet.is-open .menu-sheet__ghost { opacity: 1; transform: none; }
+/* closing: everything leaves together, quickly, before the veil shrinks */
+.menu-sheet:not(.is-open) .menu-sheet__nav a, .menu-sheet:not(.is-open) .menu-sheet__foot, .menu-sheet:not(.is-open) .menu-sheet__ghost { transition-duration: 200ms; transition-delay: 0s; }
 .menu-sheet__num { font-size: 0.8rem; color: var(--color-hero-accent-1); }
 .menu-sheet__label { font-family: var(--font-display); font-weight: 500; font-size: clamp(2rem, 9vw, 2.9rem); line-height: 1.1; color: var(--color-off-white); }
 .menu-sheet__arrow { font-size: 1.4rem; color: var(--color-silver-muted); transition: transform 300ms var(--ease), color 300ms var(--ease); }
 .menu-sheet__nav a:active .menu-sheet__arrow, .menu-sheet__nav a:focus-visible .menu-sheet__arrow { transform: translateX(-6px); color: var(--color-off-white); }
 .menu-sheet__foot {
   display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem;
-  opacity: 0; transform: translateY(24px); transition: opacity 500ms var(--ease), transform 700ms var(--ease);
-  transition-delay: calc(180ms + var(--i) * 60ms);
+  opacity: 0; transform: translateY(24px); transition: opacity 450ms var(--ease), transform 600ms var(--ease);
+  transition-delay: calc(220ms + var(--i) * 55ms);
 }
 .menu-sheet__social { display: flex; gap: 0.7rem; }
+/* plain circles here: a live blur inside an opening menu costs a frame */
+.menu-sheet__circle { background: rgb(255 255 255 / 0.06); border: 1px solid var(--border-dark); }
 
 /* ================================================================== hero
    After the studio's reference: the statement on the left, the desk scene on

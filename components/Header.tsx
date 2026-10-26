@@ -23,9 +23,10 @@ export default function Header() {
         </div>
       </header>
 
-      {/* The menu: a frosted veil that opens as a circle from the button, with
-          numbered links rising in turn and the direct channels below. */}
+      {/* The menu: a veil that grows as a circle from the button, with numbered
+          links rising in turn and the direct channels below. */}
       <div id="menu-sheet" className="menu-sheet on-dark" data-menu hidden>
+        <span className="menu-sheet__veil" aria-hidden="true" />
         <span className="menu-sheet__ghost" aria-hidden="true">AR</span>
         <nav aria-label="תפריט" className="menu-sheet__nav">
           {nav.map((n, i) => (
@@ -39,8 +40,8 @@ export default function Header() {
         <div className="menu-sheet__foot" style={{ ['--i' as string]: nav.length }}>
           <a href="#contact" className="btn btn--light">{CTA.primary} <span className="btn__arrow" aria-hidden="true">←</span></a>
           <div className="menu-sheet__social">
-            <a href={whatsappUrl()} target="_blank" rel="noopener noreferrer" className="social-btn glass" aria-label="וואטסאפ"><IconWhatsApp width={22} height={22} /></a>
-            <a href={site.instagram.url} target="_blank" rel="noopener noreferrer" className="social-btn glass" aria-label="אינסטגרם"><IconInstagram width={22} height={22} /></a>
+            <a href={whatsappUrl()} target="_blank" rel="noopener noreferrer" className="social-btn menu-sheet__circle" aria-label="וואטסאפ"><IconWhatsApp width={22} height={22} /></a>
+            <a href={site.instagram.url} target="_blank" rel="noopener noreferrer" className="social-btn menu-sheet__circle" aria-label="אינסטגרם"><IconInstagram width={22} height={22} /></a>
           </div>
         </div>
       </div>
