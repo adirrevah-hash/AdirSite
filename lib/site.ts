@@ -1,3 +1,17 @@
+// A site address as the host typed it ("arstudio.co.il", "https://arstudio.co.il/")
+// becomes a bare origin; anything that is not a real address (a project name,
+// a placeholder) is ignored rather than breaking the build.
+function siteUrl(raw?: string) {
+  const value = raw?.trim()
+  if (!value) return ''
+  try {
+    const url = new URL(/^https?:\/\//i.test(value) ? value : `https://${value}`)
+    return url.hostname.includes('.') || url.hostname === 'localhost' ? url.origin : ''
+  } catch {
+    return ''
+  }
+}
+
 // Every business fact on the site lives here. Nothing is invented: where a
 // detail has not been supplied (email, domain, Facebook, project write-ups)
 // the field is empty and the page leaves it out or marks it as pending.
@@ -9,7 +23,7 @@ export const site = {
   // The domain, once set (NEXT_PUBLIC_SITE_URL). Until then, on Vercel, the
   // project's production address, which becomes the custom domain when one
   // is connected. Used on the server only: canonical, sitemap, share image.
-  url: process.env.NEXT_PUBLIC_SITE_URL || (process.env.VERCEL_PROJECT_PRODUCTION_URL ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}` : ''),
+  url: siteUrl(process.env.NEXT_PUBLIC_SITE_URL) || siteUrl(process.env.VERCEL_PROJECT_PRODUCTION_URL),
   phone: { display: '053-800-7008', tel: '+972538007008', whatsapp: '972538007008' },
   instagram: { handle: 'ar_studio1', url: 'https://www.instagram.com/ar_studio1/' },
   email: '', // not supplied yet
