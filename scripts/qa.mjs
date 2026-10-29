@@ -374,7 +374,7 @@ async function fillLead(page) {
     if (l.h.startsWith('#')) return !document.querySelector(l.h)
     if (l.h === 'tel:+972538007008') return false
     if (l.h.startsWith('https://wa.me/972538007008')) return !l.blank || !/noopener/.test(l.rel)
-    if (['https://www.instagram.com/ar_studio1/', 'https://www.wiserise.co.il/', 'https://www.alumina-group.co.il/', 'https://readytogoo.com/'].includes(l.h)) return !l.blank || !/noopener/.test(l.rel)
+    if (['https://www.instagram.com/ar_studio1/', 'https://www.wiserise.co.il/', 'https://www.alumina-group.co.il/', 'https://readytogoo.com/', 'https://orashachar.co.il/'].includes(l.h)) return !l.blank || !/noopener/.test(l.rel)
     return true
   }))
   check('every link resolves: anchors exist, external links open safely', bad.length === 0, JSON.stringify(bad))

@@ -137,8 +137,8 @@ export const projects: Project[] = [
     delivered, result,
   },
   {
-    id: 'orhashachar', name: 'אור השחר', kind: 'אתר',
+    id: 'orhashachar', name: 'אור השחר', url: 'https://orashachar.co.il/', kind: 'אתר',
     goal: 'אתר למרכז לרפואה סינית ומשלימה, שמציג את הטיפולים, דיקור סיני, דיקור קוסמטי, שיאצו וצמחי מרפא, באווירה רכה ואישית, ומוביל לקביעת תור.',
-    delivered,
+    delivered, result,
   },
 ]
