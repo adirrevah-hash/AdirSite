@@ -37,7 +37,7 @@ function Devices({ p, large }: { p: ShowcaseProject; large?: boolean }) {
   return (
     <div className="devices">
       <div className="device-desk">
-        <div className="device-desk__bar" aria-hidden="true"><i /><i /><i /><span className="num">{p.domain}</span></div>
+        <div className="device-desk__bar" aria-hidden="true"><i /><i /><i /><span className="num">{p.domain || p.name}</span></div>
         {/* A captured screen sets the frame's proportions, so it is never cropped. */}
         <div className="device-desk__screen" data-parallax-screen style={p.desktop ? { aspectRatio: `${p.desktop.width} / ${p.desktop.height}` } : undefined}><Screen p={p} kind="desktop" large={large} /></div>
       </div>
@@ -75,10 +75,10 @@ export default function Work() {
                 </button>
                 <div className="project__caption">
                   <h3 className="t-h3">{p.name}</h3>
-                  <p className="project__meta"><span className="num">{p.domain}</span><span aria-hidden="true">·</span>{p.kind}</p>
+                  <p className="project__meta">{p.domain && <><span className="num">{p.domain}</span><span aria-hidden="true">·</span></>}{p.kind}</p>
                   <div className="project__actions">
                     <button type="button" className="link" data-dialog={`dlg-${p.id}`} aria-haspopup="dialog">פרטי הפרויקט</button>
-                    <a href={p.url} target="_blank" rel="noopener noreferrer" className="link">לאתר <IconExternal width={16} height={16} /></a>
+                    {p.url && <a href={p.url} target="_blank" rel="noopener noreferrer" className="link">לאתר <IconExternal width={16} height={16} /></a>}
                   </div>
                 </div>
               </article>
@@ -100,7 +100,7 @@ export default function Work() {
             <div className="pdialog__media"><Devices p={p} large /></div>
             <dl className="pdialog__facts">
               <div><dt>סוג</dt><dd>{p.kind}</dd></div>
-              <div><dt>כתובת</dt><dd><a href={p.url} target="_blank" rel="noopener noreferrer" className="link"><span className="num">{p.domain}</span> <IconExternal width={16} height={16} /></a></dd></div>
+              <div><dt>כתובת</dt><dd>{p.url ? <a href={p.url} target="_blank" rel="noopener noreferrer" className="link"><span className="num">{p.domain}</span> <IconExternal width={16} height={16} /></a> : <span className="pending">יתווסף בקרוב</span>}</dd></div>
               <div><dt>מטרת הפרויקט</dt><dd>{p.goal || <span className="pending">יתווסף בקרוב</span>}</dd></div>
               <div><dt>מה סופק</dt><dd>{p.delivered?.length ? p.delivered.join(' · ') : <span className="pending">יתווסף בקרוב</span>}</dd></div>
               {p.result && <div><dt>תוצאה</dt><dd>{p.result}</dd></div>}

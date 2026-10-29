@@ -151,7 +151,7 @@
 .work__count { margin: 0; color: var(--color-silver-muted); font-size: 0.95rem; }
 .work__count .num { font-size: 2.6rem; font-weight: 300; color: var(--color-off-white); margin-inline-end: 0.5rem; vertical-align: -0.2em; }
 .project { position: relative; }
-@media (min-width: 1024px) { .project { width: 80%; } .project--1 { margin-inline-start: auto; } }
+@media (min-width: 1024px) { .project { width: 80%; } .project--1, .project--3 { margin-inline-start: auto; } }
 .project__index { position: absolute; z-index: 0; top: -0.55em; inset-inline-end: 0; font-size: clamp(5rem, 12vw, 11rem); font-weight: 600; line-height: 1; letter-spacing: -0.04em; color: transparent; -webkit-text-stroke: 1px var(--color-silver-muted); opacity: 0.5; pointer-events: none; }
 .project__stage { all: unset; position: relative; z-index: 1; display: block; width: 100%; cursor: pointer; -webkit-tap-highlight-color: transparent; }
 .project__media { display: block; }

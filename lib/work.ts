@@ -34,7 +34,7 @@ function shot(id: string, kind: 'desktop' | 'mobile'): Shot | undefined {
 export function showcase(): ShowcaseProject[] {
   return projects.map(p => ({
     ...p,
-    domain: new URL(p.url).hostname.replace(/^www\./, ''),
+    domain: p.url ? new URL(p.url).hostname.replace(/^www\./, '') : '',
     desktop: shot(p.id, 'desktop'),
     mobile: shot(p.id, 'mobile'),
   }))

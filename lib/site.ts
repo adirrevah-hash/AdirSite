@@ -109,7 +109,7 @@ export const processSteps = [
 export type Project = {
   id: string
   name: string
-  url: string
+  url?: string // the live address; until the studio supplies it, the page shows it as pending
   kind: string // what was built, as the studio describes it
   goal?: string
   delivered?: string[]
@@ -135,5 +135,10 @@ export const projects: Project[] = [
     id: 'readytogoo', name: 'ReadyToGo', url: 'https://readytogoo.com/', kind: 'אתר',
     goal: 'אתר לסוכנות שיווק דיגיטלי שמציגה בבירור את השירותים שלה: קמפיינים, בניית אתרים, ניהול סושיאל ועוד, ומובילה לתיאום שיחת אפיון.',
     delivered, result,
+  },
+  {
+    id: 'orhashachar', name: 'אור השחר', kind: 'אתר',
+    goal: 'אתר למרכז לרפואה סינית ומשלימה, שמציג את הטיפולים, דיקור סיני, דיקור קוסמטי, שיאצו וצמחי מרפא, באווירה רכה ואישית, ומוביל לקביעת תור.',
+    delivered,
   },
 ]
