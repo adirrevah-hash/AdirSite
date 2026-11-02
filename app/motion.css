@@ -80,23 +80,13 @@
 @keyframes cue { 60%, 100% { transform: translateX(-100%); } }
 
 /* ------------------------------------------------------ process chapter */
-.process__head { position: relative; }
-.process__counter { display: none; }
-@media (min-width: 900px) {
-  .process__counter {
-    position: absolute; top: 0; left: 0; display: flex; align-items: flex-start; gap: 0.08em; height: 1em; overflow: hidden;
-    font-size: clamp(6rem, 12vw, 11.5rem); font-weight: 300; line-height: 1; letter-spacing: -0.05em; color: var(--color-off-white);
-  }
-  .process__roll { display: block; will-change: transform; }
-  .process__roll span { display: block; height: 1em; }
-  .process__of { font-size: 0.14em; letter-spacing: 0.02em; margin-top: 0.9em; color: var(--color-silver-muted); }
-}
-/* Steps not yet reached sit back in the muted ink (still above 4.5:1) and
-   a little lower; reaching one brings it up to full ink. */
-.motion-ready .step { transition: transform 700ms var(--ease); }
-.motion-ready .step > * { transition: color 500ms var(--ease), border-color 500ms var(--ease); }
-.motion-ready .step:not(.is-on) { transform: translateY(14px); }
-.motion-ready .step:not(.is-on) > *, .motion-ready .step:not(.is-on) .step__out span { color: var(--color-silver-muted); border-color: var(--border-dark); }
+/* Steps the gold line has not reached yet wait a little smaller and dimmer;
+   reaching one brings its medallion up to full light and its card forward. */
+.motion-ready .step__card { transition: transform 700ms var(--ease), opacity 700ms var(--ease); }
+.motion-ready .step:not(.is-on) .step__card { opacity: 0.55; transform: translateY(16px); }
+.motion-ready .step:not(.is-on) .step__disc { transform: scale(0.9); filter: saturate(0.4) brightness(0.8); }
+.step.is-on .step__disc { box-shadow: inset 0 0 0 1px rgb(197 205 216 / 0.3), inset 0 2px 1px rgb(255 255 255 / 0.12), 0 34px 60px -30px rgb(0 0 0 / 0.9), 0 0 50px -10px rgb(201 167 121 / 0.45); }
+.step.is-on .step__disc::before { border-color: rgb(242 221 179 / 0.7); box-shadow: 0 0 18px -4px rgb(201 167 121 / 0.6); }
 
 /* ------------------------------------------------------------ statement */
 .statement { position: relative; overflow: clip; }
