@@ -378,6 +378,9 @@ async function fillLead(page) {
     return true
   }))
   check('every link resolves: anchors exist, external links open safely', bad.length === 0, JSON.stringify(bad))
+  // Every WhatsApp button (the form's send link aside) opens with the greeting written.
+  const wa = await page.evaluate(() => [...document.querySelectorAll('a[href^="https://wa.me/"]:not([data-submit])')].map(a => decodeURIComponent(a.href)))
+  check('WhatsApp buttons open with the greeting written', wa.length >= 3 && wa.every(h => h.endsWith('?text=היי, אני מעוניין לשמוע פרטים נוספים')), `${wa.length} links`)
   for (const p of ['/robots.txt', '/sitemap.xml', '/icon.svg', '/og.jpg']) check(`${p} served`, (await fetch(BASE + p)).ok)
   const head = await (await fetch(BASE)).text()
   check('share image: og:image 1200x630 and a large card', /property="og:image" content="[^"]*\/og\.jpg"/.test(head) && /og:image:width" content="1200"/.test(head) && /twitter:card" content="summary_large_image"/.test(head))

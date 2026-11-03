@@ -19,7 +19,7 @@ export default function Statement() {
           </h2>
           <div className="statement__actions" data-statement-cta>
             <a href="#contact" className="btn btn--light" data-magnetic>{CTA.primary} <span className="btn__arrow" aria-hidden="true">←</span></a>
-            <a href={whatsappUrl('היי ARStudio, אשמח לשמוע על בניית אתר')} target="_blank" rel="noopener noreferrer" className="link">או בוואטסאפ</a>
+            <a href={whatsappUrl()} target="_blank" rel="noopener noreferrer" className="link">או בוואטסאפ</a>
           </div>
         </div>
       </div>

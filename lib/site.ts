@@ -30,9 +30,12 @@ export const site = {
   facebook: '', // not supplied yet
 } as const
 
-export function whatsappUrl(text?: string) {
-  const base = `https://wa.me/${site.phone.whatsapp}`
-  return text ? `${base}?text=${encodeURIComponent(text)}` : base
+// Every WhatsApp button opens the chat with this message already written;
+// the contact form writes its own, with what the visitor filled in.
+export const WA_GREETING = 'היי, אני מעוניין לשמוע פרטים נוספים'
+
+export function whatsappUrl(text: string = WA_GREETING) {
+  return `https://wa.me/${site.phone.whatsapp}?text=${encodeURIComponent(text)}`
 }
 
 export const CTA = { primary: 'בואו נדבר', work: 'לעבודות' }
