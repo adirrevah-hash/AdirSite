@@ -78,7 +78,7 @@ for (const [w, h] of [[360, 780], [390, 844], [430, 932], [768, 1024], [1024, 76
   // On wide screens the gallery runs sideways: keyboard focus must bring
   // each project into view.
   const seen = []
-  for (const id of ['wiserise', 'alumina', 'readytogoo', 'orhashachar']) {
+  for (const id of ['wiserise', 'alumina', 'readytogoo', 'orhashachar', 'ligdolyael']) {
     await page.focus(`#work .project__actions button[data-dialog="dlg-${id}"]`); await wait(1200)
     seen.push(await page.evaluate(i => { const r = document.querySelector(`#work [data-dialog="dlg-${i}"].project__stage`).getBoundingClientRect(); return r.left >= -1 && r.right <= innerWidth + 1 && r.top < innerHeight && r.bottom > 0 }, id))
   }
@@ -374,7 +374,7 @@ async function fillLead(page) {
     if (l.h.startsWith('#')) return !document.querySelector(l.h)
     if (l.h === 'tel:+972538007008') return false
     if (l.h.startsWith('https://wa.me/972538007008')) return !l.blank || !/noopener/.test(l.rel)
-    if (['https://www.instagram.com/ar_studio1/', 'https://www.wiserise.co.il/', 'https://www.alumina-group.co.il/', 'https://readytogoo.com/', 'https://orashachar.co.il/'].includes(l.h)) return !l.blank || !/noopener/.test(l.rel)
+    if (['https://www.instagram.com/ar_studio1/', 'https://www.wiserise.co.il/', 'https://www.alumina-group.co.il/', 'https://readytogoo.com/', 'https://orashachar.co.il/', 'https://ligdol-yael.co.il/'].includes(l.h)) return !l.blank || !/noopener/.test(l.rel)
     return true
   }))
   check('every link resolves: anchors exist, external links open safely', bad.length === 0, JSON.stringify(bad))
