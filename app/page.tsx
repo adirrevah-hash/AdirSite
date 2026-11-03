@@ -12,6 +12,7 @@ import Footer from '@/components/Footer'
 import WhatsAppFloat from '@/components/WhatsAppFloat'
 import A11yFloat from '@/components/A11yFloat'
 import CookieBar from '@/components/CookieBar'
+import Pricing from '@/components/Pricing'
 
 export default function Home() {
   return (
@@ -24,6 +25,7 @@ export default function Home() {
         <Work />
         <About />
         <Services />
+        <Pricing />
         <Difference />
         <Statement />
         <Contact />

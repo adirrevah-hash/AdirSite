@@ -379,8 +379,11 @@ async function fillLead(page) {
   }))
   check('every link resolves: anchors exist, external links open safely', bad.length === 0, JSON.stringify(bad))
   // Every WhatsApp button (the form's send link aside) opens with the greeting written.
-  const wa = await page.evaluate(() => [...document.querySelectorAll('a[href^="https://wa.me/"]:not([data-submit])')].map(a => decodeURIComponent(a.href)))
+  const wa = await page.evaluate(() => [...document.querySelectorAll('a[href^="https://wa.me/"]:not([data-submit]):not(.plan__cta)')].map(a => decodeURIComponent(a.href)))
   check('WhatsApp buttons open with the greeting written', wa.length >= 3 && wa.every(h => h.endsWith('?text=היי, אני מעוניין לשמוע פרטים נוספים')), `${wa.length} links`)
+  // Each plan's button opens WhatsApp with that plan's name written.
+  const plans = await page.evaluate(() => [...document.querySelectorAll('#pricing .plan')].map(p => ({ id: p.dataset.plan, code: p.querySelector('.plan__code').textContent, href: decodeURIComponent(p.querySelector('a.plan__cta').href), blank: p.querySelector('a.plan__cta').target === '_blank' })))
+  check('pricing: 3 packages and 2 care plans, each button opens WhatsApp with its plan named', plans.length === 5 && plans.every(p => p.blank && p.href.startsWith('https://wa.me/972538007008?text=') && p.href.includes(p.code)), plans.map(p => p.code).join(','))
   for (const p of ['/robots.txt', '/sitemap.xml', '/icon.svg', '/og.jpg']) check(`${p} served`, (await fetch(BASE + p)).ok)
   const head = await (await fetch(BASE)).text()
   check('share image: og:image 1200x630 and a large card', /property="og:image" content="[^"]*\/og\.jpg"/.test(head) && /og:image:width" content="1200"/.test(head) && /twitter:card" content="summary_large_image"/.test(head))

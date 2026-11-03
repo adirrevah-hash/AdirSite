@@ -45,6 +45,7 @@ export const nav = [
   { href: '#work', label: 'עבודות' },
   { href: '#about', label: 'אודות' },
   { href: '#services', label: 'שירותים' },
+  { href: '#pricing', label: 'מחירים' },
   { href: '#contact', label: 'צור קשר' },
 ]
 
