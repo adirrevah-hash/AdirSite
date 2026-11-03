@@ -1,8 +1,8 @@
 import Split from './Split'
 import { packages, addOns, carePlans, shekels, packageWhatsApp, careWhatsApp, type Plan } from '@/lib/pricing'
 
-// Packages, add-ons and monthly care, in one dark chapter between the
-// services and the closing statement. Three packages stand side by side on
+// Packages, add-ons and monthly care: the body of the /pricing page. Three
+// packages stand side by side on
 // wide screens with BUSINESS raised in the middle; the care plans sit in a
 // panel of their own below. Every call to action opens WhatsApp with the
 // plan's name written. Readable as plain content; with motion the cards
@@ -29,7 +29,7 @@ const ADDON_ICON: Record<string, React.ReactNode> = {
 }
 
 function PlanCard({ plan, monthly, href, cta, Heading, badge }: {
-  plan: Plan; monthly?: boolean; href: string; cta: string; Heading: 'h3' | 'h4'; badge: string
+  plan: Plan; monthly?: boolean; href: string; cta: string; Heading: 'h2' | 'h3'; badge: string
 }) {
   return (
     <li className={`plan${plan.featured ? ' plan--featured' : ''}`} data-plan={plan.id}>
@@ -63,22 +63,25 @@ export default function Pricing() {
       <div className="pricing__glow" aria-hidden="true" />
       <div className="wrap">
         <header className="pricing__head">
+          <nav className="crumbs" aria-label="מיקום באתר">
+            <ol><li><a href="/">דף הבית</a></li><li aria-current="page">מסלולים ומחירים</li></ol>
+          </nav>
           <p className="t-label">המסלולים שלנו</p>
-          <h2 id="pricing-title" className="t-h2" data-reveal="chars">
+          <h1 id="pricing-title" className="t-h2" data-reveal="chars">
             <span className="line"><Split text="הנוכחות הדיגיטלית שלך" /></span>
             <span className="line"><Split text="מתחילה כאן" start={19} /></span>
-          </h2>
+          </h1>
           <p className="t-lede">פתרונות דיגיטליים בהתאמה אישית לעסק שלך. מעיצוב מוקפד ועד אתר מקצועי שמייצר הזדמנויות חדשות.</p>
         </header>
 
         <ul className="plans plans--build" data-reveal="fade" aria-label="חבילות הקמת אתר">
           {packages.map(p => (
-            <PlanCard key={p.id} plan={p} href={packageWhatsApp(p)} cta="אני רוצה את החבילה" Heading="h3" badge="הכי מומלצת" />
+            <PlanCard key={p.id} plan={p} href={packageWhatsApp(p)} cta="אני רוצה את החבילה" Heading="h2" badge="הכי מומלצת" />
           ))}
         </ul>
 
         <div className="addons">
-          <h3 className="addons__title">אפשר להוסיף גם</h3>
+          <h2 className="addons__title">אפשר להוסיף גם</h2>
           <ul className="addons__grid" data-reveal="fade">
             {addOns.map(a => (
               <li key={a.id} className={`addon addon--${a.id}`}>
@@ -93,12 +96,12 @@ export default function Pricing() {
         <div className="care">
           <header className="care__head">
             <p className="t-label">תחזוקה חודשית</p>
-            <h3 className="care__title">האתר שלך תמיד בידיים טובות</h3>
+            <h2 className="care__title">האתר שלך תמיד בידיים טובות</h2>
             <p className="care__sub">אנחנו דואגים שהאתר שלך יישאר מעודכן, תקין ומוכן להמשיך לעבוד בשביל העסק שלך.</p>
           </header>
           <ul className="plans plans--care" data-reveal="fade" aria-label="מסלולי תחזוקה חודשיים">
             {carePlans.map(p => (
-              <PlanCard key={p.id} plan={p} monthly href={careWhatsApp(p)} cta="אני רוצה להצטרף" Heading="h4" badge="מומלץ" />
+              <PlanCard key={p.id} plan={p} monthly href={careWhatsApp(p)} cta="אני רוצה להצטרף" Heading="h3" badge="מומלץ" />
             ))}
           </ul>
         </div>

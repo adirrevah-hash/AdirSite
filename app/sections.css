@@ -15,6 +15,9 @@
 .site-nav { display: none; }
 .site-nav a { position: relative; font-size: 0.95rem; color: var(--color-silver); padding-block: 0.6rem; transition: color 180ms var(--ease); }
 .site-nav a::after { content: ''; position: absolute; inset-inline: 0; bottom: 0.3rem; height: 1px; background: currentColor; transform: scaleX(0); transform-origin: right; transition: transform 300ms var(--ease); }
+.site-nav a[aria-current="page"] { color: var(--color-off-white); }
+.site-nav a[aria-current="page"]::after { transform: scaleX(1); }
+.menu-sheet__nav a[aria-current="page"] .menu-sheet__label { color: var(--color-hero-accent-1); }
 @media (hover: hover) and (pointer: fine) { .site-nav a:hover { color: var(--color-off-white); } .site-nav a:hover::after { transform: scaleX(1); } }
 .site-header__end { display: flex; align-items: center; gap: 0.75rem; }
 .btn--sm { min-height: 2.65rem; padding: 0 1.15rem; font-size: 0.925rem; }
@@ -513,6 +516,62 @@ button.link { background: none; border-inline: 0; border-top: 0; font: inherit; 
   .addon { grid-template-columns: 2.25rem minmax(0, 1fr) auto; gap: 0.75rem; padding: 0.9rem 1rem; }
   .addon__icon { width: 2.25rem; height: 2.25rem; padding: 0.5rem; }
   .care { border-radius: 26px; }
+}
+
+/* ---------------------------------------------------------- pricing page */
+/* the fixed header sits over the top of the page */
+.pricing-page .pricing { padding-top: calc(var(--header-h) + clamp(2.5rem, 6vw, 4.5rem)); }
+.crumbs ol { list-style: none; margin: 0 0 0.5rem; padding: 0; display: flex; flex-wrap: wrap; justify-content: center; gap: 0.5rem; font-size: 0.85rem; color: var(--color-silver-muted); }
+.crumbs li + li::before { content: '/'; margin-inline-end: 0.5rem; opacity: 0.6; }
+.crumbs a { color: var(--color-silver); text-decoration: underline; text-decoration-color: var(--border-dark); text-underline-offset: 4px; }
+@media (hover: hover) and (pointer: fine) { .crumbs a:hover { color: var(--color-off-white); text-decoration-color: currentColor; } }
+
+.pricing-help { background: var(--color-midnight); padding-block: 0 var(--section-y); }
+.pricing-help__inner { display: grid; gap: 1.75rem; align-items: center; padding-top: clamp(2.5rem, 5vw, 3.5rem); border-top: 1px solid var(--border-dark); }
+.pricing-help__title { margin: 0 0 0.6rem; font-family: var(--font-display); font-weight: 500; font-size: clamp(1.6rem, 1.2rem + 1.5vw, 2.4rem); line-height: 1.15; color: var(--color-off-white); text-wrap: balance; }
+.pricing-help__text { margin: 0; max-width: 34rem; color: var(--color-silver); line-height: 1.65; }
+.pricing-help__actions { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem 1.75rem; }
+@media (min-width: 900px) { .pricing-help__inner { grid-template-columns: minmax(0, 1fr) auto; } }
+@media (max-width: 599px) { .pricing-help__actions .btn { width: 100%; } }
+
+/* ---------------------------------------------------- plans band (home) */
+.plans-teaser { position: relative; background: var(--color-midnight); padding-block: clamp(4.5rem, 9vw, 7.5rem); }
+.plans-teaser__panel {
+  position: relative; overflow: hidden; display: grid; gap: clamp(2rem, 4vw, 3.5rem); align-items: center;
+  padding: clamp(1.75rem, 4.5vw, 3.75rem); border-radius: 32px; border: 1px solid var(--border-dark);
+  background: radial-gradient(60% 90% at 0% 0%, rgb(85 133 214 / 0.16), transparent 70%), linear-gradient(180deg, #0F1D31, #0A1424);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.05), 0 50px 90px -60px rgb(0 0 0 / 0.9);
+}
+.plans-teaser__copy { display: grid; gap: 1rem; justify-items: start; }
+.plans-teaser__title { margin: 0; font-family: var(--font-display); font-weight: 500; font-size: clamp(1.9rem, 1.3rem + 2.4vw, 3.2rem); line-height: 1.08; letter-spacing: -0.02em; color: var(--color-off-white); text-wrap: balance; }
+.plans-teaser__text { margin: 0; max-width: 30rem; color: var(--color-silver); font-size: clamp(1rem, 0.95rem + 0.3vw, 1.15rem); line-height: 1.65; }
+
+.plans-teaser__side { display: grid; gap: 1.5rem; }
+.plans-teaser__rail { list-style: none; margin: 0; padding: 0; display: grid; border: 1px solid var(--border-dark); border-radius: 20px; overflow: hidden; background: rgb(16 29 48 / 0.6); }
+.plans-teaser__rail li { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: 'code price' 'name price'; align-items: center; gap: 0.2rem 1rem; padding: 1rem 1.25rem; border-bottom: 1px solid var(--border-dark); }
+.plans-teaser__rail li:last-child { border-bottom: 0; }
+.plans-teaser__rail li.is-featured { background: linear-gradient(90deg, rgb(85 133 214 / 0.2), rgb(85 133 214 / 0.06)); }
+.plans-teaser__rail li.is-featured::before { content: ''; position: absolute; inset-block: 0; inset-inline-start: 0; width: 2px; background: linear-gradient(180deg, var(--color-hero-accent-2), var(--color-hero-accent-1)); }
+.plans-teaser__code { grid-area: code; justify-self: start; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.22em; color: var(--color-silver-muted); }
+.is-featured .plans-teaser__code { color: var(--color-hero-accent-1); }
+.plans-teaser__name { grid-area: name; color: var(--color-off-white); font-size: 1rem; }
+.plans-teaser__price { grid-area: price; white-space: nowrap; color: var(--color-silver); font-size: 1rem; }
+.plans-teaser__price .num { font-size: clamp(1.6rem, 1.3rem + 1vw, 2.1rem); font-weight: 300; letter-spacing: -0.03em; color: var(--color-off-white); }
+.plans-teaser__foot { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem 1.5rem; }
+.plans-teaser__care { margin: 0; color: var(--color-silver); font-size: 0.95rem; }
+.plans-teaser__care .num { font-weight: 600; color: var(--color-off-white); }
+@media (min-width: 1024px) {
+  .plans-teaser__panel { grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); }
+  /* three columns side by side, divided by hairlines */
+  .plans-teaser__rail { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .plans-teaser__rail li { grid-template-columns: 1fr; grid-template-areas: 'code' 'name' 'price'; gap: 0.35rem; padding: 1.4rem 1.3rem; border-bottom: 0; border-inline-start: 1px solid var(--border-dark); }
+  .plans-teaser__rail li:first-child { border-inline-start: 0; }
+  .plans-teaser__rail li.is-featured::before { inset: 0 0 auto; width: auto; height: 2px; background: linear-gradient(90deg, var(--color-hero-accent-2), var(--color-hero-accent-1)); }
+  .plans-teaser__price { justify-self: start; margin-top: 0.5rem; }
+}
+@media (max-width: 599px) {
+  .plans-teaser__panel { border-radius: 26px; }
+  .plans-teaser__cta { width: 100%; }
 }
 
 /* ============================================================ difference */

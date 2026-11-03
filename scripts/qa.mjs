@@ -373,6 +373,7 @@ async function fillLead(page) {
   const bad = await page.evaluate(() => [...document.querySelectorAll('a[href]')].map(a => ({ h: a.getAttribute('href'), blank: a.target === '_blank', rel: a.rel })).filter(l => {
     if (l.h.startsWith('#')) return !document.querySelector(l.h)
     if (l.h === 'tel:+972538007008') return false
+    if (l.h === '/pricing') return false
     if (l.h.startsWith('https://wa.me/972538007008')) return !l.blank || !/noopener/.test(l.rel)
     if (['https://www.instagram.com/ar_studio1/', 'https://www.wiserise.co.il/', 'https://www.alumina-group.co.il/', 'https://readytogoo.com/', 'https://orashachar.co.il/', 'https://ligdol-yael.co.il/'].includes(l.h)) return !l.blank || !/noopener/.test(l.rel)
     return true
@@ -381,14 +382,29 @@ async function fillLead(page) {
   // Every WhatsApp button (the form's send link aside) opens with the greeting written.
   const wa = await page.evaluate(() => [...document.querySelectorAll('a[href^="https://wa.me/"]:not([data-submit]):not(.plan__cta)')].map(a => decodeURIComponent(a.href)))
   check('WhatsApp buttons open with the greeting written', wa.length >= 3 && wa.every(h => h.endsWith('?text=היי, אני מעוניין לשמוע פרטים נוספים')), `${wa.length} links`)
-  // Each plan's button opens WhatsApp with that plan's name written.
-  const plans = await page.evaluate(() => [...document.querySelectorAll('#pricing .plan')].map(p => ({ id: p.dataset.plan, code: p.querySelector('.plan__code').textContent, href: decodeURIComponent(p.querySelector('a.plan__cta').href), blank: p.querySelector('a.plan__cta').target === '_blank' })))
-  check('pricing: 3 packages and 2 care plans, each button opens WhatsApp with its plan named', plans.length === 5 && plans.every(p => p.blank && p.href.startsWith('https://wa.me/972538007008?text=') && p.href.includes(p.code)), plans.map(p => p.code).join(','))
+  // The home page leads to the plans page.
+  const teaser = await page.evaluate(() => ({ cta: document.querySelector('#plans a[href="/pricing"]')?.textContent, rows: document.querySelectorAll('#plans .plans-teaser__rail li').length, nav: !!document.querySelector('.site-nav a[href="/pricing"]') }))
+  check('home: plans band with the three packages and a button to /pricing, menu links there too', teaser.rows === 3 && !!teaser.cta && teaser.nav, JSON.stringify(teaser))
   for (const p of ['/robots.txt', '/sitemap.xml', '/icon.svg', '/og.jpg']) check(`${p} served`, (await fetch(BASE + p)).ok)
   const head = await (await fetch(BASE)).text()
   check('share image: og:image 1200x630 and a large card', /property="og:image" content="[^"]*\/og\.jpg"/.test(head) && /og:image:width" content="1200"/.test(head) && /twitter:card" content="summary_large_image"/.test(head))
   const res = await fetch(BASE)
   check('security headers set', res.headers.get('x-content-type-options') === 'nosniff' && !!res.headers.get('referrer-policy') && !res.headers.get('x-powered-by'))
+  // The plans page: its own title, five plans whose buttons name them, and
+  // header links that lead back to the home page's sections.
+  const pp = await ctx.newPage()
+  const rp = await pp.goto(BASE + '/pricing', { waitUntil: 'networkidle' })
+  const pricing = await pp.evaluate(() => ({
+    h1: document.querySelectorAll('h1').length, title: document.title,
+    plans: [...document.querySelectorAll('#pricing .plan')].map(p => ({ code: p.querySelector('.plan__code').textContent, href: decodeURIComponent(p.querySelector('a.plan__cta').href), blank: p.querySelector('a.plan__cta').target === '_blank' })),
+    nav: [...document.querySelectorAll('.site-nav a')].map(a => a.getAttribute('href')),
+    current: document.querySelector('.site-nav a[aria-current="page"]')?.getAttribute('href'),
+    ld: [...document.querySelectorAll('script[type="application/ld+json"]')].some(s => JSON.parse(s.textContent)['@type'] === 'OfferCatalog'),
+  }))
+  check('/pricing: one h1, its own title, structured offers', rp.status() === 200 && pricing.h1 === 1 && /מסלולים ומחירים/.test(pricing.title) && pricing.ld, JSON.stringify({ h1: pricing.h1, title: pricing.title }))
+  check('/pricing: 3 packages and 2 care plans, each button opens WhatsApp with its plan named', pricing.plans.length === 5 && pricing.plans.every(p => p.blank && p.href.startsWith('https://wa.me/972538007008?text=') && p.href.includes(p.code)), pricing.plans.map(p => p.code).join(','))
+  check('/pricing: menu leads back to the home sections, marks itself current', pricing.nav.filter(h => h !== '/pricing').every(h => h.startsWith('/#')) && pricing.current === '/pricing', pricing.nav.join(' '))
+  await pp.close()
   // A missing address answers 404 with the studio's own page and a way home.
   const page404 = await ctx.newPage()
   const r404 = await page404.goto(BASE + '/no/such/page', { waitUntil: 'networkidle' })
